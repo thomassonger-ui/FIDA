@@ -28,37 +28,56 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // ── Admin guard — verify Supabase session ──────────────────────────────────
+  // ── Admin guard — accept EITHER Supabase user OR password-based admin cookie ──
   if (pathname.startsWith("/admin")) {
     const response = NextResponse.next({ request: req });
 
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll: () => req.cookies.getAll(),
-          setAll: (cookiesToSet: { name: string; value: string; options: CookieOptions }[]) => {
-            cookiesToSet.forEach(({ name, value, options }) => {
-              response.cookies.set(name, value, options);
-            });
-          },
-        },
-      }
-    );
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      const url = req.nextUrl.clone();
-      url.pathname = "/login";
-      url.searchParams.set("next", pathname);
-      return NextResponse.redirect(url);
+    // Path 1: password-based admin cookie (set by /api/admin/login).
+    // Cookie value must match ADMIN_SESSION_SECRET env var.
+    const adminCookie = req.cookies.get("fida_admin")?.value;
+    if (adminCookie && adminCookie === process.env.ADMIN_SESSION_SECRET) {
+      return response;
     }
 
-    return response;
+    // Path 2: Supabase OAuth session (Google sign-in). Skip if Supabase env
+    // vars aren't configured yet.
+    if (
+      process.env.NEXT_PUBLIC_SUPABASE_URL &&
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY &&
+      !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("placeholder")
+    ) {
+      try {
+        const supabase = createServerClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL,
+          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+          {
+            cookies: {
+              getAll: () => req.cookies.getAll(),
+              setAll: (cookiesToSet: { name: string; value: string; options: CookieOptions }[]) => {
+                cookiesToSet.forEach(({ name, value, options }) => {
+                  response.cookies.set(name, value, options);
+                });
+              },
+            },
+          }
+        );
+
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        if (user) {
+          return response;
+        }
+      } catch {
+        // Fall through to login redirect.
+      }
+    }
+
+    const url = req.nextUrl.clone();
+    url.pathname = "/login";
+    url.searchParams.set("next", pathname);
+    return NextResponse.redirect(url);
   }
 
   return NextResponse.next();

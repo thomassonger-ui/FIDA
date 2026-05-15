@@ -45,6 +45,31 @@ function GoogleSignInButton() {
   );
 }
 
+function PasswordSignInForm() {
+  const searchParams = useSearchParams();
+  const next = searchParams.get("next") ?? "/admin";
+
+  return (
+    <form action="/api/admin/login" method="POST" className="flex flex-col gap-3">
+      <input type="hidden" name="next" value={next} />
+      <input
+        type="password"
+        name="password"
+        placeholder="Admin password"
+        required
+        autoComplete="current-password"
+        className="w-full rounded-md border border-rule bg-white px-4 py-3 text-sm text-navy outline-none transition focus:border-teal"
+      />
+      <button
+        type="submit"
+        className="w-full rounded-md bg-navy px-4 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+      >
+        Sign in with password
+      </button>
+    </form>
+  );
+}
+
 export default function AdminLoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-paper px-6">
@@ -67,6 +92,16 @@ export default function AdminLoginPage() {
             </div>
           }>
             <GoogleSignInButton />
+          </Suspense>
+
+          <div className="my-5 flex items-center gap-3 text-xs text-muted">
+            <div className="h-px flex-1 bg-rule" />
+            <span className="uppercase tracking-wider">or</span>
+            <div className="h-px flex-1 bg-rule" />
+          </div>
+
+          <Suspense fallback={null}>
+            <PasswordSignInForm />
           </Suspense>
         </div>
 
