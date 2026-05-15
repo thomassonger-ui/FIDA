@@ -61,13 +61,23 @@ export default async function AdminLeadsPage() {
 
   return (
     <div>
-      <div className="eyebrow mb-3">Admissions</div>
-      <h1 className="text-3xl md:text-4xl mb-2">Leads</h1>
-      <p className="text-muted max-w-prose mb-8">
-        Prospective students who finished an Atticus conversation and were
-        handed off to a human advisor within the last 30 days. Click a row to
-        read the full transcript.
-      </p>
+      <div className="flex items-start justify-between gap-6 mb-8">
+        <div>
+          <div className="eyebrow mb-3">Admissions</div>
+          <h1 className="text-3xl md:text-4xl mb-2">Leads</h1>
+          <p className="text-muted max-w-prose">
+            Prospective students who finished an Atticus conversation and were
+            handed off to a human advisor within the last 30 days. Click a row
+            to read the full transcript, or use <span className="font-medium">Enroll</span> to
+            promote a lead to a student.
+          </p>
+        </div>
+        <div className="shrink-0">
+          <Link href="/admin/students/new" className="btn-primary whitespace-nowrap">
+            + New Student
+          </Link>
+        </div>
+      </div>
 
       {error && (
         <div className="border border-rule bg-paper-subtle p-5 rounded-sm text-sm text-muted mb-6">
@@ -111,6 +121,9 @@ export default async function AdminLeadsPage() {
                 <th className="px-4 py-3 font-medium text-xs uppercase tracking-wider text-muted text-right">
                   Msgs
                 </th>
+                <th className="px-4 py-3 font-medium text-xs uppercase tracking-wider text-muted text-right">
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -146,6 +159,16 @@ export default async function AdminLeadsPage() {
                   </td>
                   <td className="px-4 py-3 text-muted text-right">
                     {r.message_count ?? 0}
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    <form action={`/api/admin/leads/${r.id}/enroll`} method="POST">
+                      <button
+                        type="submit"
+                        className="text-xs font-medium px-3 py-1.5 rounded border border-teal text-teal hover:bg-teal hover:text-white transition-colors"
+                      >
+                        Enroll
+                      </button>
+                    </form>
                   </td>
                 </tr>
               ))}
