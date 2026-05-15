@@ -20,12 +20,12 @@ export default async function StudentsPage() {
           <Link href="/admin/students/new" className="btn-primary whitespace-nowrap">
             + New Student
           </Link>
-          <Link href="/admin/students/upload" className="btn-secondary">
+          <Link href="/admin/students/upload" className="btn-outline">
             Import
           </Link>
           <a
             href="/api/admin/students/export"
-            className="btn-secondary"
+            className="btn-outline"
             download
           >
             Export CSV

@@ -209,7 +209,7 @@ export function StudentUploader() {
           <button onClick={reset} className="btn-primary">
             Import another file
           </button>
-          <a href="/admin/students" className="btn-secondary">
+          <a href="/admin/students" className="btn-outline">
             View students
           </a>
         </div>
@@ -386,7 +386,7 @@ export function StudentUploader() {
         >
           {busy ? "Importing…" : `Import ${rows.length} row${rows.length === 1 ? "" : "s"}`}
         </button>
-        <button onClick={reset} className="btn-secondary">
+        <button onClick={reset} className="btn-outline">
           Cancel
         </button>
       </div>

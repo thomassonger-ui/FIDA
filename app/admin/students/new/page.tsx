@@ -62,7 +62,7 @@ export default function NewStudentPage() {
 
         <div className="flex items-center gap-3 pt-2">
           <button type="submit" className="btn-primary">Create student</button>
-          <Link href="/admin/students" className="btn-secondary">Cancel</Link>
+          <Link href="/admin/students" className="btn-outline">Cancel</Link>
         </div>
 
         <p className="text-xs text-subtle pt-2">
