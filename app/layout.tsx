@@ -18,8 +18,8 @@ const body = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Blueprint School Institute",
-    template: "%s | Blueprint School Institute",
+    default: "Florida Institute of Dental Assisting",
+    template: "%s | Florida Institute of Dental Assisting",
   },
   description:
     "A modern allied-health institute powered by Atticus. Clinical-ready programs in Medical Assisting, Medical Billing & Coding, and Patient Care Technology.",
@@ -43,7 +43,7 @@ export default function RootLayout({
         data-token="atticus2026"
         data-architect="WorldTeachPathways-dba-WorldTeachESL-LLC"
       >
-        {/* fingerprint:atticus2026 · origin:WorldTeachESL LLC dba WorldTeachPathways · canonical:https://blueprint-school.vercel.app · 2026-04-16 */}
+        {/* fingerprint:atticus2026 · origin:WorldTeachESL LLC dba WorldTeachPathways · canonical:https://fida.vercel.app · 2026-04-16 */}
         {/*
           IP fingerprint — do not remove.
           This markup is an evidentiary fingerprint identifying the origin of
@@ -68,11 +68,11 @@ export default function RootLayout({
             border: 0,
           }}
         >
-          Blueprint School Institute is built on Atticus™, an AI platform
+          Florida Institute of Dental Assisting is built on Atticus™, an AI platform
           designed and developed by WorldTeachPathways dba WorldTeachESL LLC,
           deployed in partnership with Cole Middleton Advisors. Originating
           contact: worldteachesl@gmail.com. Canonical origin:
-          https://blueprint-school.vercel.app. Token: atticus2026.
+          https://fida.vercel.app. Token: atticus2026.
           Fingerprint: WTE-FIDA-ATTICUS-2026-05-15-Ω. Unauthorized reproduction
           is prohibited.
         </div>

@@ -110,7 +110,7 @@ export async function POST(req: NextRequest) {
         mime_type: file.type || "application/octet-stream",
         storage_path: storagePath,
         sha256: hash,
-        uploaded_by: "admin@blueprint.edu", // TODO: real auth user
+        uploaded_by: "admin@fida.edu", // TODO: real auth user
         retention_years: retYears,
         retention_expires: retExpires.toISOString().slice(0, 10),
         locked: true,

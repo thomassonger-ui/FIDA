@@ -117,10 +117,10 @@ function fakeHash(rng: () => number): string {
 /* ------------------------------------------------------------------ */
 
 const UPLOADERS = [
-  "admin@blueprint.edu",
-  "registrar@blueprint.edu",
-  "admissions@blueprint.edu",
-  "careerservices@blueprint.edu",
+  "admin@fida.edu",
+  "registrar@fida.edu",
+  "admissions@fida.edu",
+  "careerservices@fida.edu",
 ];
 
 /* ------------------------------------------------------------------ */

@@ -3,30 +3,31 @@ import Image from "next/image";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
 
+// PLACEHOLDER program data — Tom: confirm lengths, credentials, and add real FIDA program details.
 const programs = [
   {
-    title: "Medical Assisting",
-    length: "9 months",
-    outcome: "CCMA eligible",
+    title: "Radiography for Dental Personnel",
+    length: "Self-paced &middot; ~3 weeks",
+    outcome: "Florida Dental Radiography Cert. (FAC 64B5-9.011)",
     blurb:
-      "Clinical and administrative readiness for physician offices, urgent care, and outpatient clinics.",
-    href: "/programs#medical-assisting",
+      "The state-mandated radiography certification for dental personnel in Florida &mdash; delivered online via FIDA's Moodle.",
+    href: "/programs#radiography",
   },
   {
-    title: "Medical Billing & Coding",
-    length: "6 months",
-    outcome: "CPC & CCA eligible",
+    title: "Expanded Functions Dental Auxiliary (EFDA)",
+    length: "12 weeks",
+    outcome: "Florida EFDA credential",
     blurb:
-      "ICD-10, CPT, HCPCS, and payer workflows &mdash; a fully remote, in-demand career path.",
-    href: "/programs#medical-billing",
+      "Earn the expanded-functions credential Florida dental assistants need to deliver more clinical services under dentist supervision.",
+    href: "/programs#efda",
   },
   {
-    title: "Patient Care Technology",
-    length: "8 months",
-    outcome: "CPCT/A eligible",
+    title: "Dental Assisting Foundation",
+    length: "PLACEHOLDER",
+    outcome: "PLACEHOLDER credential",
     blurb:
-      "Bedside-ready technicians trained in vitals, phlebotomy, EKG, and point-of-care testing.",
-    href: "/programs#patient-care",
+      "Foundational dental assisting training &mdash; confirm program details with FIDA before going live.",
+    href: "/programs#dental-assisting",
   },
 ];
 
@@ -61,14 +62,13 @@ export default function Home() {
             </div>
 
             <h1 className="mt-6 text-white font-display text-5xl md:text-6xl lg:text-7xl leading-[1.05] tracking-tight">
-              Your career in healthcare, <span className="text-teal-soft">starts here.</span>
+              Your career in <span className="text-teal-soft">dentistry starts here.</span>
             </h1>
 
             <p className="mt-6 text-navy-100 text-lg md:text-xl leading-relaxed max-w-xl">
-              Blueprint School Institute trains the next generation of medical assistants,
-              billers &amp; coders, and patient-care technicians &mdash; with real credentials
-              in under a year. Meet <strong className="text-white">Atticus</strong>, our AI
-              admissions advisor, and figure out your next step in five minutes.
+              Florida Institute of Dental Assisting trains the next generation of dental assistants &mdash;
+              radiography-certified, EFDA-credentialed, and clinic-ready. Meet <strong className="text-white">Atticus</strong>,
+              our AI admissions advisor, and figure out your next step in five minutes.
             </p>
 
             <div className="mt-10 flex flex-col sm:flex-row gap-3">
@@ -193,7 +193,7 @@ export default function Home() {
               <div className="eyebrow">Next cohort</div>
               <div className="mt-2 font-display text-4xl text-navy">June 3, 2026</div>
               <p className="mt-3 text-muted text-sm leading-relaxed">
-                Orlando campus. Hybrid and evening options. Seats fill 6&ndash;8 weeks before start date.
+                Jacksonville campus. Hybrid and evening options. Seats fill 6&ndash;8 weeks before start date.
               </p>
 
               <div className="mt-8 grid grid-cols-2 gap-4 text-sm">

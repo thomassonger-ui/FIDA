@@ -151,7 +151,7 @@ export function demoTranscript(lead: DemoLead): DemoMessage[] {
   const turns: { user: string; atticus: string }[] = [
     {
       user: `Hi, I'm interested in the ${program} program. Can you tell me more?`,
-      atticus: `Hey ${first}! Great to meet you. The ${program} program at Blueprint School is a 16-week certificate track — you'll finish with the credential and clinical hours you need to sit for the national exam. Can I ask what got you looking into it?`,
+      atticus: `Hey ${first}! Great to meet you. The ${program} program at FIDA is a 16-week certificate track — you'll finish with the credential and clinical hours you need to sit for the national exam. Can I ask what got you looking into it?`,
     },
     {
       user: `I've been working retail for a few years and I want something with more stability. A friend did medical billing and liked it.`,

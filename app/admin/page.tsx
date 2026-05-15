@@ -68,7 +68,7 @@ export default async function AdminOverviewPage() {
       <div className="eyebrow mb-3">Overview</div>
       <h1 className="text-3xl md:text-4xl mb-2">Operations dashboard</h1>
       <p className="text-muted max-w-prose mb-10">
-        Live view of the Blueprint School demo school &mdash; enrollment,
+        Live view of the FIDA demo school &mdash; enrollment,
         attendance, grades, and compliance rolled up across every active
         cohort.
       </p>

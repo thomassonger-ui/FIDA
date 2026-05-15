@@ -2,7 +2,7 @@ import { Sidebar } from "@/components/admin/Sidebar";
 import { DemoBanner } from "@/components/admin/DemoBanner";
 
 export const metadata = {
-  title: "Admin &middot; Blueprint School",
+  title: "Admin &middot; FIDA",
 };
 
 export default function AdminLayout({

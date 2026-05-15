@@ -43,7 +43,7 @@ export function Nav() {
           </span>
           <span className="flex flex-col leading-tight">
             <span className="font-display text-lg text-navy tracking-tight">
-              Blueprint School
+              FIDA
             </span>
             <span className="text-[10px] font-semibold tracking-[0.14em] uppercase text-teal -mt-0.5">
               Institute

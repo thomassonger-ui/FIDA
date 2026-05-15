@@ -210,7 +210,7 @@ const FLAGS: { title: string; body: string }[] = [
   {
     title: "Demo vs product is conflated",
     body:
-      "Blueprint School is currently a presentation-grade mockup. Moving to SoR means a hard rewrite of the data layer with durable tables, migrations, RLS, and audit triggers. Budget 6\u201310 weeks for Phase 1 if it has to withstand a real ACCSC visit \u2014 not the 2\u20133 weeks the plan doc suggests.",
+      "FIDA is currently a presentation-grade mockup. Moving to SoR means a hard rewrite of the data layer with durable tables, migrations, RLS, and audit triggers. Budget 6\u201310 weeks for Phase 1 if it has to withstand a real ACCSC visit \u2014 not the 2\u20133 weeks the plan doc suggests.",
   },
   {
     title: "Atticus-on-top is the right architecture",

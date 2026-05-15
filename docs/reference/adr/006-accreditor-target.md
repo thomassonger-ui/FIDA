@@ -5,7 +5,7 @@
 
 ## Context
 
-Blueprint School needs programmatic accreditation for its allied health programs. The two primary options for vocational/career schools are ACCSC (Accrediting Commission of Career Schools and Colleges) and COE (Council on Occupational Education). Their requirements for attendance, placement, and SAP overlap but diverge in important ways.
+FIDA needs programmatic accreditation for its allied health programs. The two primary options for vocational/career schools are ACCSC (Accrediting Commission of Career Schools and Colleges) and COE (Council on Occupational Education). Their requirements for attendance, placement, and SAP overlap but diverge in important ways.
 
 ## Key Differences
 

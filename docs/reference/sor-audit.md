@@ -1,4 +1,4 @@
-# System of Record Audit — Blueprint School SIS
+# System of Record Audit — FIDA OS
 
 **Date:** April 15, 2026
 **Auditor:** Claude (AI-assisted) + Tom Songer
@@ -216,7 +216,7 @@
 ## Cross-Cutting Flags
 
 ### 1. Demo vs product is conflated
-Blueprint School is currently a presentation-grade mockup. Moving to SoR means a hard rewrite of the data layer with durable tables, migrations, RLS, and audit triggers. Budget 6–10 weeks for Phase 1 if it has to withstand a real ACCSC visit — not the 2–3 weeks the plan doc suggests.
+FIDA is currently a presentation-grade mockup. Moving to SoR means a hard rewrite of the data layer with durable tables, migrations, RLS, and audit triggers. Budget 6–10 weeks for Phase 1 if it has to withstand a real ACCSC visit — not the 2–3 weeks the plan doc suggests.
 
 ### 2. Atticus-on-top is the right architecture
 Don't bake intelligence into the SoR. Keep Atticus reading from SIS views and writing only to `atticus_*` tables. That way audits have one story (SIS) and intelligence stays a replaceable layer.

@@ -82,7 +82,7 @@ export function demoStudents(courseId: number): DemoStudent[] {
     const first = FIRST_NAMES[i % FIRST_NAMES.length];
     const last = LAST_NAMES[(i * 7 + 3) % LAST_NAMES.length];
     const fullname = `${first} ${last}`;
-    const email = `${first}.${last}`.toLowerCase() + "@blueprint.edu";
+    const email = `${first}.${last}`.toLowerCase() + "@fida.edu";
     const tier = tiers[i];
 
     let attendancePct: number;

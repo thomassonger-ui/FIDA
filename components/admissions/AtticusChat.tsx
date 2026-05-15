@@ -11,7 +11,7 @@ type ChatMessage = {
 const OPENING_MESSAGE: ChatMessage = {
   role: "assistant",
   content:
-    "Hi — I'm Atticus, the admissions advisor for Blueprint School Institute. I'm here to help you figure out if one of our programs is the right fit, and walk you through next steps if it is. What's bringing you to us today?",
+    "Hi — I'm Atticus, the admissions advisor for Florida Institute of Dental Assisting. I'm here to help you figure out if one of our programs is the right fit, and walk you through next steps if it is. What's bringing you to us today?",
 };
 
 const QUICK_PROMPTS = [

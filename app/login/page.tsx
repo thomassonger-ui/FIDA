@@ -53,7 +53,7 @@ export default function AdminLoginPage() {
           <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-md bg-navy pt-1 font-display text-xl leading-none text-white">
             A
           </div>
-          <div className="font-display text-2xl text-navy">Blueprint School</div>
+          <div className="font-display text-2xl text-navy">FIDA</div>
           <div className="eyebrow mt-1">Live platform preview</div>
         </div>
 

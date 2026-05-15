@@ -9,7 +9,7 @@ export async function GET() {
 
   return NextResponse.json({
     ok: true,
-    app: "blueprint-school",
+    app: "fida",
     timestamp: new Date().toISOString(),
     env: {
       supabaseUrl: supabaseUrl ?? null,

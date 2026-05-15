@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Blueprint School Institute palette
+        // Florida Institute of Dental Assisting palette
         navy: {
           DEFAULT: "#102A43",
           deep: "#0B1E33",

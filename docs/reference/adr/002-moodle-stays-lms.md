@@ -5,7 +5,7 @@
 
 ## Context
 
-Blueprint School already uses Moodle Cloud as the LMS for course delivery, gradebook, and attendance. The SIS needs grade and attendance data for SAP calculations. The question is whether to rebuild these features inside the SIS or pull from Moodle.
+FIDA already uses Moodle Cloud as the LMS for course delivery, gradebook, and attendance. The SIS needs grade and attendance data for SAP calculations. The question is whether to rebuild these features inside the SIS or pull from Moodle.
 
 ## Decision
 

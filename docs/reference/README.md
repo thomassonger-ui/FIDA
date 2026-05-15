@@ -1,11 +1,11 @@
-# Blueprint School — SIS Reference Package
+# FIDA — SIS Reference Package
 
-This package contains the reference documentation, templates, database schema, and architecture decisions for the Blueprint School Student Information System (SIS) demo built on Next.js + Supabase + Moodle.
+This package contains the reference documentation, templates, database schema, and architecture decisions for the FIDA Student Information System (SIS) demo built on Next.js + Supabase + Moodle.
 
 **Owner:** WorldTeachPathways
 **Builder:** Tom Songer / Bear Team
 **Stack:** Next.js 15, Supabase (Postgres + Storage), Moodle LMS, Atticus AI intake advisor
-**Live demo:** https://blueprint-school.vercel.app
+**Live demo:** https://fida.vercel.app
 
 ---
 

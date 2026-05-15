@@ -5,7 +5,7 @@
 
 ## Context
 
-Blueprint School SIS needs a database, auth, storage, and real-time layer. The team is small (one developer) and the school is pre-revenue. The system must eventually support compliance-grade data handling (RLS, audit logging, encryption at rest).
+FIDA OS needs a database, auth, storage, and real-time layer. The team is small (one developer) and the school is pre-revenue. The system must eventually support compliance-grade data handling (RLS, audit logging, encryption at rest).
 
 ## Decision
 

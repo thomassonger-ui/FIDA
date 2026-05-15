@@ -15,7 +15,7 @@ export function Footer() {
               </span>
               <span className="flex flex-col leading-tight">
                 <span className="font-display text-lg tracking-tight">
-                  Blueprint School
+                  FIDA
                 </span>
                 <span className="text-[10px] font-semibold tracking-[0.14em] uppercase text-teal-soft -mt-0.5">
                   Institute
@@ -46,14 +46,14 @@ export function Footer() {
             </div>
             <ul className="space-y-3 text-navy-100">
               <li><Link href="/admin" className="hover:text-teal transition-colors">Admin Dashboard</Link></li>
-              <li><a href="mailto:admissions@blueprint.edu" className="hover:text-teal transition-colors">admissions@blueprint.edu</a></li>
+              <li><a href="mailto:admissions@fida.edu" className="hover:text-teal transition-colors">admissions@fida.edu</a></li>
             </ul>
           </div>
         </div>
 
         <div className="mt-14 pt-8 border-t border-white/10 text-xs text-navy-200 flex flex-col md:flex-row md:items-start md:justify-between gap-3">
           <div>
-            &copy; {new Date().getFullYear()} Blueprint School Institute. All rights reserved.
+            &copy; {new Date().getFullYear()} Florida Institute of Dental Assisting. All rights reserved.
           </div>
           <div className="md:text-right md:max-w-md">
             Atticus&trade; is an AI platform by WorldTeachPathways dba WorldTeachESL LLC,

@@ -42,7 +42,7 @@ const faqs = [
   },
   {
     q: "Can I talk to a real person instead?",
-    a: "Absolutely. Email admissions@blueprint.edu and we&rsquo;ll schedule a call. But most people find Atticus faster for initial questions.",
+    a: "Absolutely. Email admissions@fida.edu and we&rsquo;ll schedule a call. But most people find Atticus faster for initial questions.",
   },
 ];
 
@@ -105,7 +105,7 @@ export default async function AdmissionsPage({
                 Upcoming cohort
               </div>
               <div className="mt-2 font-display text-3xl">Summer 2026</div>
-              <div className="mt-1 text-navy-100 text-sm">Starts June 3, 2026 &middot; Orlando</div>
+              <div className="mt-1 text-navy-100 text-sm">Starts June 3, 2026 &middot; Jacksonville</div>
               <div className="mt-5 pt-5 border-t border-white/10 text-sm text-navy-100 space-y-2">
                 <div className="flex items-center justify-between">
                   <span>Priority deadline</span>
@@ -123,10 +123,10 @@ export default async function AdmissionsPage({
               <p className="mt-3 text-muted text-sm leading-relaxed">
                 Email us at{" "}
                 <a
-                  href="mailto:admissions@blueprint.edu"
+                  href="mailto:admissions@fida.edu"
                   className="text-navy font-semibold underline decoration-teal underline-offset-4 hover:text-teal"
                 >
-                  admissions@blueprint.edu
+                  admissions@fida.edu
                 </a>{" "}
                 and we&rsquo;ll schedule a call.
               </p>

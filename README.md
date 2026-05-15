@@ -1,9 +1,9 @@
-# Blueprint School
+# FIDA
 
 A demonstration allied-health institution powered by Atticus. Operated by **WorldTeachPathways dba WorldTeachESL LLC**, architected in collaboration with **Cole Middleton Advisors**.
 
-**Live:** pending — Vercel project `blueprint-school`
-**Repo:** https://github.com/thomassonger-ui/blueprint-school-
+**Live:** pending — Vercel project `fida`
+**Repo:** https://github.com/thomassonger-ui/fida-
 
 ---
 
@@ -25,7 +25,7 @@ Completely separate from the `atticus` repo (Cole Middleton Advisors).
 | Framework | Next.js 15.2 (App Router) + React 19 + TypeScript |
 | Styling | Tailwind CSS 3.4, Cormorant Garamond (display), Inter (body) |
 | Database | Supabase (project `zefzgenuenjkasselccy`) |
-| Hosting | Vercel (`blueprint-school` under team `thomassonger-5425s-projects`) |
+| Hosting | Vercel (`fida` under team `thomassonger-5425s-projects`) |
 | Utils | `clsx`, `tailwind-merge` for `cn()` |
 
 ---
@@ -47,7 +47,7 @@ SUPABASE_URL=https://zefzgenuenjkasselccy.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=eyJ...        # server-only; never exposed to browser
 NEXT_PUBLIC_SUPABASE_URL=https://zefzgenuenjkasselccy.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...    # browser-safe anon key
-NEXT_PUBLIC_SITE_URL=https://blueprint-school.vercel.app
+NEXT_PUBLIC_SITE_URL=https://fida.vercel.app
 ```
 
 Keys live at: https://supabase.com/dashboard/project/zefzgenuenjkasselccy/settings/api

@@ -5,7 +5,7 @@ import { Footer } from "@/components/landing/Footer";
 export const metadata = {
   title: "About",
   description:
-    "Blueprint School Institute is a modern, AI-powered allied-health school in Orlando, FL.",
+    "Florida Institute of Dental Assisting is a modern, AI-powered dental assisting school in Jacksonville, FL.",
 };
 
 const values = [
@@ -41,7 +41,7 @@ export default function AboutPage() {
               A modern institute for a modern workforce.
             </h1>
             <p className="mt-6 text-muted text-lg leading-relaxed">
-              Blueprint School Institute was built on a simple idea: the healthcare
+              Florida Institute of Dental Assisting was built on a simple idea: the healthcare
               workforce needs more skilled people, and the path to getting there
               shouldn&rsquo;t be two years, a dead-end degree, or a mountain of debt.
             </p>
@@ -93,7 +93,7 @@ export default function AboutPage() {
               Built by people who&rsquo;ve done this before.
             </h2>
             <p className="mt-5 text-muted leading-relaxed">
-              Blueprint School Institute is operated by <strong className="text-navy">WorldTeachPathways
+              Florida Institute of Dental Assisting is operated by <strong className="text-navy">WorldTeachPathways
               dba WorldTeachESL LLC</strong>, architected in collaboration with{" "}
               <strong className="text-navy">Cole Middleton Advisors</strong>.
             </p>
@@ -111,7 +111,7 @@ export default function AboutPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="card p-8 bg-white">
             <div className="eyebrow">Campus</div>
-            <div className="mt-3 font-display text-2xl text-navy">Orlando, Florida</div>
+            <div className="mt-3 font-display text-2xl text-navy">Jacksonville, Florida</div>
             <p className="mt-2 text-muted text-sm leading-relaxed">
               Hybrid and in-person programs with clinical placements across Central Florida.
             </p>
