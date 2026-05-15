@@ -65,61 +65,9 @@ function between(rng: () => number, lo: number, hi: number): number {
  * 25 demo students for a given course. Deterministic per courseId so the
  * same faces + numbers appear every page load.
  */
-export function demoStudents(courseId: number): DemoStudent[] {
-  const rng = prng(courseId * 1013904223 + 1664525);
-  const now = Math.floor(Date.now() / 1000);
-  const day = 60 * 60 * 24;
-
-  // Fixed distribution: 3 at-risk, 7 watch, 15 on-track.
-  const tiers: ("risk" | "watch" | "ok")[] = [
-    ...Array(3).fill("risk"),
-    ...Array(7).fill("watch"),
-    ...Array(15).fill("ok"),
-  ];
-
-  const out: DemoStudent[] = [];
-  for (let i = 0; i < 25; i++) {
-    const first = FIRST_NAMES[i % FIRST_NAMES.length];
-    const last = LAST_NAMES[(i * 7 + 3) % LAST_NAMES.length];
-    const fullname = `${first} ${last}`;
-    const email = `${first}.${last}`.toLowerCase() + "@fida.edu";
-    const tier = tiers[i];
-
-    let attendancePct: number;
-    let gradePct: number;
-    let completionPct: number;
-    let lastaccess: number;
-    if (tier === "risk") {
-      attendancePct = Math.round(between(rng, 45, 74));
-      gradePct = Math.round(between(rng, 40, 68));
-      completionPct = Math.round(between(rng, 10, 45));
-      lastaccess = now - Math.floor(between(rng, 10 * day, 35 * day));
-    } else if (tier === "watch") {
-      attendancePct = Math.round(between(rng, 75, 89));
-      gradePct = Math.round(between(rng, 72, 84));
-      completionPct = Math.round(between(rng, 45, 75));
-      lastaccess = now - Math.floor(between(rng, 2 * day, 9 * day));
-    } else {
-      attendancePct = Math.round(between(rng, 90, 100));
-      gradePct = Math.round(between(rng, 85, 98));
-      completionPct = Math.round(between(rng, 75, 100));
-      lastaccess = now - Math.floor(between(rng, 0, 2 * day));
-    }
-
-    out.push({
-      id: -(1000 + i + courseId * 100), // negative, deterministic, unique
-      fullname,
-      firstname: first,
-      lastname: last,
-      email,
-      riskTier: tier,
-      attendancePct,
-      gradePct,
-      completionPct,
-      lastaccess,
-    });
-  }
-  return out;
+export function demoStudents(_courseId: number): DemoStudent[] {
+  // Demo data disabled. Restore from git history (or wire to Supabase) for real students.
+  return [];
 }
 
 /** Given a desired attendance % and total sessions, return session counts. */

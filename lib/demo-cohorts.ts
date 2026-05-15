@@ -39,10 +39,13 @@ export async function getDemoCohorts(): Promise<DemoCohort[]> {
 
 function cohortFromTracked(c: TrackedCourse): DemoCohort {
   const students = demoStudents(c.course_id);
-  const avgAttendance =
-    students.reduce((s, r) => s + r.attendancePct, 0) / students.length;
-  const avgGrade =
-    students.reduce((s, r) => s + r.gradePct, 0) / students.length;
+  const n = students.length;
+  const avgAttendance = n
+    ? students.reduce((s, r) => s + r.attendancePct, 0) / n
+    : 0;
+  const avgGrade = n
+    ? students.reduce((s, r) => s + r.gradePct, 0) / n
+    : 0;
   const atRiskCount = students.filter((s) => s.riskTier === "risk").length;
   // Start 16 weeks ago, matching the attendance session count.
   const start = new Date();
