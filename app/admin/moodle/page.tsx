@@ -500,7 +500,7 @@ export default async function MoodlePage({
       <p className="text-muted max-w-prose mb-8">
         Server-to-server connection to{" "}
         <code className="text-xs bg-paper-subtle px-1">
-          {process.env.MOODLE_URL ?? "colemiddleton.moodlecloud.com"}
+          {process.env.MOODLE_URL ?? "fldentalassisting.moodlecloud.com"}
         </code>
         . Uses a web-service token stored in Vercel env.
       </p>
@@ -692,7 +692,7 @@ export default async function MoodlePage({
             <li>
               Log into{" "}
               <code className="text-xs bg-paper-subtle px-1">
-                colemiddleton.moodlecloud.com
+                fldentalassisting.moodlecloud.com
               </code>{" "}
               as admin.
             </li>

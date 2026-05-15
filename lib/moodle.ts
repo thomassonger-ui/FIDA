@@ -12,7 +12,7 @@
  */
 
 export type MoodleConfig = {
-  url: string; // e.g. https://colemiddleton.moodlecloud.com
+  url: string; // e.g. https://fldentalassisting.moodlecloud.com
   token: string; // admin-issued web service token
 };
 

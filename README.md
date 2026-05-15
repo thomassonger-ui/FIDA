@@ -154,7 +154,7 @@ Next up:
 - [ ] Wire `/admissions` interest form to `/api/admissions` → `demo_applications`
 - [ ] Flesh out `/admin/attendance` and `/admin/compliance` against their demo tables
 - [ ] Add auth gate on `/admin/*` (Supabase Auth magic link, scoped to staff emails)
-- [ ] Moodle integration via `colemiddleton.moodlecloud.com` API (parked)
+- [ ] Moodle integration via `fldentalassisting.moodlecloud.com` API (parked)
 - [ ] Atticus advisor embed on `/admissions`
 
 ---
