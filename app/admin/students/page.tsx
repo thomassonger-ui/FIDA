@@ -18,7 +18,10 @@ export default async function StudentsPage() {
           </p>
         </div>
         <div className="flex gap-2 shrink-0">
-          <Link href="/admin/students/upload" className="btn-primary">
+          <Link href="/admin/students/new" className="btn-primary whitespace-nowrap">
+            + New Student
+          </Link>
+          <Link href="/admin/students/upload" className="btn-secondary">
             Import
           </Link>
           <a
