@@ -63,15 +63,14 @@ export default function GatePage() {
     <main className="min-h-screen bg-paper-subtle flex flex-col items-center justify-center gap-8 px-4">
       <div className="flex flex-col items-center gap-4">
         <Image
-          src="/atticus-logo.png"
-          alt="Atticus"
+          src="/fida-shield.png"
+          alt="FIDA"
           width={80}
           height={80}
           priority
         />
         <div className="flex items-start gap-0.5">
-          <span className="font-display text-2xl text-navy tracking-tight">Atticus</span>
-          <span className="text-[10px] font-semibold text-teal mt-1">™</span>
+          <span className="font-display text-2xl text-navy tracking-tight">FIDA</span>
         </div>
       </div>
       <Suspense>

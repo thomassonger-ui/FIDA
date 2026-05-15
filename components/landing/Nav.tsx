@@ -35,12 +35,12 @@ export function Nav() {
     <header className="border-b border-rule bg-white/95 backdrop-blur-md sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 flex items-center justify-between h-16">
         <Link href="/" className="flex items-center gap-2.5 group">
-          <span
-            aria-hidden="true"
-            className="inline-flex items-center justify-center w-8 h-8 rounded-md bg-navy text-white font-display text-base leading-none pt-0.5"
-          >
-            A
-          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/fida-shield.png"
+            alt="FIDA"
+            className="w-9 h-9 object-contain"
+          />
           <span className="flex flex-col leading-tight">
             <span className="font-display text-lg text-navy tracking-tight">
               FIDA

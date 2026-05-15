@@ -75,9 +75,12 @@ export default function AdminLoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-paper px-6">
       <div className="w-full max-w-sm">
         <div className="mb-10 text-center">
-          <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-md bg-navy pt-1 font-display text-xl leading-none text-white">
-            A
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/fida-shield.png"
+            alt="FIDA"
+            className="mb-4 inline-block h-12 w-12 object-contain"
+          />
           <div className="font-display text-2xl text-navy">FIDA</div>
           <div className="eyebrow mt-1">Live platform preview</div>
         </div>

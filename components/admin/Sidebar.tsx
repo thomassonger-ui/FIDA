@@ -21,6 +21,8 @@ export function Sidebar() {
   return (
     <aside className="w-56 shrink-0 border-r border-rule bg-paper-subtle min-h-screen p-6 flex flex-col">
       <Link href="/" className="block mb-10">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/fida-shield.png" alt="FIDA" className="w-8 h-8 object-contain mb-2" />
         <div className="font-display text-lg text-ink">FIDA</div>
         <div className="eyebrow">Admin</div>
       </Link>
