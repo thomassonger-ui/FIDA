@@ -1,6 +1,8 @@
 import Link from "next/link";
 
-const nav = [
+// To re-enable a module in the sidebar later, flip `hidden: true` -> remove it
+// (or set false). The underlying /admin/<route> pages stay live regardless.
+const nav: { href: string; label: string; hidden?: boolean }[] = [
   { href: "/admin", label: "Overview" },
   { href: "/admin/leads", label: "Leads" },
   { href: "/admin/students", label: "Students" },
@@ -8,8 +10,8 @@ const nav = [
   { href: "/admin/attendance", label: "Attendance" },
   { href: "/admin/interventions", label: "Interventions" },
   { href: "/admin/sap", label: "SAP" },
-  { href: "/admin/ledger", label: "Ledger" },
-  { href: "/admin/placement", label: "Placement" },
+  { href: "/admin/ledger", label: "Ledger", hidden: true },      // hidden until school enables
+  { href: "/admin/placement", label: "Placement", hidden: true }, // hidden until school enables
   { href: "/admin/documents", label: "Documents" },
   { href: "/admin/compliance", label: "Compliance" },
   { href: "/admin/moodle", label: "Moodle" },
@@ -23,7 +25,7 @@ export function Sidebar() {
         <div className="eyebrow">Admin</div>
       </Link>
       <nav className="space-y-1">
-        {nav.map((item) => (
+        {nav.filter((item) => !item.hidden).map((item) => (
           <Link
             key={item.href}
             href={item.href}
