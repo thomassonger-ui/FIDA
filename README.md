@@ -85,7 +85,7 @@ lib/
 └── utils.ts                 # cn()
 
 supabase/
-└── (migration_apex_demo.sql + seed_apex_demo.sql to be added)
+└── (migration_fida_demo.sql + seed_fida_demo.sql to be added)
 
 public/                      # empty — placeholder
 ```
@@ -98,8 +98,8 @@ Supabase project: **`zefzgenuenjkasselccy`**.
 
 Two SQL files need to be run (in order) in the Supabase SQL editor:
 
-1. `migration_apex_demo.sql` — creates all 12 `demo_` tables
-2. `seed_apex_demo.sql` — 62 students, 3 cohorts, grades, attendance, transcripts, compliance
+1. `migration_fida_demo.sql` — creates all 12 `demo_` tables
+2. `seed_fida_demo.sql` — 62 students, 3 cohorts, grades, attendance, transcripts, compliance
 
 Drop them into `supabase/` inside this repo once you have the final versions, then run in the SQL editor.
 
@@ -150,7 +150,7 @@ Shipped in this scaffold:
 
 Next up:
 
-- [ ] Drop `migration_apex_demo.sql` + `seed_apex_demo.sql` into `supabase/` and run in Supabase SQL editor
+- [ ] Drop `migration_fida_demo.sql` + `seed_fida_demo.sql` into `supabase/` and run in Supabase SQL editor
 - [ ] Wire `/admissions` interest form to `/api/admissions` → `demo_applications`
 - [ ] Flesh out `/admin/attendance` and `/admin/compliance` against their demo tables
 - [ ] Add auth gate on `/admin/*` (Supabase Auth magic link, scoped to staff emails)

@@ -54,7 +54,7 @@ export async function GET(_req: NextRequest) {
       status: 200,
       headers: {
         "content-type": "text/csv; charset=utf-8",
-        "content-disposition": `attachment; filename="apex-students-${today}.csv"`,
+        "content-disposition": `attachment; filename="fida-students-${today}.csv"`,
         "cache-control": "no-store",
       },
     });

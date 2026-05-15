@@ -568,7 +568,7 @@ export default async function MoodlePage({
               <div className="eyebrow mb-1">Tracked</div>
               <div className="text-sm text-muted">
                 Roster, attendance, and grades flow from these courses into the
-                rest of Apex.
+                rest of FIDA.
               </div>
             </div>
           </div>

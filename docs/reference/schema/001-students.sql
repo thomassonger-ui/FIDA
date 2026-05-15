@@ -1,7 +1,7 @@
 -- ============================================================
 -- 001 — Student Master Record
 -- ============================================================
--- Core student table for Apex SIS. Every enrolled student gets
+-- Core student table for FIDA OS. Every enrolled student gets
 -- one row. RLS restricts access by staff role. All mutations
 -- fire an audit trigger (see 002-audit-events.sql).
 --

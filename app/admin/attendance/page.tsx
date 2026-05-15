@@ -403,7 +403,7 @@ export default async function AttendancePage() {
           How data enters this page in production
         </div>
         <p className="text-sm text-amber-950 leading-relaxed mb-2">
-          Attendance is recorded by instructors inside Moodle (the LMS). Apex
+          Attendance is recorded by instructors inside Moodle (the LMS). FIDA
           SIS pulls daily snapshots from Moodle&rsquo;s attendance plugin via
           API and stores its own audit-grade copy. The instructor marks
           present, late, or absent per student per session &mdash; the SIS

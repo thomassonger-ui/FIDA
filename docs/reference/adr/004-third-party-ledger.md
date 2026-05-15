@@ -9,7 +9,7 @@ The SIS needs to track tuition, payments, financial aid, refunds, and R2T4 (Retu
 
 ## Decision
 
-The financial ledger belongs in a dedicated third-party system. Apex SIS reads summary views from the ledger vendor via API. It does not store or calculate financial data itself.
+The financial ledger belongs in a dedicated third-party system. FIDA OS reads summary views from the ledger vendor via API. It does not store or calculate financial data itself.
 
 ## Recommended Vendors
 
@@ -22,9 +22,9 @@ The financial ledger belongs in a dedicated third-party system. Apex SIS reads s
 - **R2T4 is not DIY.** The federal formula (34 CFR 668.22) has edge cases (leave of absence, module-based programs, clock-hour adjustments) that are easy to get wrong. A wrong R2T4 calculation is a federal finding.
 - **Audit separation.** When the auditor asks "where does financial data live and who can change it," the answer is one vendor with its own access controls — not the same app that runs attendance and admissions.
 - **Liability boundary.** If the R2T4 calculation is wrong, the vendor shares liability. If you roll your own, you own 100% of the risk.
-- **SSN stays in the vendor.** The ledger vendor handles full SSN for ISIR matching and COD reporting. Apex SIS stores last-4 only.
+- **SSN stays in the vendor.** The ledger vendor handles full SSN for ISIR matching and COD reporting. FIDA OS stores last-4 only.
 
-## What Apex SIS Reads
+## What FIDA OS Reads
 
 - Student balance (charges minus credits)
 - Payment status (paid in full, balance due, delinquent)
@@ -32,7 +32,7 @@ The financial ledger belongs in a dedicated third-party system. Apex SIS reads s
 - R2T4 flag (has a return been calculated?)
 - Aid warning (approaching SAP loss of eligibility)
 
-## What Apex SIS Does NOT Do
+## What FIDA OS Does NOT Do
 
 - Calculate tuition or fees
 - Process payments

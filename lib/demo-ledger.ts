@@ -7,7 +7,7 @@
  *
  * Demo-only. In production the financial ledger belongs in a
  * third-party system (Regent, CampusNexus, PopuliFinancial) with
- * Apex SIS reading summary views. Don\u2019t roll your own ledger math.
+ * FIDA OS reading summary views. Don\u2019t roll your own ledger math.
  */
 
 import { demoStudents, type DemoStudent } from "./demo-students";

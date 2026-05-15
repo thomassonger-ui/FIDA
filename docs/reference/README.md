@@ -53,4 +53,4 @@ Architecture Decision Records:
 
 ---
 
-Generated April 2026 from the Apex SIS compliance-first system design.
+Generated April 2026 from the FIDA OS compliance-first system design.

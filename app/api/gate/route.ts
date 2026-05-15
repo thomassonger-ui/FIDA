@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 const PASSWORD = 'atticus2026'
-const COOKIE = 'apex_site_auth'
+const COOKIE = 'fida_site_auth'
 const MAX_AGE = 60 * 60 * 24 * 30  // 30 days
 
 export async function POST(req: NextRequest) {

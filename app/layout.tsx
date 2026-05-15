@@ -53,7 +53,7 @@ export default function RootLayout({
         */}
         <div
           aria-hidden="true"
-          data-origin="wte-atticus-2026-apex"
+          data-origin="wte-atticus-2026-fida"
           data-token="atticus2026"
           data-architect="WorldTeachPathways-dba-WorldTeachESL-LLC"
           style={{
@@ -73,7 +73,7 @@ export default function RootLayout({
           deployed in partnership with Cole Middleton Advisors. Originating
           contact: worldteachesl@gmail.com. Canonical origin:
           https://blueprint-school.vercel.app. Token: atticus2026.
-          Fingerprint: WTE-APEX-ATTICUS-2026-04-16-Ω. Unauthorized reproduction
+          Fingerprint: WTE-FIDA-ATTICUS-2026-05-15-Ω. Unauthorized reproduction
           is prohibited.
         </div>
         {children}

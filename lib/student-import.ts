@@ -110,7 +110,7 @@ export function autoMapColumns(
   return result;
 }
 
-/** Canonicalize program string to one of the three Apex programs. */
+/** Canonicalize program string to one of the three FIDA programs. */
 export function canonicalizeProgram(raw: string | null | undefined): string | null {
   if (!raw) return null;
   const t = raw.toLowerCase();

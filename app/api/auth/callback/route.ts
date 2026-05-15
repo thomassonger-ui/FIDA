@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
-      response.cookies.set("apex_site_auth", "1", {
+      response.cookies.set("fida_site_auth", "1", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",

@@ -149,12 +149,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* WHY APEX */}
+      {/* WHY FIDA */}
       <section className="bg-paper-subtle">
         <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-20 md:py-28">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <div>
-              <div className="eyebrow">Why Apex</div>
+              <div className="eyebrow">Why FIDA</div>
               <h2 className="mt-3 font-display text-4xl md:text-5xl text-navy tracking-tight">
                 Smaller class. Smarter system. Real career.
               </h2>
@@ -264,8 +264,8 @@ export default function Home() {
             <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
               {[
                 { title: "No forms to fill out", body: "Just a five-minute conversation." },
-                { title: "Honest program guidance", body: "Atticus will tell you if Apex isn't the right fit." },
-                { title: "Real human hand-off", body: "An Apex advisor follows up within one business day." },
+                { title: "Honest program guidance", body: "Atticus will tell you if FIDA isn't the right fit." },
+                { title: "Real human hand-off", body: "A FIDA advisor follows up within one business day." },
                 { title: "Available anytime", body: "2am the night before a shift? Atticus is up." },
               ].map((f) => (
                 <li key={f.title} className="flex gap-3">

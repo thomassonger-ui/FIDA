@@ -25,6 +25,6 @@ export async function POST(req: NextRequest) {
 
   await supabase.auth.signOut();
 
-  response.cookies.set("apex_site_auth", "", { maxAge: 0, path: "/" });
+  response.cookies.set("fida_site_auth", "", { maxAge: 0, path: "/" });
   return response;
 }

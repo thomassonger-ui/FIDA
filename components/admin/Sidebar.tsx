@@ -19,7 +19,7 @@ export function Sidebar() {
   return (
     <aside className="w-56 shrink-0 border-r border-rule bg-paper-subtle min-h-screen p-6 flex flex-col">
       <Link href="/" className="block mb-10">
-        <div className="font-display text-lg text-ink">Apex</div>
+        <div className="font-display text-lg text-ink">FIDA</div>
         <div className="eyebrow">Admin</div>
       </Link>
       <nav className="space-y-1">

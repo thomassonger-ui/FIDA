@@ -18,7 +18,7 @@ const steps = [
   {
     n: "02",
     title: "Meet a real human",
-    body: "An Apex advisor follows up within one business day to walk you through financial aid, scheduling, and any questions.",
+    body: "A FIDA advisor follows up within one business day to walk you through financial aid, scheduling, and any questions.",
   },
   {
     n: "03",
@@ -30,7 +30,7 @@ const steps = [
 const faqs = [
   {
     q: "Is this actually an AI?",
-    a: "Yes &mdash; Atticus is a real AI admissions advisor built on Claude. It answers questions, helps you compare programs, and hands off to a human Apex advisor when you&rsquo;re ready to enroll.",
+    a: "Yes &mdash; Atticus is a real AI admissions advisor built on Claude. It answers questions, helps you compare programs, and hands off to a huma FIDA advisor when you&rsquo;re ready to enroll.",
   },
   {
     q: "Do I have to decide anything right now?",

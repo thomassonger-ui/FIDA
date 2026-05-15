@@ -228,7 +228,7 @@ export type TrackedCourse = {
   tracked_at: string;
 };
 
-/** IDs of courses the admin has chosen to "track" in Apex. */
+/** IDs of courses the admin has chosen to "track" in FIDA. */
 export async function getTrackedCourseIds(): Promise<Set<number>> {
   try {
     const sb = getServerClient();

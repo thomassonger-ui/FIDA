@@ -225,7 +225,7 @@ export function AtticusChat({ initialProgram }: { initialProgram?: string }) {
             <strong className="text-navy">Heads up:</strong> Atticus is an AI
             admissions advisor &mdash; not a human and not a medical or legal
             professional. Please don&rsquo;t share your SSN, insurance info, or
-            medical history in chat. A real Apex advisor follows up within one
+            medical history in chat. A real FIDA advisor follows up within one
             business day.
           </div>
         )}

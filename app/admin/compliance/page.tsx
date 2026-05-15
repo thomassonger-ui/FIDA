@@ -2,7 +2,7 @@
  * SoR (System of Record) audit page.
  *
  * This is the one-stop view an owner or accreditor can open to see exactly
- * which parts of Apex SIS are demo-only, partial, or not yet built — plus
+ * which parts of FIDA OS are demo-only, partial, or not yet built — plus
  * the flags to watch and the recommended next build step. Nothing here
  * pretends to be compliance evidence; it IS the disclosure.
  */
@@ -127,7 +127,7 @@ const MODULES: ModuleRow[] = [
       "Bursar role with scoped write access",
     ],
     flag:
-      "R2T4 (Return to Title IV) refund calculation is a federal formula that must be mathematically exact and audit-reproducible. Don\u2019t roll your own math \u2014 use a vetted vendor (Regent, CampusNexus) for the ledger and wire Apex SIS on top as the reporting layer.",
+      "R2T4 (Return to Title IV) refund calculation is a federal formula that must be mathematically exact and audit-reproducible. Don\u2019t roll your own math \u2014 use a vetted vendor (Regent, CampusNexus) for the ledger and wire FIDA OS on top as the reporting layer.",
   },
   {
     letter: "F",
@@ -185,7 +185,7 @@ const MODULES: ModuleRow[] = [
     title: "External SIS Integration (Partner Adapters)",
     status: "not_built",
     summary:
-      "Atticus is designed to sit on top of a partner SIS (Populi, FAME Freedom, Campus Cloud) for schools that already have one. Apex itself runs on its own Supabase stack \u2014 the partner-adapter layer is documented but not yet wired.",
+      "Atticus is designed to sit on top of a partner SIS (Populi, FAME Freedom, Campus Cloud) for schools that already have one. FIDA itself runs on its own Supabase stack \u2014 the partner-adapter layer is documented but not yet wired.",
     have: [
       "Adapter pattern documented (lib/sis/ split: populi.ts, fame.ts, campuscloud.ts, supabase.ts)",
       "Partnership tier map \u2014 Populi, FAME, Campus Cloud as Tier 1 integrations",
@@ -279,7 +279,7 @@ export default function CompliancePage() {
       <div className="eyebrow mb-3">SoR audit</div>
       <h1 className="text-3xl md:text-4xl mb-2">System of Record status</h1>
       <p className="text-muted max-w-prose mb-8">
-        Compliance-first audit of Apex SIS against the eight required modules
+        Compliance-first audit of FIDA OS against the eight required modules
         (A&ndash;H). What exists in the demo, what&rsquo;s partial, what&rsquo;s
         not built yet, and the flags to watch before any of this goes near an
         accreditation visit.
@@ -426,7 +426,7 @@ export default function CompliancePage() {
       </section>
 
       <p className="text-xs text-subtle">
-        Generated from the Apex SIS compliance-first system design. Update
+        Generated from the FIDA OS compliance-first system design. Update
         when modules ship.
       </p>
     </div>

@@ -55,7 +55,7 @@ Choose COE if:
 - The school wants a slightly lower placement threshold
 - The school is in a state where COE has stronger recognition
 
-## Impact on Apex SIS
+## Impact on FIDA OS
 
 The accreditor choice affects:
 1. **Placement page:** In-field definition and minimum rate threshold

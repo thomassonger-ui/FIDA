@@ -1,7 +1,7 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextRequest, NextResponse } from "next/server";
 
-const SITE_COOKIE = "apex_site_auth";
+const SITE_COOKIE = "fida_site_auth";
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;

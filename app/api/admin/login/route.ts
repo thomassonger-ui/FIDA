@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
   const redirect = NextResponse.redirect(new URL(safeNext, req.url), {
     status: 303,
   });
-  redirect.cookies.set("apex_admin", sessionSecret, {
+  redirect.cookies.set("fida_admin", sessionSecret, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",

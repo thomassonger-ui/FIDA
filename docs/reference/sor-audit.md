@@ -87,7 +87,7 @@
 
 **Flag:** Clock-hour programs (which allied-health often are) have much stricter attendance requirements than credit-hour — you need to pick a model early. Moodle's attendance plugin can carry this if enabled.
 
-**Data entry in production:** Instructors record attendance in Moodle. Apex SIS pulls daily snapshots via API and stores its own audit-grade copy. Clock-hour vs credit-hour model must be configured per program before any real data enters.
+**Data entry in production:** Instructors record attendance in Moodle. FIDA OS pulls daily snapshots via API and stores its own audit-grade copy. Clock-hour vs credit-hour model must be configured per program before any real data enters.
 
 ---
 
@@ -140,9 +140,9 @@
 - Contra-entry correction workflow (no edits, only new entries)
 - Bursar role with scoped write access
 
-**Flag:** R2T4 (Return to Title IV) refund calculation is a federal formula that must be mathematically exact and audit-reproducible. Don't roll your own math — use a vetted vendor (Regent, CampusNexus) for the ledger and wire Apex SIS on top as the reporting layer.
+**Flag:** R2T4 (Return to Title IV) refund calculation is a federal formula that must be mathematically exact and audit-reproducible. Don't roll your own math — use a vetted vendor (Regent, CampusNexus) for the ledger and wire FIDA OS on top as the reporting layer.
 
-**Data entry in production:** Tuition charges auto-generated at enrollment. Aid syncs from Title IV processor (COD/SAIG). Payments recorded by bursar in ledger vendor. Apex SIS pulls read-only summary. Financial records are immutable once posted — corrections are contra entries, never edits.
+**Data entry in production:** Tuition charges auto-generated at enrollment. Aid syncs from Title IV processor (COD/SAIG). Payments recorded by bursar in ledger vendor. FIDA OS pulls read-only summary. Financial records are immutable once posted — corrections are contra entries, never edits.
 
 ---
 

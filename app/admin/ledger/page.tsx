@@ -4,7 +4,7 @@
  * Per-student tuition, payments, aid, running balance, and R2T4
  * scenarios. This is demo-only \u2014 the real financial ledger should
  * live in a third-party system (Regent, CampusNexus, Populi) with
- * Apex SIS reading summary views.
+ * FIDA OS reading summary views.
  */
 
 import {
@@ -151,7 +151,7 @@ export default function LedgerPage() {
           before completing 60% of a payment period. The math must be exact
           and audit-reproducible &mdash; don&rsquo;t roll your own. Use a
           vetted vendor (Regent, CampusNexus, Populi) for the calculation
-          engine and wire Apex SIS on top as the reporting layer.
+          engine and wire FIDA OS on top as the reporting layer.
         </p>
       </div>
 
@@ -173,12 +173,12 @@ export default function LedgerPage() {
         <div className="border border-rule bg-paper-subtle rounded-sm p-6">
           <p className="text-sm text-ink leading-relaxed mb-3">
             The financial ledger should live in a dedicated third-party system
-            &mdash; not inside Apex SIS. Recommended providers: Regent
+            &mdash; not inside FIDA OS. Recommended providers: Regent
             (tuition management + R2T4), CampusNexus (full SIS with ledger),
             or Populi (lightweight alternative with built-in billing).
           </p>
           <p className="text-sm text-muted leading-relaxed">
-            Apex SIS reads summary views from the ledger vendor via API:
+            FIDA OS reads summary views from the ledger vendor via API:
             balance, payment status, aid status, R2T4 flags. This keeps
             financial data in its own service boundary &mdash; when the
             auditor asks &ldquo;where does financial data live and who can
@@ -198,12 +198,12 @@ export default function LedgerPage() {
           enrolled in a program term. Financial aid disbursements sync from
           the school&rsquo;s Title&nbsp;IV processor (e.g., COD/SAIG).
           Student payments are recorded by the bursar in the ledger vendor.
-          Apex SIS pulls a read-only summary per student on each page load.
+          FIDA OS pulls a read-only summary per student on each page load.
         </p>
         <p className="text-sm text-amber-950 leading-relaxed">
           R2T4 calculations are triggered when a student&rsquo;s enrollment
           status changes to Withdrawn. The ledger vendor runs the federal
-          formula; Apex SIS surfaces the result and flags the student.
+          formula; FIDA OS surfaces the result and flags the student.
           All financial records are immutable once posted &mdash;
           corrections are entered as new contra entries, never as edits.
         </p>

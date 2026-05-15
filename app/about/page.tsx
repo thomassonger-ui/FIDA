@@ -36,7 +36,7 @@ export default function AboutPage() {
       <section className="bg-paper-subtle border-b border-rule">
         <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-20 md:py-24">
           <div className="max-w-3xl">
-            <div className="eyebrow">About Apex</div>
+            <div className="eyebrow">About FIDA</div>
             <h1 className="mt-3 font-display text-5xl md:text-6xl text-navy tracking-tight leading-[1.05]">
               A modern institute for a modern workforce.
             </h1>
@@ -76,7 +76,7 @@ export default function AboutPage() {
               Powered by Atticus.
             </h2>
             <p className="mt-5 text-muted leading-relaxed">
-              Apex runs on Atticus &mdash; a four-pillar AI operating system for education:
+              FIDA runs on Atticus &mdash; a four-pillar AI operating system for education:
               an AI Brain that answers student questions, an OS that handles scheduling and
               compliance, an LMS for coursework, and an LLS that keeps every student on
               track to graduation and beyond.
@@ -99,7 +99,7 @@ export default function AboutPage() {
             </p>
             <p className="mt-4 text-muted leading-relaxed">
               Between our teams we&rsquo;ve built, advised, and operated K-12, ESL, and
-              post-secondary programs across three continents. Apex is where we bring the
+              post-secondary programs across three continents. FIDA is where we bring the
               best of that playbook to allied health.
             </p>
           </div>
@@ -137,7 +137,7 @@ export default function AboutPage() {
       <section className="bg-navy text-white">
         <div className="max-w-4xl mx-auto px-6 md:px-10 lg:px-12 py-20 text-center">
           <h2 className="font-display text-4xl md:text-5xl leading-tight">
-            See if Apex is a fit.
+            See if FIDA is a fit.
           </h2>
           <p className="mt-5 text-navy-100 text-lg max-w-xl mx-auto">
             Start the conversation with Atticus. It takes about five minutes.
