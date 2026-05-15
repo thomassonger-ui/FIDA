@@ -8,8 +8,7 @@ export default async function CohortsPage() {
       <div className="eyebrow mb-3">Cohorts</div>
       <h1 className="text-3xl md:text-4xl mb-2">Active cohorts</h1>
       <p className="text-muted mb-8">
-        {data.length} {data.length === 1 ? "cohort" : "cohorts"} from{" "}
-        <code className="text-xs bg-paper-subtle px-1">demo_cohorts</code>.
+        {data.length} {data.length === 1 ? "cohort" : "cohorts"}.
       </p>
 
       {error ? (
@@ -18,7 +17,7 @@ export default async function CohortsPage() {
         </div>
       ) : data.length === 0 ? (
         <div className="border border-rule bg-paper-subtle p-5 rounded-sm text-sm text-muted">
-          No cohorts found. Run the demo seed SQL to populate 3 cohorts.
+          No active cohorts yet. Create one in your Moodle and tracked cohorts will appear here.
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

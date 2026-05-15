@@ -13,8 +13,7 @@ export default async function StudentsPage() {
           <div className="eyebrow mb-3">Students</div>
           <h1 className="text-3xl md:text-4xl mb-2">Enrolled students</h1>
           <p className="text-muted">
-            {data.length} {data.length === 1 ? "student" : "students"} from{" "}
-            <code className="text-xs bg-paper-subtle px-1">demo_students</code>.
+            {data.length} {data.length === 1 ? "student" : "students"} enrolled.
           </p>
         </div>
         <div className="flex gap-2 shrink-0">
