@@ -29,8 +29,12 @@ function LoginForm() {
         <div className="eyebrow mb-2">Check your email</div>
         <h3 className="font-display text-xl text-navy mb-2">Link sent.</h3>
         <p className="text-sm text-muted">
-          We sent a sign-in link to your inbox. Click it to land in your portal.
-          The link is good for one click.
+          Your new sign-in link should arrive within a few minutes. Each link is
+          single-use &mdash; if it stops working, come back here and request another.
+        </p>
+        <p className="text-xs text-subtle mt-3 italic">
+          Tip: if you don&rsquo;t see it within 10 minutes, check spam. Please wait
+          at least 1 minute before requesting another link.
         </p>
       </div>
     );
@@ -47,6 +51,14 @@ function LoginForm() {
           to get set up.
         </div>
       )}
+      <div className="rounded-md border border-teal/30 bg-teal/5 px-3 py-2.5 text-xs text-navy">
+        <div className="font-semibold mb-0.5">
+          Forgot your sign-in link or it expired?
+        </div>
+        <div className="text-muted">
+          Enter the email FIDA has on file. We&rsquo;ll email you a fresh one-click link.
+        </div>
+      </div>
       <input
         type="email"
         name="email"
@@ -63,7 +75,8 @@ function LoginForm() {
         {submitting ? "Sending…" : "Send me a sign-in link"}
       </button>
       <p className="text-xs text-subtle text-center">
-        No password needed. We&rsquo;ll email you a one-click link.
+        <span className="font-semibold text-muted">No password to forget.</span>{" "}
+        Type your email anytime to get a new sign-in link.
       </p>
     </form>
   );
