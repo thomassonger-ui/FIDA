@@ -4,6 +4,18 @@ import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createBrowserClient } from "@supabase/ssr";
 
+type OtpType = "magiclink" | "signup" | "email" | "recovery" | "invite";
+
+function isOtpType(v: string | null): v is OtpType {
+  return (
+    v === "magiclink" ||
+    v === "signup" ||
+    v === "email" ||
+    v === "recovery" ||
+    v === "invite"
+  );
+}
+
 function AuthCallbackContent() {
   const router = useRouter();
   const sp = useSearchParams();
@@ -40,7 +52,6 @@ function AuthCallbackContent() {
             refresh_token,
           });
           if (!error) {
-            // Also set the site-gate cookie so the rest of the app is reachable.
             await fetch("/api/auth/finalize", { method: "POST" }).catch(() => {});
             router.replace(next);
             return;
@@ -48,7 +59,9 @@ function AuthCallbackContent() {
         }
       }
 
-      // 2) PKCE flow — Supabase put a code in the query string
+      // 2) PKCE flow — Supabase put a code in the query string.
+      //    Requires a matching code_verifier in this browser's local storage,
+      //    which is set when signInWithOtp() was called from the browser.
       const code = sp.get("code");
       if (code) {
         const { error } = await supabase.auth.exchangeCodeForSession(code);
@@ -59,7 +72,33 @@ function AuthCallbackContent() {
         }
       }
 
-      // 3) Nothing usable — back to login
+      // 3) Email-confirmation flow — Supabase put token_hash + type in the
+      //    query string. This is what the modern email templates emit when
+      //    using {{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type={{ .Type }}.
+      const tokenHash = sp.get("token_hash");
+      const type = sp.get("type");
+      if (tokenHash && isOtpType(type)) {
+        const { error } = await supabase.auth.verifyOtp({
+          token_hash: tokenHash,
+          type,
+        });
+        if (!error) {
+          await fetch("/api/auth/finalize", { method: "POST" }).catch(() => {});
+          router.replace(next);
+          return;
+        }
+      }
+
+      // 4) Surfaced error in the query string (e.g. ?error=access_denied)
+      const queryError = sp.get("error_description") || sp.get("error");
+      if (queryError) {
+        router.replace(
+          `/portal/login?error=${encodeURIComponent(queryError)}`
+        );
+        return;
+      }
+
+      // 5) Nothing usable — back to login
       router.replace("/portal/login?error=auth-failed");
     }
     run();
