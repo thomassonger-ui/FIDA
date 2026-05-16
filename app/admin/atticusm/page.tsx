@@ -190,12 +190,20 @@ export default async function AtticusMPage() {
             students are finally off shift.
           </p>
         </div>
-        <Link
-          href="/admin/atticusm/qr"
-          className="mt-2 inline-block bg-teal text-white text-sm font-semibold px-4 py-2 rounded-sm hover:bg-teal-deep transition"
-        >
-          Manage QR codes →
-        </Link>
+        <div className="mt-2 flex flex-wrap gap-2">
+          <Link
+            href="/admin/atticusm/templates"
+            className="inline-block border border-teal text-teal-deep text-sm font-semibold px-4 py-2 rounded-sm hover:bg-teal/10 transition"
+          >
+            Campaign templates →
+          </Link>
+          <Link
+            href="/admin/atticusm/qr"
+            className="inline-block bg-teal text-white text-sm font-semibold px-4 py-2 rounded-sm hover:bg-teal-deep transition"
+          >
+            Manage QR codes →
+          </Link>
+        </div>
       </div>
 
       {/* CYCLE BANNER */}
