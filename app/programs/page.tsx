@@ -27,7 +27,7 @@ const programs: Program[] = [
     id: "radiography",
     title: "Radiography for Dental Personnel",
     tagline: "Florida-mandated dental radiography certification, delivered online.",
-    length: "14 clock hours (8 theory + 6 lab)",
+    length: "6 weeks · 14 clock hours (8 theory + 6 lab)",
     format: "Online — self-paced via FIDA Moodle",
     credential: "Diploma · Florida Dental Radiography Certification (FAC 64B5-9.011)",
     tuition: "$499.00",
