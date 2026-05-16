@@ -81,7 +81,7 @@ async function getMetrics(): Promise<Metrics> {
     const cycleStart = getCycleStart().toISOString();
 
     // Parallel queries
-    const [qrRes, sessionsRes, chatsRes, seatsRes, demoSeatsRes] = await Promise.all([
+    const [qrRes, sessionsRes, chatsRes, seatsRes] = await Promise.all([
       // QR scans this cycle
       sb
         .from("qr_scans")
@@ -98,16 +98,13 @@ async function getMetrics(): Promise<Metrics> {
         .select("id", { count: "exact", head: true })
         .gte("created_at", cycleStart)
         .gt("message_count", 0),
-      // Real students enrolled this cycle (may not exist in this schema)
+      // Seats filled = real students this cycle with a tracked acquisition source.
+      // Demo data is excluded — only Atticus-attributed enrollments count.
       sb
         .from("students")
-        .select("id, acquisition_source", { count: "exact", head: false })
-        .gte("created_at", cycleStart),
-      // Demo students fallback
-      sb
-        .from("demo_students")
-        .select("id, acquisition_source", { count: "exact", head: false })
-        .gte("created_at", cycleStart),
+        .select("id", { count: "exact", head: true })
+        .gte("created_at", cycleStart)
+        .not("acquisition_source", "is", null),
     ]);
 
     // Channel breakdown: combine QR scans by slug + atticus session sources
@@ -120,15 +117,15 @@ async function getMetrics(): Promise<Metrics> {
       .sort((a, b) => b.count - a.count)
       .slice(0, 5);
 
-    // Seats filled — prefer real students if the query worked, else demo_students
-    const realSeats = seatsRes.error ? 0 : seatsRes.count ?? 0;
-    const demoSeats = demoSeatsRes.error ? 0 : demoSeatsRes.count ?? 0;
+    // Seats filled — only count real students with a tracked acquisition source.
+    // If the students table doesn't exist or query errors, show 0 (not demo data).
+    const seatsFilled = seatsRes.error ? 0 : seatsRes.count ?? 0;
 
     return {
       qrScans: qrRes.count ?? (qrRes.data?.length ?? 0),
       chatsStarted: chatsRes.count ?? 0,
       visitors: sessionsRes.count ?? (sessionsRes.data?.length ?? 0),
-      seatsFilled: realSeats || demoSeats,
+      seatsFilled,
       topChannels,
     };
   } catch (err) {
