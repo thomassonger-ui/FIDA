@@ -290,7 +290,7 @@ export default function ProgramsPage() {
               </p>
             </div>
             <a href="mailto:success@fldentalassisting.com?subject=Professional%20Development%20interest" className="btn-primary">
-              Email success@fldentalassisting.com
+              Email Us Today
             </a>
           </div>
         </div>
