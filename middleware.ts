@@ -20,6 +20,13 @@ export async function middleware(req: NextRequest) {
     // Portal sign-in page — open so a student with a magic link can land.
     pathname === "/portal/login" ||
     pathname.startsWith("/api/portal/login") ||
+    // Public Atticus™M landing — prospects scan QR codes from flyers,
+    // they cannot be asked to authenticate.
+    pathname === "/atticus" ||
+    pathname.startsWith("/atticus/") ||
+    pathname.startsWith("/api/atticus") ||
+    // QR redirect handler — must be reachable without auth.
+    pathname.startsWith("/qr/") ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/favicon") ||
     pathname.match(/\.(png|svg|jpg|ico|webp|woff2?)$/)
