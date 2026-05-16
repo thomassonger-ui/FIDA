@@ -1,10 +1,27 @@
 import Link from "next/link";
-import { getDemoStudents } from "@/lib/supabase";
+import { listStudents } from "@/lib/students-db";
 
 export const dynamic = "force-dynamic";
 
+function fmtDate(s: string | null) {
+  if (!s) return "—";
+  try {
+    return new Date(s).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+  } catch {
+    return s;
+  }
+}
+
+const STATUS_TONE: Record<string, string> = {
+  active: "bg-emerald-50 text-emerald-800 border-emerald-200",
+  invited: "bg-amber-50 text-amber-800 border-amber-200",
+  paused: "bg-paper-subtle text-muted border-rule",
+  graduated: "bg-teal/10 text-teal-deep border-teal/30",
+  withdrawn: "bg-paper-subtle text-subtle border-rule",
+};
+
 export default async function StudentsPage() {
-  const { data, error } = await getDemoStudents(200);
+  const students = await listStudents();
 
   return (
     <div>
@@ -13,7 +30,8 @@ export default async function StudentsPage() {
           <div className="eyebrow mb-3">Students</div>
           <h1 className="text-3xl md:text-4xl mb-2">Enrolled students</h1>
           <p className="text-muted">
-            {data.length} {data.length === 1 ? "student" : "students"} enrolled.
+            {students.length} {students.length === 1 ? "student" : "students"}{" "}
+            in the roster.
           </p>
         </div>
         <div className="flex gap-2 shrink-0">
@@ -23,104 +41,56 @@ export default async function StudentsPage() {
           <Link href="/admin/students/upload" className="btn-outline">
             Import
           </Link>
-          <a
-            href="/api/admin/students/export"
-            className="btn-outline"
-            download
-          >
+          <a href="/api/admin/students/export" className="btn-outline" download>
             Export CSV
           </a>
         </div>
       </div>
 
-      {error ? (
-        <div className="border border-rule bg-paper-subtle p-5 rounded-sm text-sm text-muted">
-          Unable to load students: {error}
-        </div>
-      ) : data.length === 0 ? (
+      {students.length === 0 ? (
         <div className="border border-rule bg-paper-subtle p-10 rounded-sm text-center">
-          <div className="font-display text-lg text-ink mb-1">
-            No students yet
-          </div>
+          <div className="font-display text-lg text-ink mb-1">No students yet</div>
           <p className="text-sm text-muted mb-4">
-            Import a CSV, Excel file, or Google Sheet to populate this table.
+            Add a student directly or bulk-import a CSV.
           </p>
-          <Link href="/admin/students/upload" className="btn-primary">
-            Import students
-          </Link>
+          <Link href="/admin/students/new" className="btn-primary">+ New Student</Link>
         </div>
       ) : (
-        <div className="border border-rule bg-paper rounded-sm overflow-x-auto">
+        <div className="border border-rule rounded-sm overflow-hidden bg-paper">
           <table className="w-full text-sm">
-            <thead className="bg-paper-subtle border-b border-rule">
-              <tr>
-                <th className="text-left px-4 py-3 font-medium">Name</th>
-                <th className="text-left px-4 py-3 font-medium">Email</th>
-                <th className="text-left px-4 py-3 font-medium">Program</th>
-                <th className="text-left px-4 py-3 font-medium">Cohort</th>
-                <th className="text-left px-4 py-3 font-medium">Status</th>
+            <thead className="bg-paper-subtle">
+              <tr className="text-left text-xs uppercase tracking-wider text-muted">
+                <th className="px-4 py-3 font-semibold">Name</th>
+                <th className="px-4 py-3 font-semibold">Email</th>
+                <th className="px-4 py-3 font-semibold">Program</th>
+                <th className="px-4 py-3 font-semibold">Cohort</th>
+                <th className="px-4 py-3 font-semibold">Start</th>
+                <th className="px-4 py-3 font-semibold">Status</th>
               </tr>
             </thead>
             <tbody>
-              {data.slice(0, 100).map((s, i) => {
-                const row = s as Record<string, unknown>;
-                return (
-                  <tr
-                    key={(row.id as string) ?? i}
-                    className="border-b border-rule last:border-0"
-                  >
-                    <td className="px-4 py-3">
-                      {(row.first_name as string) ?? ""}{" "}
-                      {(row.last_name as string) ?? ""}
-                    </td>
-                    <td className="px-4 py-3 text-muted">
-                      {(row.email as string) ?? "—"}
-                    </td>
-                    <td className="px-4 py-3 text-muted">
-                      {(row.program as string) ?? "—"}
-                    </td>
-                    <td className="px-4 py-3 text-muted">
-                      {(row.cohort_id as string) ?? "—"}
-                    </td>
-                    <td className="px-4 py-3 text-muted">
-                      {(row.status as string) ?? "—"}
-                    </td>
-                  </tr>
-                );
-              })}
+              {students.map((s) => (
+                <tr key={s.id} className="border-t border-rule hover:bg-paper-subtle/40">
+                  <td className="px-4 py-3">
+                    <Link href={`/admin/students/${s.id}`} className="text-navy hover:text-teal font-medium">
+                      {s.full_name || "—"}
+                    </Link>
+                  </td>
+                  <td className="px-4 py-3 text-muted">{s.email}</td>
+                  <td className="px-4 py-3 text-muted">{s.program || "—"}</td>
+                  <td className="px-4 py-3 text-muted">{s.cohort_id || "—"}</td>
+                  <td className="px-4 py-3 text-muted text-xs">{fmtDate(s.start_date)}</td>
+                  <td className="px-4 py-3">
+                    <span className={`inline-block text-xs font-semibold px-2 py-0.5 rounded-full border ${STATUS_TONE[s.status] ?? STATUS_TONE.invited}`}>
+                      {s.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
       )}
-
-      {/* Production entry callout */}
-      <div className="border-l-2 border-amber-300 bg-amber-50/60 rounded-r-sm px-4 py-3 mt-8">
-        <div className="text-[10px] uppercase tracking-wider text-amber-900 font-medium mb-1">
-          How data enters this page in production
-        </div>
-        <p className="text-sm text-amber-950 leading-relaxed mb-2">
-          Student records are created through three paths: (1)&nbsp;
-          <strong>Atticus handoff</strong> &mdash; when a lead completes
-          intake, their name, email, and program interest automatically seed
-          an applicant record; (2)&nbsp;
-          <strong>Admissions staff form</strong> &mdash; after the enrollment
-          agreement is signed, staff enters legal name, DOB, CIP&nbsp;code,
-          start date, and enrollment status via a validated form; (3)&nbsp;
-          <strong>Bulk CSV/XLSX import</strong> &mdash; for migrating an
-          existing cohort, gated to owner role.
-        </p>
-        <p className="text-sm text-amber-950 leading-relaxed">
-          Every write &mdash; creation, edit, status change &mdash; logs to an
-          append-only{" "}
-          <code className="font-mono text-xs bg-amber-100 px-1">
-            audit_events
-          </code>{" "}
-          table (old value, new value, user, timestamp, reason). Records live
-          in a Postgres{" "}
-          <code className="font-mono text-xs bg-amber-100 px-1">students</code>{" "}
-          table with row-level security scoped by staff role.
-        </p>
-      </div>
     </div>
   );
 }

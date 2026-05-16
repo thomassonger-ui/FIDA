@@ -44,23 +44,6 @@ function toneClass(t: ReturnType<typeof statusTone>) {
   }
 }
 
-function buildMailtoHref(opts: {
-  to: string;
-  subject: string;
-  studentName: string | null;
-  firstMessage: string | null;
-}) {
-  const subject = `Re: ${opts.subject}`;
-  const greeting = opts.studentName ? `Hi ${opts.studentName.split(" ")[0]},\n\n` : "Hi,\n\n";
-  const quoted = opts.firstMessage
-    ? `\n\n---\nYou wrote:\n${opts.firstMessage
-        .split("\n")
-        .map((l) => `> ${l}`)
-        .join("\n")}`
-    : "";
-  const body = `${greeting}${quoted}\n\n— FIDA Support\nsuccess@fldentalassisting.com`;
-  return `mailto:${encodeURIComponent(opts.to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-}
 
 const STATUS_OPTIONS: TicketStatus[] = [
   "open",
@@ -118,21 +101,10 @@ export default async function AdminTicketDetailPage({
             <span>Opened {fmt(ticket.created_at)}</span>
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex items-center gap-2">
           <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${tone}`}>
             {STATUS_LABELS[ticket.status]}
           </span>
-          <a
-            href={buildMailtoHref({
-              to: ticket.email,
-              subject: ticket.subject,
-              studentName: ticket.student_name,
-              firstMessage: messages.find((m) => m.author_type === "student")?.body ?? null,
-            })}
-            className="btn-primary text-sm px-3 py-1.5"
-          >
-            ✉ Email student
-          </a>
           <StatusControls
             ticketId={ticket.id}
             current={ticket.status}
@@ -193,12 +165,7 @@ export default async function AdminTicketDetailPage({
           </ol>
 
           <div className="mt-8">
-            <AdminReplyForm
-              ticketId={ticket.id}
-              studentEmail={ticket.email}
-              studentName={ticket.student_name}
-              subject={ticket.subject}
-            />
+<AdminReplyForm ticketId={ticket.id} />
           </div>
         </div>
 

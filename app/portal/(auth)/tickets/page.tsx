@@ -1,0 +1,112 @@
+import Link from "next/link";
+import { cookies } from "next/headers";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import { getServerClient } from "@/lib/supabase";
+import {
+  CATEGORY_LABELS,
+  STATUS_LABELS,
+  statusTone,
+  type Ticket,
+  type TicketCategory,
+} from "@/lib/tickets-db";
+
+export const dynamic = "force-dynamic";
+
+function fmt(ts: string) {
+  try {
+    return new Date(ts).toLocaleString(undefined, {
+      month: "short", day: "numeric", hour: "numeric", minute: "2-digit",
+    });
+  } catch { return ts; }
+}
+
+function toneClass(t: ReturnType<typeof statusTone>) {
+  switch (t) {
+    case "warn": return "bg-amber-50 text-amber-800 border-amber-200";
+    case "open": return "bg-teal/10 text-teal-deep border-teal/30";
+    case "ok": return "bg-emerald-50 text-emerald-800 border-emerald-200";
+    case "muted":
+    default: return "bg-paper-subtle text-muted border-rule";
+  }
+}
+
+async function ticketsForEmail(email: string): Promise<Ticket[]> {
+  try {
+    const supabase = getServerClient();
+    const { data, error } = await supabase
+      .from("tickets").select("*")
+      .ilike("email", email)
+      .order("last_reply_at", { ascending: false });
+    if (error) return [];
+    return (data ?? []) as Ticket[];
+  } catch { return []; }
+}
+
+export default async function PortalTicketsList() {
+  const cookieStore = await cookies();
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll: () => cookieStore.getAll(),
+        setAll: (toSet: { name: string; value: string; options: CookieOptions }[]) => {
+          toSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
+        },
+      },
+    }
+  );
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user?.email) return null;
+  const tickets = await ticketsForEmail(user.email);
+
+  return (
+    <div>
+      <div className="flex flex-wrap items-end justify-between gap-3 mb-2">
+        <div>
+          <div className="eyebrow mb-3">Tickets</div>
+          <h1 className="text-3xl md:text-4xl">Your tickets</h1>
+        </div>
+        <Link href="/portal/tickets/new" className="btn-primary">+ New ticket</Link>
+      </div>
+      <p className="text-muted max-w-prose mb-8">
+        Conversations with FIDA staff — academics, financial aid, scheduling, tech.
+      </p>
+
+      {tickets.length === 0 ? (
+        <div className="card p-10 text-center">
+          <div className="font-display text-2xl text-navy mb-2">No tickets yet</div>
+          <p className="text-muted text-sm mb-6">
+            When you open a ticket, it&rsquo;ll show up here.
+          </p>
+          <Link href="/portal/tickets/new" className="btn-primary">Open your first ticket</Link>
+        </div>
+      ) : (
+        <ul className="space-y-3">
+          {tickets.map((t) => {
+            const tone = toneClass(statusTone(t.status));
+            return (
+              <li key={t.id}>
+                <Link href={`/portal/tickets/${t.id}`} className="card card-hover block p-5">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="font-display text-lg text-navy truncate">{t.subject}</div>
+                      <div className="mt-1 text-xs text-subtle flex flex-wrap items-center gap-2">
+                        <span>{CATEGORY_LABELS[(t.category as TicketCategory) ?? "other"]}</span>
+                        <span aria-hidden="true">·</span>
+                        <span>Updated {fmt(t.last_reply_at)}</span>
+                      </div>
+                    </div>
+                    <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${tone}`}>
+                      {STATUS_LABELS[t.status]}
+                    </span>
+                  </div>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+  );
+}
