@@ -52,6 +52,41 @@ export default async function AtticusPage({
           programs — tuition, schedules, financial aid, whether your work experience counts.
         </p>
 
+        {/* CALENDLY HANDOFF — primary path */}
+        <div className="mt-10 border-2 border-teal bg-paper rounded-sm p-6">
+          <div className="flex items-start justify-between gap-4 flex-wrap">
+            <div className="flex-1 min-w-[220px]">
+              <div className="eyebrow text-teal-deep">Talk to Debbie or Ashley</div>
+              <p className="font-display text-xl text-ink mt-2 leading-snug">
+                Lock in a 15-minute call. Real conversation, no pressure.
+              </p>
+              <p className="text-sm text-muted mt-2">
+                Pick a slot that works — evenings and weekends included. They&rsquo;ll answer
+                every question about programs, schedules, and financial aid directly.
+              </p>
+            </div>
+            <a
+              href={`https://calendly.com/thomas-songer/atticus${
+                cleanSrc
+                  ? `?utm_source=${encodeURIComponent(cleanSrc)}&utm_campaign=atticusm`
+                  : "?utm_campaign=atticusm"
+              }`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block bg-teal text-white text-sm font-semibold px-5 py-3 rounded-sm hover:bg-teal-deep transition whitespace-nowrap"
+            >
+              Book a 15-min call →
+            </a>
+          </div>
+        </div>
+
+        {/* OR DIVIDER */}
+        <div className="mt-6 flex items-center gap-3 text-xs text-subtle uppercase tracking-eyebrow">
+          <div className="flex-1 h-px bg-rule"></div>
+          <span>or have us text you back</span>
+          <div className="flex-1 h-px bg-rule"></div>
+        </div>
+
         <InquiryForm source={cleanSrc} />
 
         <div className="mt-10 grid sm:grid-cols-3 gap-4 text-sm">
