@@ -1,9 +1,11 @@
 import Link from "next/link";
+import { getServerClient } from "@/lib/supabase";
 
 // To re-enable a module in the sidebar later, flip `hidden: true` -> remove it
 // (or set false). The underlying /admin/<route> pages stay live regardless.
 const nav: { href: string; label: string; hidden?: boolean }[] = [
   { href: "/admin", label: "Overview" },
+  { href: "/admin/tickets", label: "Tickets" },
   { href: "/admin/leads", label: "Leads" },
   { href: "/admin/students", label: "Students" },
   { href: "/admin/cohorts", label: "Cohorts" },
@@ -17,7 +19,24 @@ const nav: { href: string; label: string; hidden?: boolean }[] = [
   { href: "/admin/moodle", label: "Moodle" },
 ];
 
-export function Sidebar() {
+/** Count tickets needing staff attention. Returns 0 if the table doesn't exist yet. */
+async function openTicketCount(): Promise<number> {
+  try {
+    const supabase = getServerClient();
+    const { count, error } = await supabase
+      .from("tickets")
+      .select("id", { count: "exact", head: true })
+      .in("status", ["open", "awaiting_staff"]);
+    if (error) return 0;
+    return count ?? 0;
+  } catch {
+    return 0;
+  }
+}
+
+export async function Sidebar() {
+  const openTickets = await openTicketCount();
+
   return (
     <aside className="w-56 shrink-0 border-r border-rule bg-paper-subtle min-h-screen p-6 flex flex-col">
       <Link href="/" className="block mb-10">
@@ -27,15 +46,23 @@ export function Sidebar() {
         <div className="eyebrow">Admin</div>
       </Link>
       <nav className="space-y-1">
-        {nav.filter((item) => !item.hidden).map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="block px-3 py-2 text-sm text-muted hover:text-ink hover:bg-paper rounded-sm transition-colors"
-          >
-            {item.label}
-          </Link>
-        ))}
+        {nav.filter((item) => !item.hidden).map((item) => {
+          const isTickets = item.href === "/admin/tickets";
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="flex items-center justify-between px-3 py-2 text-sm text-muted hover:text-ink hover:bg-paper rounded-sm transition-colors"
+            >
+              <span>{item.label}</span>
+              {isTickets && openTickets > 0 && (
+                <span className="ml-2 inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[10px] font-semibold rounded-full bg-teal text-white">
+                  {openTickets > 99 ? "99+" : openTickets}
+                </span>
+              )}
+            </Link>
+          );
+        })}
       </nav>
       <div className="mt-auto pt-6 border-t border-rule space-y-3">
         <Link href="/" className="block text-xs text-subtle hover:text-ink">

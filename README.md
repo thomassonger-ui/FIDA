@@ -1,6 +1,6 @@
 # FIDA
 
-A demonstration allied-health institution powered by Atticus. Operated by **WorldTeachPathways dba WorldTeachESL LLC**, architected in collaboration with **Cole Middleton Advisors**.
+A demonstration allied-health institution powered by Atticus. Operated by **WorldTeachPathways dba WorldTeachESL LLC**, architected in collaboration with **Florida Institute of Dental Assisting**.
 
 **Live:** pending — Vercel project `fida`
 **Repo:** https://github.com/thomassonger-ui/fida-
@@ -14,7 +14,7 @@ A standalone Next.js 15 app with two surfaces:
 1. **Public school site** (`/`, `/programs`, `/admissions`, `/about`) — a realistic allied-health school front door for demoing Atticus-powered content and funnels.
 2. **Operations dashboard** (`/admin/*`) — an internal view of students, cohorts, attendance, and compliance, backed by Supabase tables prefixed `demo_`.
 
-Completely separate from the `atticus` repo (Cole Middleton Advisors).
+Completely separate from the `atticus` repo (Florida Institute of Dental Assisting).
 
 ---
 
@@ -24,7 +24,7 @@ Completely separate from the `atticus` repo (Cole Middleton Advisors).
 |---|---|
 | Framework | Next.js 15.2 (App Router) + React 19 + TypeScript |
 | Styling | Tailwind CSS 3.4, Cormorant Garamond (display), Inter (body) |
-| Database | Supabase (project `zefzgenuenjkasselccy`) |
+| Database | Supabase (project `pljgraqphhmsbscpvhbm`) |
 | Hosting | Vercel (`fida` under team `thomassonger-5425s-projects`) |
 | Utils | `clsx`, `tailwind-merge` for `cn()` |
 
@@ -43,14 +43,14 @@ npm run dev                    # http://localhost:3000
 Set these in `.env.local` **and** in the Vercel project (Production + Preview):
 
 ```
-SUPABASE_URL=https://zefzgenuenjkasselccy.supabase.co
+SUPABASE_URL=https://pljgraqphhmsbscpvhbm.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=eyJ...        # server-only; never exposed to browser
-NEXT_PUBLIC_SUPABASE_URL=https://zefzgenuenjkasselccy.supabase.co
+NEXT_PUBLIC_SUPABASE_URL=https://pljgraqphhmsbscpvhbm.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...    # browser-safe anon key
 NEXT_PUBLIC_SITE_URL=https://fida.vercel.app
 ```
 
-Keys live at: https://supabase.com/dashboard/project/zefzgenuenjkasselccy/settings/api
+Keys live at: https://supabase.com/dashboard/project/pljgraqphhmsbscpvhbm/settings/api
 
 ---
 
@@ -94,7 +94,7 @@ public/                      # empty — placeholder
 
 ## Supabase setup (not yet applied)
 
-Supabase project: **`zefzgenuenjkasselccy`**.
+Supabase project: **`pljgraqphhmsbscpvhbm`**.
 
 Two SQL files need to be run (in order) in the Supabase SQL editor:
 
@@ -115,7 +115,7 @@ Once migration + seed are applied and env vars are set in Vercel, the dashboard 
 
 ## Design system
 
-Matches the Atticus / Cole Middleton visual language:
+Matches the Atticus / Florida Institute of Dental Assisting visual language:
 
 - Warm off-white background (`#fafaf8`)
 - Near-black ink (`#0a0a0a`) foreground
@@ -161,6 +161,6 @@ Next up:
 
 ## Credits
 
-Architected and maintained for Cole Middleton Advisors by **WorldTeachPathways dba WorldTeachESL LLC**.
+Architected and maintained for Florida Institute of Dental Assisting by **WorldTeachPathways dba WorldTeachESL LLC**.
 
 © 2026 WorldTeachPathways dba WorldTeachESL LLC.

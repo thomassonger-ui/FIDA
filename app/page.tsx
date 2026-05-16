@@ -62,7 +62,7 @@ export default function Home() {
             </div>
 
             <h1 className="mt-6 text-white font-display text-5xl md:text-6xl lg:text-7xl leading-[1.05] tracking-tight">
-              Your career in <span className="text-teal-soft">dentistry starts here.</span>
+              Your career in <span className="text-teal-soft">dentistry &mdash; and the courses that grow it.</span>
             </h1>
 
             <p className="mt-6 text-navy-100 text-lg md:text-xl leading-relaxed max-w-xl">

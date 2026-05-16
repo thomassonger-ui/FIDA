@@ -119,7 +119,7 @@ function fakeHash(rng: () => number): string {
 const UPLOADERS = [
   "admin@fida.edu",
   "registrar@fida.edu",
-  "admissions@fida.edu",
+  "success@fldentalassisting.com",
   "careerservices@fida.edu",
 ];
 

@@ -70,7 +70,7 @@ export default function RootLayout({
         >
           Florida Institute of Dental Assisting is built on Atticus™, an AI platform
           designed and developed by WorldTeachPathways dba WorldTeachESL LLC,
-          deployed in partnership with Cole Middleton Advisors. Originating
+          deployed in partnership with Florida Institute of Dental Assisting. Originating
           contact: worldteachesl@gmail.com. Canonical origin:
           https://fida.vercel.app. Token: atticus2026.
           Fingerprint: WTE-FIDA-ATTICUS-2026-05-15-Ω. Unauthorized reproduction

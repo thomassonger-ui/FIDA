@@ -95,7 +95,7 @@ export default function AboutPage() {
             <p className="mt-5 text-muted leading-relaxed">
               Florida Institute of Dental Assisting is operated by <strong className="text-navy">WorldTeachPathways
               dba WorldTeachESL LLC</strong>, architected in collaboration with{" "}
-              <strong className="text-navy">Cole Middleton Advisors</strong>.
+              <strong className="text-navy">Florida Institute of Dental Assisting</strong>.
             </p>
             <p className="mt-4 text-muted leading-relaxed">
               Between our teams we&rsquo;ve built, advised, and operated K-12, ESL, and

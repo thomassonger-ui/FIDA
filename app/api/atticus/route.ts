@@ -131,7 +131,7 @@ export async function POST(req: NextRequest) {
           error:
             rl.reason === "minute"
               ? "You're sending messages too fast. Give Atticus a breather and try again in a minute."
-              : "Hourly limit reached. Try again in a bit — or request a human advisor at admissions@fida.edu.",
+              : "Hourly limit reached. Try again in a bit — or request a human advisor at success@fldentalassisting.com.",
         }),
         {
           status: 429,

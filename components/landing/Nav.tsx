@@ -8,6 +8,7 @@ const LINKS = [
   { href: "/programs", label: "Programs" },
   { href: "/admissions", label: "Admissions" },
   { href: "/about", label: "About" },
+  { href: "/tickets", label: "Tickets" },
 ];
 
 export function Nav() {
@@ -99,7 +100,7 @@ export function Nav() {
       <div
         id="mobile-nav"
         className={`md:hidden overflow-hidden transition-[max-height,opacity] duration-300 ease-out ${
-          open ? "max-h-[400px] opacity-100 border-t border-rule" : "max-h-0 opacity-0"
+          open ? "max-h-[460px] opacity-100 border-t border-rule" : "max-h-0 opacity-0"
         }`}
       >
         <nav className="bg-white px-6 py-6 flex flex-col gap-1">

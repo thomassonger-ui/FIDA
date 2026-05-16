@@ -12,6 +12,12 @@ export async function middleware(req: NextRequest) {
     pathname === "/login" ||
     pathname.startsWith("/api/gate") ||
     pathname.startsWith("/api/auth") ||
+    // Tickets feature is publicly accessible — students don't need the site
+    // gate password to open a ticket or view their own (the inbox/detail
+    // pages enforce Supabase auth independently).
+    pathname === "/tickets" ||
+    pathname.startsWith("/tickets/") ||
+    pathname.startsWith("/api/tickets") ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/favicon") ||
     pathname.match(/\.(png|svg|jpg|ico|webp|woff2?)$/)

@@ -7,12 +7,12 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 text-sm">
           <div className="md:col-span-2">
             <div className="flex items-center gap-2.5 mb-4">
-              <span
-                aria-hidden="true"
-                className="inline-flex items-center justify-center w-8 h-8 rounded-md bg-teal text-white font-display text-base leading-none pt-0.5"
-              >
-                A
-              </span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/fida-shield.png"
+                alt="FIDA"
+                className="w-9 h-9 object-contain"
+              />
               <span className="flex flex-col leading-tight">
                 <span className="font-display text-lg tracking-tight">
                   FIDA
@@ -25,7 +25,7 @@ export function Footer() {
             <p className="text-navy-100 leading-relaxed max-w-sm">
               A modern allied-health institute powered by Atticus&trade; &mdash; the AI
               platform designed and developed by WorldTeachPathways dba WorldTeachESL LLC,
-              deployed in partnership with Cole Middleton Advisors.
+              deployed in partnership with Florida Institute of Dental Assisting.
             </p>
           </div>
 
@@ -42,11 +42,13 @@ export function Footer() {
 
           <div>
             <div className="text-xs font-semibold tracking-[0.14em] uppercase text-teal mb-4">
-              Institute
+              Support
             </div>
             <ul className="space-y-3 text-navy-100">
+              <li><Link href="/tickets" className="hover:text-teal transition-colors">Submit a Ticket</Link></li>
+              <li><Link href="/tickets/inbox" className="hover:text-teal transition-colors">My Tickets</Link></li>
+              <li><a href="mailto:support@fldentalassisting.com" className="hover:text-teal transition-colors">support@fldentalassisting.com</a></li>
               <li><Link href="/admin" className="hover:text-teal transition-colors">Admin Dashboard</Link></li>
-              <li><a href="mailto:admissions@fida.edu" className="hover:text-teal transition-colors">admissions@fida.edu</a></li>
             </ul>
           </div>
         </div>
@@ -57,7 +59,7 @@ export function Footer() {
           </div>
           <div className="md:text-right md:max-w-md">
             Atticus&trade; is an AI platform by WorldTeachPathways dba WorldTeachESL LLC,
-            deployed in partnership with Cole Middleton Advisors.
+            deployed in partnership with Florida Institute of Dental Assisting.
           </div>
         </div>
         <div className="mt-4 text-center text-[11px] text-navy-200">
