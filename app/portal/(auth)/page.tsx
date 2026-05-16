@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { cookies } from "next/headers";
-import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import { redirect } from "next/navigation";
 import { getServerClient } from "@/lib/supabase";
-import { resolvePortalStudent, listStudentDocuments } from "@/lib/students-db";
+import { listStudentDocuments } from "@/lib/students-db";
+import { getPortalStudent } from "@/lib/portal-auth";
 import { STATUS_LABELS, statusTone, type Ticket } from "@/lib/tickets-db";
 
 export const dynamic = "force-dynamic";
@@ -51,35 +51,19 @@ async function recentTicketsForEmail(email: string): Promise<Ticket[]> {
 }
 
 export default async function PortalOverview() {
-  const cookieStore = await cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll: () => cookieStore.getAll(),
-        setAll: (toSet: { name: string; value: string; options: CookieOptions }[]) => {
-          toSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options)
-          );
-        },
-      },
-    }
-  );
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user?.email) {
-    return null;
+  const student = await getPortalStudent();
+  if (!student) {
+    redirect("/portal/login");
   }
-  const student = await resolvePortalStudent({ userId: user.id, email: user.email });
-  const tickets = await recentTicketsForEmail(user.email);
-  const documents = student ? await listStudentDocuments(student.id) : [];
+
+  const tickets = await recentTicketsForEmail(student.email);
+  const documents = await listStudentDocuments(student.id);
 
   const openCount = tickets.filter((t) =>
     ["open", "awaiting_staff", "awaiting_student"].includes(t.status)
   ).length;
   const requiredOutstanding = documents.filter((d) => d.is_required).length;
-  const firstName = (student?.full_name ?? user.user_metadata?.full_name ?? user.email)
-    ?.split(" ")[0];
+  const firstName = (student.full_name ?? student.email)?.split(" ")[0];
 
   return (
     <div>
@@ -164,22 +148,6 @@ export default async function PortalOverview() {
             })}
           </ul>
         </section>
-      )}
-
-      {!student && (
-        <div className="border border-amber-200 bg-amber-50 p-5 rounded-sm">
-          <div className="font-semibold text-amber-900 mb-1">
-            Your portal account isn&rsquo;t linked to a student record yet.
-          </div>
-          <p className="text-sm text-amber-900/80">
-            Reach out to{" "}
-            <a className="underline" href="mailto:success@fldentalassisting.com">
-              success@fldentalassisting.com
-            </a>{" "}
-            to complete your enrollment. You can still open tickets and view
-            replies from this account.
-          </p>
-        </div>
       )}
     </div>
   );

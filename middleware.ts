@@ -2,6 +2,7 @@ import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextRequest, NextResponse } from "next/server";
 
 const SITE_COOKIE = "fida_site_auth";
+const PORTAL_SESSION_COOKIE = "fida_portal_session";
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -13,19 +14,15 @@ export async function middleware(req: NextRequest) {
     pathname === "/auth/callback" ||
     pathname.startsWith("/api/gate") ||
     pathname.startsWith("/api/auth") ||
-    // Public tickets intake — no site gate, no login.
     pathname === "/tickets" ||
     pathname.startsWith("/tickets/") ||
     pathname.startsWith("/api/tickets") ||
-    // Portal sign-in page — open so a student with a magic link can land.
     pathname === "/portal/login" ||
     pathname.startsWith("/api/portal/login") ||
-    // Public Atticus™M landing — prospects scan QR codes from flyers,
-    // they cannot be asked to authenticate.
+    pathname.startsWith("/api/portal/logout") ||
     pathname === "/atticus" ||
     pathname.startsWith("/atticus/") ||
     pathname.startsWith("/api/atticus") ||
-    // QR redirect handler — must be reachable without auth.
     pathname.startsWith("/qr/") ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/favicon") ||
@@ -34,44 +31,17 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // ── Portal — requires a Supabase auth session, bypasses site-gate ──────────
+  // ── Portal — DB-backed session cookie. No Supabase Auth dependency. ───────
   if (pathname === "/portal" || pathname.startsWith("/portal/")) {
-    const response = NextResponse.next({ request: req });
-
-    if (
-      !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-      !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-      process.env.NEXT_PUBLIC_SUPABASE_URL.includes("placeholder")
-    ) {
-      const url = req.nextUrl.clone();
-      url.pathname = "/portal/login";
-      url.searchParams.set("error", "supabase-not-configured");
-      return NextResponse.redirect(url);
+    const sessionId = req.cookies.get(PORTAL_SESSION_COOKIE)?.value;
+    if (sessionId && /^[0-9a-f-]{36}$/i.test(sessionId)) {
+      // Cookie shape is plausible. The downstream page (and the route handler
+      // for any /api/portal/* mutation) will validate the session against the
+      // DB. Middleware only enforces the presence of a syntactically valid
+      // cookie — this keeps middleware fast and avoids per-request DB calls
+      // for static assets etc., while still gating navigation.
+      return NextResponse.next({ request: req });
     }
-
-    try {
-      const supabase = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-        {
-          cookies: {
-            getAll: () => req.cookies.getAll(),
-            setAll: (toSet: { name: string; value: string; options: CookieOptions }[]) => {
-              toSet.forEach(({ name, value, options }) =>
-                response.cookies.set(name, value, options)
-              );
-            },
-          },
-        }
-      );
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) return response;
-    } catch {
-      // fall through to login redirect
-    }
-
     const url = req.nextUrl.clone();
     url.pathname = "/portal/login";
     if (pathname !== "/portal") url.searchParams.set("next", pathname);
@@ -87,7 +57,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // ── Admin guard — accept EITHER Supabase user OR password-based admin cookie ──
+  // ── Admin guard — accept EITHER Supabase user OR admin cookie ─────────────
   if (pathname.startsWith("/admin")) {
     const response = NextResponse.next({ request: req });
 
@@ -108,7 +78,13 @@ export async function middleware(req: NextRequest) {
           {
             cookies: {
               getAll: () => req.cookies.getAll(),
-              setAll: (cookiesToSet: { name: string; value: string; options: CookieOptions }[]) => {
+              setAll: (
+                cookiesToSet: {
+                  name: string;
+                  value: string;
+                  options: CookieOptions;
+                }[]
+              ) => {
                 cookiesToSet.forEach(({ name, value, options }) => {
                   response.cookies.set(name, value, options);
                 });
