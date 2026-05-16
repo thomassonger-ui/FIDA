@@ -67,6 +67,12 @@ export function Nav() {
 
         <div className="flex items-center gap-2">
           <Link
+            href="/portal/login"
+            className="hidden md:inline-flex items-center gap-1.5 text-navy/80 hover:text-teal border border-rule hover:border-teal px-3 py-2 text-sm font-semibold rounded-md transition-colors"
+          >
+            Student sign in
+          </Link>
+          <Link
             href="/admissions"
             className="hidden sm:inline-flex items-center gap-1.5 bg-teal hover:bg-teal-deep text-white px-4 py-2 text-sm font-semibold rounded-md transition-colors"
           >
@@ -122,8 +128,14 @@ export function Nav() {
             );
           })}
           <Link
+            href="/portal/login"
+            className="mt-4 inline-flex items-center justify-center gap-1.5 border border-rule text-navy px-4 py-3 text-sm font-semibold rounded-md transition-colors hover:border-teal hover:text-teal"
+          >
+            Student sign in
+          </Link>
+          <Link
             href="/admissions"
-            className="mt-4 inline-flex items-center justify-center gap-1.5 bg-teal hover:bg-teal-deep text-white px-4 py-3 text-sm font-semibold rounded-md transition-colors"
+            className="mt-2 inline-flex items-center justify-center gap-1.5 bg-teal hover:bg-teal-deep text-white px-4 py-3 text-sm font-semibold rounded-md transition-colors"
           >
             Talk to Atticus
             <span aria-hidden="true">→</span>

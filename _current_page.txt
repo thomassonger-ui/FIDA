@@ -72,11 +72,11 @@ export default function Home() {
             </p>
 
             <div className="mt-10 flex flex-col sm:flex-row gap-3">
-              <Link href="/programs" className="btn-primary">
-                Explore programs <span aria-hidden="true">→</span>
+              <Link href="/admissions" className="btn-primary">
+                Talk to Atticus <span aria-hidden="true">→</span>
               </Link>
-              <Link href="/portal/login" className="btn-secondary">
-                I&rsquo;m already a student
+              <Link href="/programs" className="btn-secondary">
+                Explore programs
               </Link>
             </div>
 
@@ -110,79 +110,6 @@ export default function Home() {
               </div>
             </div>
           ))}
-        </div>
-      </section>
-
-      {/* AUDIENCE-PICKER BAND — three paths in one row */}
-      <section className="bg-white border-b border-rule">
-        <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-10 md:py-14">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Link
-              href="/admissions"
-              className="card card-hover block p-6"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <span className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-teal/10 border border-teal/30 font-display text-teal text-lg">
-                  01
-                </span>
-                <div className="eyebrow">New to FIDA</div>
-              </div>
-              <div className="font-display text-xl text-navy mb-1">
-                Explore programs
-              </div>
-              <p className="text-sm text-muted leading-relaxed">
-                Radiography, EFDA, and dental assisting foundations. Talk to
-                Atticus to find your fit.
-              </p>
-              <div className="mt-4 text-sm font-semibold text-teal">
-                Start with admissions <span aria-hidden="true">→</span>
-              </div>
-            </Link>
-
-            <Link
-              href="/programs"
-              className="card card-hover block p-6"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <span className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-teal/10 border border-teal/30 font-display text-teal text-lg">
-                  02
-                </span>
-                <div className="eyebrow">Working professional</div>
-              </div>
-              <div className="font-display text-xl text-navy mb-1">
-                Continuing education
-              </div>
-              <p className="text-sm text-muted leading-relaxed">
-                Professional development courses and CE credits for working
-                dental assistants and hygienists.
-              </p>
-              <div className="mt-4 text-sm font-semibold text-teal">
-                Browse PD courses <span aria-hidden="true">→</span>
-              </div>
-            </Link>
-
-            <Link
-              href="/portal/login"
-              className="card card-hover block p-6"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <span className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-teal/10 border border-teal/30 font-display text-teal text-lg">
-                  03
-                </span>
-                <div className="eyebrow">Already a student</div>
-              </div>
-              <div className="font-display text-xl text-navy mb-1">
-                Student portal
-              </div>
-              <p className="text-sm text-muted leading-relaxed">
-                Tickets, messages with staff, documents, and your course
-                progress.
-              </p>
-              <div className="mt-4 text-sm font-semibold text-teal">
-                Sign in <span aria-hidden="true">→</span>
-              </div>
-            </Link>
-          </div>
         </div>
       </section>
 
@@ -356,44 +283,35 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ALREADY A STUDENT BAND — quick portal/support paths */}
-      <section className="bg-paper-subtle border-t border-rule">
-        <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-16 md:py-20">
-          <div className="max-w-3xl mb-10">
-            <div className="eyebrow">Already a student?</div>
-            <h2 className="mt-3 font-display text-3xl md:text-4xl text-navy tracking-tight">
-              Pick up where you left off.
-            </h2>
-            <p className="mt-4 text-muted text-lg leading-relaxed">
-              Your portal has your tickets, messages from staff, and your document
-              vault. Working professionals taking CE courses sign in here too.
-            </p>
+      {/* CTA BAND */}
+      <section className="bg-navy text-white relative overflow-hidden">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 opacity-30"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 85% 30%, rgba(44,177,188,0.55), transparent 50%), radial-gradient(circle at 15% 80%, rgba(44,177,188,0.25), transparent 45%)",
+          }}
+        />
+        <div className="relative max-w-5xl mx-auto px-6 md:px-10 lg:px-12 py-20 md:py-24 text-center">
+          <div className="text-xs font-semibold tracking-[0.14em] uppercase text-teal-soft">
+            Your next chapter
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Link href="/portal/login" className="card card-hover block p-6">
-              <div className="eyebrow mb-2">Portal</div>
-              <div className="font-display text-xl text-navy mb-1">Sign in</div>
-              <div className="text-sm text-muted">
-                Tickets, messages, documents, and CE progress.
-              </div>
+          <h2 className="mt-4 font-display text-white text-4xl md:text-5xl lg:text-6xl leading-tight">
+            Talk to Atticus. No pressure. No forms.
+          </h2>
+          <p className="mt-5 text-navy-100 text-lg max-w-2xl mx-auto">
+            <strong className="text-white">Atticus</strong> is our AI admissions advisor.
+            Tell it where you are and where you want to go &mdash; it&rsquo;ll help you figure
+            out the right program in about five minutes.
+          </p>
+          <div className="mt-10 flex flex-col sm:flex-row gap-3 justify-center">
+            <Link href="/admissions" className="btn-primary">
+              Start the conversation <span aria-hidden="true">→</span>
             </Link>
-            <Link href="/tickets" className="card card-hover block p-6">
-              <div className="eyebrow mb-2">Support</div>
-              <div className="font-display text-xl text-navy mb-1">Open a ticket</div>
-              <div className="text-sm text-muted">
-                Academic, financial aid, scheduling, or tech help. No sign-in needed.
-              </div>
+            <Link href="/programs" className="btn-secondary">
+              Compare programs first
             </Link>
-            <a
-              href="mailto:success@fldentalassisting.com"
-              className="card card-hover block p-6"
-            >
-              <div className="eyebrow mb-2">Contact</div>
-              <div className="font-display text-xl text-navy mb-1">Email us</div>
-              <div className="text-sm text-muted">
-                success@fldentalassisting.com &middot; Jacksonville, FL
-              </div>
-            </a>
           </div>
         </div>
       </section>
