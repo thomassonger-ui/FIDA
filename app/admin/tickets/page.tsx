@@ -78,9 +78,8 @@ export default async function AdminTicketsPage({
         </div>
       </div>
       <p className="text-muted max-w-prose mb-8">
-        Student-submitted inquiries. Reply directly to keep the conversation in
-        one place; the student gets a magic link by email when they need to come
-        back.
+        Student-submitted inquiries. Click any subject to open the conversation
+        and reply directly to the student via email.
       </p>
 
       {/* Filter pills */}
