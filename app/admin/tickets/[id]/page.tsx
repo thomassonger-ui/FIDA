@@ -193,7 +193,12 @@ export default async function AdminTicketDetailPage({
           </ol>
 
           <div className="mt-8">
-            <AdminReplyForm ticketId={ticket.id} />
+            <AdminReplyForm
+              ticketId={ticket.id}
+              studentEmail={ticket.email}
+              studentName={ticket.student_name}
+              subject={ticket.subject}
+            />
           </div>
         </div>
 
