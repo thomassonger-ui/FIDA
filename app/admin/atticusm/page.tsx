@@ -4,6 +4,14 @@ export const metadata = {
   title: "AtticusM · Admin · FIDA",
 };
 
+// ---------- CYCLE (edit monthly when you reset the playbook) ----------
+const CYCLE = {
+  start: "May 16, 2026",
+  end: "June 14, 2026",
+  resetOn: "June 15, 2026",
+  cohort: "July 6, 2026",
+};
+
 // ---------- CONTENT MODEL ----------
 
 type Day = {
@@ -148,6 +156,27 @@ export default function AtticusMPage() {
         The AI admissions advisor who actually shows up at 11pm — when your future
         students are finally off shift.
       </p>
+
+      {/* MONTHLY RESET BANNER */}
+      <section className="mt-8 rounded-sm border-l-4 border-teal bg-teal-50 px-5 py-4 flex flex-col md:flex-row md:items-center gap-4">
+        <div className="flex-1">
+          <div className="eyebrow text-teal-deep">Monthly reset cycle</div>
+          <p className="text-sm text-ink mt-1">
+            Current cycle: <span className="font-semibold">{CYCLE.start} – {CYCLE.end}</span>
+            {" · "}
+            Next reset: <span className="font-semibold">{CYCLE.resetOn}</span>
+          </p>
+          <p className="text-xs text-muted mt-1 leading-snug">
+            Every 30 days this playbook is rewritten with a revised action plan — new calendar,
+            refreshed tactics, and updated targets based on the previous cycle&rsquo;s results.
+          </p>
+        </div>
+        <div className="text-right md:text-left md:border-l md:border-rule md:pl-5">
+          <div className="eyebrow text-muted">Cohort filling</div>
+          <div className="font-display text-lg text-ink leading-tight">{CYCLE.cohort}</div>
+          <div className="text-[11px] text-subtle">Owner review monthly</div>
+        </div>
+      </section>
 
       {/* KPI ROW */}
       <div className="mt-8 grid md:grid-cols-4 gap-4">
