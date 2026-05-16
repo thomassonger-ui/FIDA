@@ -11,7 +11,9 @@ import {
   type TicketCategory,
   type TicketStatus,
 } from "@/lib/tickets-db";
+import { getStudentByEmail } from "@/lib/students-db";
 import { AdminReplyForm } from "./admin-reply-form";
+import { ConvertToStudentButton } from "./convert-to-student-button";
 import { StatusControls } from "./status-controls";
 
 export const dynamic = "force-dynamic";
@@ -62,6 +64,7 @@ export default async function AdminTicketDetailPage({
   const ticket = await getTicket(id);
   if (!ticket) return notFound();
 
+  const student = await getStudentByEmail(ticket.email);
   const messages = await getMessages(id, { includeInternal: true });
   const attachments = await getAttachmentsForMessages(messages.map((m) => m.id));
   const attByMsg = new Map<number, typeof attachments>();
@@ -101,10 +104,22 @@ export default async function AdminTicketDetailPage({
             <span>Opened {fmt(ticket.created_at)}</span>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${tone}`}>
             {STATUS_LABELS[ticket.status]}
           </span>
+          {!student && (
+            <>
+              <a
+                href={`mailto:${encodeURIComponent(ticket.email)}?subject=${encodeURIComponent("Re: " + ticket.subject)}&body=${encodeURIComponent("Hi" + (ticket.student_name ? " " + ticket.student_name.split(" ")[0] : "") + ",\n\n\n\n— FIDA Support\nsuccess@fldentalassisting.com")}`}
+                className="btn-outline text-sm px-3 py-1.5"
+                title="Open your mail client to reply directly — they don't have a portal yet"
+              >
+                ✉ Email submitter
+              </a>
+              <ConvertToStudentButton ticketId={ticket.id} />
+            </>
+          )}
           <StatusControls
             ticketId={ticket.id}
             current={ticket.status}
@@ -179,9 +194,21 @@ export default async function AdminTicketDetailPage({
             </div>
           </div>
           <div className="card p-4">
-            <div className="eyebrow mb-2">Student</div>
-            <div className="text-navy">{ticket.student_name || "—"}</div>
+            <div className="eyebrow mb-2">{student ? "Student" : "Submitter"}</div>
+            <div className="text-navy">{student?.full_name || ticket.student_name || "—"}</div>
             <div className="text-xs text-muted break-all">{ticket.email}</div>
+            {student ? (
+              <Link
+                href={`/admin/students/${student.id}`}
+                className="mt-2 inline-block text-xs font-semibold text-teal hover:text-teal-deep"
+              >
+                View student profile →
+              </Link>
+            ) : (
+              <div className="mt-2 inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-amber-800 bg-amber-50 border border-amber-200 rounded-full px-2 py-0.5">
+                Not enrolled
+              </div>
+            )}
           </div>
           <div className="card p-4">
             <div className="eyebrow mb-2">Program</div>
