@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AtticusCopyrightBar } from "@/components/AtticusCopyrightBar";
 
 export function Footer() {
   return (
@@ -61,8 +62,8 @@ export function Footer() {
             deployed in partnership with Florida Institute of Dental Assisting.
           </div>
         </div>
-        <div className="mt-4 text-center text-[11px] text-navy-200">
-          Atticus&trade; &copy; 2026 WorldTeachPathways dba WorldTeachESL LLC.
+        <div className="mt-4">
+          <AtticusCopyrightBar variant="light" />
         </div>
       </div>
     </footer>
