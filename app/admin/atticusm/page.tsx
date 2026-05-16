@@ -1,11 +1,14 @@
 import Link from "next/link";
 import { CycleInfo, CalendarChecklist } from "./checklist";
+import { getServerClient } from "@/lib/supabase";
+
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Atticus™M · Admin · FIDA",
 };
 
-// ---------- TACTIC LIBRARY (server-rendered, static) ----------
+// ---------- TACTIC LIBRARY ----------
 
 type Tactic = {
   tag: string;
@@ -44,7 +47,99 @@ function tagClass(tag: string) {
   }
 }
 
-function Kpi({ value, label, sub }: { value: string; label: string; sub?: string }) {
+// ---------- LIVE METRICS ----------
+
+type Metrics = {
+  qrScans: number;
+  chatsStarted: number;
+  visitors: number;
+  seatsFilled: number;
+  topChannels: { source: string; count: number }[];
+};
+
+/** Cycle starts on the 15th. If today is before the 15th, prior month's 15th. */
+function getCycleStart(): Date {
+  const today = new Date();
+  const y = today.getFullYear();
+  const m = today.getMonth();
+  const d = today.getDate();
+  if (d >= 15) return new Date(y, m, 15);
+  return new Date(y, m - 1, 15);
+}
+
+async function getMetrics(): Promise<Metrics> {
+  const empty: Metrics = {
+    qrScans: 0,
+    chatsStarted: 0,
+    visitors: 0,
+    seatsFilled: 0,
+    topChannels: [],
+  };
+
+  try {
+    const sb = getServerClient();
+    const cycleStart = getCycleStart().toISOString();
+
+    // Parallel queries
+    const [qrRes, sessionsRes, chatsRes, seatsRes, demoSeatsRes] = await Promise.all([
+      // QR scans this cycle
+      sb
+        .from("qr_scans")
+        .select("slug", { count: "exact", head: false })
+        .gte("scanned_at", cycleStart),
+      // All Atticus sessions this cycle (visitors)
+      sb
+        .from("atticus_sessions")
+        .select("source, message_count", { count: "exact", head: false })
+        .gte("created_at", cycleStart),
+      // Chats started = sessions with at least one message
+      sb
+        .from("atticus_sessions")
+        .select("id", { count: "exact", head: true })
+        .gte("created_at", cycleStart)
+        .gt("message_count", 0),
+      // Real students enrolled this cycle (may not exist in this schema)
+      sb
+        .from("students")
+        .select("id, acquisition_source", { count: "exact", head: false })
+        .gte("created_at", cycleStart),
+      // Demo students fallback
+      sb
+        .from("demo_students")
+        .select("id, acquisition_source", { count: "exact", head: false })
+        .gte("created_at", cycleStart),
+    ]);
+
+    // Channel breakdown: combine QR scans by slug + atticus session sources
+    const channelCounts: Record<string, number> = {};
+    for (const row of (qrRes.data ?? []) as Array<{ slug: string }>) {
+      if (row.slug) channelCounts[row.slug] = (channelCounts[row.slug] || 0) + 1;
+    }
+    const topChannels = Object.entries(channelCounts)
+      .map(([source, count]) => ({ source, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+
+    // Seats filled — prefer real students if the query worked, else demo_students
+    const realSeats = seatsRes.error ? 0 : seatsRes.count ?? 0;
+    const demoSeats = demoSeatsRes.error ? 0 : demoSeatsRes.count ?? 0;
+
+    return {
+      qrScans: qrRes.count ?? (qrRes.data?.length ?? 0),
+      chatsStarted: chatsRes.count ?? 0,
+      visitors: sessionsRes.count ?? (sessionsRes.data?.length ?? 0),
+      seatsFilled: realSeats || demoSeats,
+      topChannels,
+    };
+  } catch (err) {
+    console.error("[atticusm metrics] failed:", err);
+    return empty;
+  }
+}
+
+// ---------- COMPONENTS ----------
+
+function StaticKpi({ value, label, sub }: { value: string; label: string; sub?: string }) {
   return (
     <div className="border border-rule bg-paper p-5 rounded-sm">
       <div className="font-display text-3xl text-ink">{value}</div>
@@ -54,9 +149,35 @@ function Kpi({ value, label, sub }: { value: string; label: string; sub?: string
   );
 }
 
+function LiveKpi({
+  count,
+  label,
+  sub,
+}: {
+  count: number;
+  label: string;
+  sub?: string;
+}) {
+  return (
+    <div className="border border-rule bg-paper p-5 rounded-sm">
+      <div className="font-display text-4xl text-ink leading-none">{count.toLocaleString()}</div>
+      <div className="eyebrow mt-2 text-teal-deep">{label}</div>
+      {sub && <div className="text-xs text-subtle mt-1">{sub}</div>}
+    </div>
+  );
+}
+
 // ---------- PAGE ----------
 
-export default function Atticus_M_Page() {
+export default async function AtticusMPage() {
+  const metrics = await getMetrics();
+  const cycleStart = getCycleStart();
+  const cycleLabel = cycleStart.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+
   return (
     <div className="max-w-6xl">
       {/* HEADER */}
@@ -64,23 +185,31 @@ export default function Atticus_M_Page() {
         <span className="eyebrow">Marketing playbook</span>
         <span className="text-xs text-subtle">· 30-day cohort fill · resets the 15th</span>
       </div>
-      <h1 className="font-display text-5xl text-ink tracking-tight leading-tight">
-        Atticus™M
-      </h1>
-      <p className="font-display text-xl text-muted mt-2 max-w-3xl leading-snug">
-        The AI admissions advisor who actually shows up at 11pm — when your future
-        students are finally off shift.
-      </p>
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="font-display text-5xl text-ink tracking-tight leading-tight">Atticus™M</h1>
+          <p className="font-display text-xl text-muted mt-2 max-w-3xl leading-snug">
+            The AI admissions advisor who actually shows up at 11pm — when your future
+            students are finally off shift.
+          </p>
+        </div>
+        <Link
+          href="/admin/atticusm/qr"
+          className="mt-2 inline-block bg-teal text-white text-sm font-semibold px-4 py-2 rounded-sm hover:bg-teal-deep transition"
+        >
+          Manage QR codes →
+        </Link>
+      </div>
 
-      {/* CYCLE BANNER (client) */}
+      {/* CYCLE BANNER */}
       <CycleInfo cohort="July 6, 2026" />
 
-      {/* KPI ROW */}
+      {/* PLANNING KPIs (static targets) */}
       <div className="mt-8 grid md:grid-cols-4 gap-4">
-        <Kpi value="18" label="Seats to fill" sub="Next cohort — July 6, 2026" />
-        <Kpi value="$0" label="Paid media budget" sub="Every play is free or near-zero" />
-        <Kpi value="14" label="Guerrilla plays" sub="Each targeted at a specific moment" />
-        <Kpi value="0" label="Forms before a real answer" sub="That’s the whole campaign" />
+        <StaticKpi value="18" label="Seats to fill" sub="Next cohort — July 6, 2026" />
+        <StaticKpi value="$0" label="Paid media budget" sub="Every play is free or near-zero" />
+        <StaticKpi value="14" label="Guerrilla plays" sub="Each targeted at a specific moment" />
+        <StaticKpi value="0" label="Forms before a real answer" sub="That’s the whole campaign" />
       </div>
 
       {/* INSIGHT */}
@@ -142,7 +271,7 @@ export default function Atticus_M_Page() {
         </p>
       </section>
 
-      {/* 30-DAY CALENDAR (client) */}
+      {/* 30-DAY CALENDAR */}
       <section className="mt-12">
         <h2 className="font-display text-3xl text-ink">30-day calendar</h2>
         <p className="text-sm text-muted mt-1 max-w-3xl">
@@ -150,7 +279,6 @@ export default function Atticus_M_Page() {
           auto-rolls on reset. Tap the checkbox to mark a task done — progress saves to
           this browser.
         </p>
-
         <div className="mt-6">
           <CalendarChecklist />
         </div>
@@ -180,21 +308,57 @@ export default function Atticus_M_Page() {
         </div>
       </section>
 
-      {/* WEEKLY KPIS */}
+      {/* LIVE METRICS — what to measure each Sunday */}
       <section className="mt-12">
-        <h2 className="font-display text-3xl text-ink">What to measure each Sunday</h2>
-        <div className="mt-4 grid md:grid-cols-4 gap-4">
-          <Kpi value="QR scans" label="Per channel" sub="Which flyer / sign / table drove chats" />
-          <Kpi value="Chats started" label="Atticus™M" sub="Live conversations initiated" />
-          <Kpi value="Apps started" label="Funnel" sub="Inquiry → application" />
-          <Kpi value="Seats filled" label="North star" sub="Attribution back to source" />
+        <div className="flex items-end justify-between mb-3 flex-wrap gap-2">
+          <h2 className="font-display text-3xl text-ink">Live cycle metrics</h2>
+          <div className="text-xs text-subtle">Since {cycleLabel} (auto-resets the 15th)</div>
         </div>
+        <p className="text-sm text-muted max-w-3xl mb-4">
+          Real counts from the live database — QR scans, Atticus™M visitors, chats started,
+          and seats filled this cycle. Each Sunday, Debbie & Ashley review these to decide
+          what to double down on next week.
+        </p>
+        <div className="grid md:grid-cols-4 gap-4">
+          <LiveKpi count={metrics.qrScans} label="QR scans" sub="Across all printed codes" />
+          <LiveKpi count={metrics.visitors} label="Atticus™M visitors" sub="Attributed page sessions" />
+          <LiveKpi count={metrics.chatsStarted} label="Chats started" sub="Sessions w/ ≥1 message" />
+          <LiveKpi count={metrics.seatsFilled} label="Seats filled" sub="Students enrolled this cycle" />
+        </div>
+
+        {/* Top channels */}
+        {metrics.topChannels.length > 0 ? (
+          <div className="mt-6 border border-rule rounded-sm bg-paper p-5">
+            <div className="eyebrow text-muted mb-3">Top channels this cycle</div>
+            <div className="space-y-2">
+              {metrics.topChannels.map((c) => (
+                <div key={c.source} className="flex items-center gap-3">
+                  <code className="font-mono text-xs text-muted w-48 truncate">{c.source}</code>
+                  <div className="flex-1 h-2 bg-paper-subtle rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-teal"
+                      style={{ width: `${Math.min(100, (c.count / metrics.topChannels[0].count) * 100)}%` }}
+                    />
+                  </div>
+                  <div className="font-display text-base text-ink w-12 text-right">{c.count}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="mt-6 border border-dashed border-rule rounded-sm p-6 text-center">
+            <p className="text-sm text-muted">
+              No scans yet this cycle. <Link href="/admin/atticusm/qr" className="text-teal hover:text-teal-deep underline">Mint your first QR code</Link>{" "}
+              to start collecting data.
+            </p>
+          </div>
+        )}
       </section>
 
       {/* FOOTER */}
       <div className="mt-12 pt-6 border-t border-rule flex items-center justify-between text-xs text-subtle">
         <div>
-          Atticus™M playbook · v2 · Built for FIDA · Edit at{" "}
+          Atticus™M playbook · v3 · Built for FIDA · Edit at{" "}
           <code className="font-mono">app/admin/atticusm/page.tsx</code>
         </div>
         <Link href="/admin" className="hover:text-ink">&larr; Back to overview</Link>
