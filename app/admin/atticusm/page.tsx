@@ -192,6 +192,12 @@ export default async function AtticusMPage() {
         </div>
         <div className="mt-2 flex flex-wrap gap-2">
           <Link
+            href="/admin/atticusm/market"
+            className="inline-block border border-teal text-teal-deep text-sm font-semibold px-4 py-2 rounded-sm hover:bg-teal/10 transition"
+          >
+            Market analysis →
+          </Link>
+          <Link
             href="/admin/atticusm/templates"
             className="inline-block border border-teal text-teal-deep text-sm font-semibold px-4 py-2 rounded-sm hover:bg-teal/10 transition"
           >
