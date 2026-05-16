@@ -144,7 +144,7 @@ export default async function AdminTicketDetailPage({
                 <li key={m.id} className={`border rounded-md p-4 ${cls}`}>
                   <div className="text-xs font-semibold uppercase tracking-wider mb-1 flex flex-wrap items-center gap-2">
                     <span className={fromStudent ? "text-navy" : "text-teal"}>
-                      {fromStudent ? "Student" : internal ? "Internal note" : "FIDA Staff"}
+                      {fromStudent ? (student ? "Student" : "Submitter") : internal ? "Internal note" : "FIDA Staff"}
                     </span>
                     {m.author_name && (
                       <span className="text-subtle font-normal">· {m.author_name}</span>
