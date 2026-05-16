@@ -8,36 +8,35 @@ export const dynamic = "force-dynamic";
 const EMAIL_RE = /^[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,}$/i;
 
 /**
- * POST /api/portal/login — email-as-passcode sign-in, fully server-side.
+ * POST /api/portal/login
  *
- * Flow:
- *   1. Look up email in public.students.
- *   2. If enrolled (status invited/active):
- *      a. Ensure auth.users row exists (admin.createUser, no email sent).
- *      b. admin.generateLink({type:"magiclink"}) — returns properties.hashed_token.
- *      c. verifyOtp({token_hash, type:"magiclink"}) using an ssr server client
- *         whose cookie writes are bound to the outgoing response. This issues
- *         a real session and lands Supabase auth cookies directly on the response.
- *      d. Also set fida_site_auth=1 cookie so the site gate passes.
- *      e. 303 redirect to /portal.
- *   3. If not enrolled or inactive: silent 303 back to /portal/login.
+ * Email-as-passcode sign-in, fully server-side.
  *
- * No client-side callback processing. No URL fragments. No email sent.
+ * Strategy:
+ *   1. Lookup email in public.students. Reject if not enrolled / withdrawn / paused.
+ *   2. Find or create the corresponding auth.users record (email_confirm: true).
+ *   3. Rotate that user's password to a fresh random value (admin API).
+ *   4. Immediately signInWithPassword using that random password through a
+ *      cookie-bound ssr server client — Supabase session cookies land on the
+ *      outgoing response.
+ *   5. Also set fida_site_auth=1 cookie so the site-wide gate passes.
+ *   6. 303 redirect to /portal.
+ *
+ * Why this works where verifyOtp didn't: signInWithPassword is the most
+ * battle-tested Supabase auth path and doesn't depend on token-hash semantics
+ * that vary between SDK and server versions. We never store the password;
+ * each login rotates it again, so the previous password is invalidated.
+ *
+ * Security trade-off: anyone with a student email can sign in as that student.
+ * Documented and accepted by the operator.
  */
 export async function POST(req: NextRequest) {
   const origin =
     process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
     "https://fida-eight.vercel.app";
 
-  function redirect(path: string, response?: NextResponse) {
-    const url = new URL(path, origin);
-    if (response) {
-      // Merge: we want the cookies already on `response` to flow with the redirect.
-      const r = NextResponse.redirect(url, { status: 303 });
-      response.cookies.getAll().forEach((c) => r.cookies.set(c));
-      return r;
-    }
-    return NextResponse.redirect(url, { status: 303 });
+  function redirect(path: string) {
+    return NextResponse.redirect(new URL(path, origin), { status: 303 });
   }
 
   let email = "";
@@ -47,7 +46,6 @@ export async function POST(req: NextRequest) {
   } catch {
     return redirect("/portal/login?notice=submitted");
   }
-
   if (!email || !EMAIL_RE.test(email)) {
     return redirect("/portal/login?notice=submitted");
   }
@@ -56,27 +54,24 @@ export async function POST(req: NextRequest) {
   const SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   const PUBLIC_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-
   if (!SUPABASE_URL || !SERVICE_ROLE || !ANON_KEY || !PUBLIC_URL) {
     console.error("[portal/login] missing supabase env vars");
     return redirect("/portal/login?error=link-failed");
   }
 
   try {
-    // Admin client — for students lookup + admin.createUser + admin.generateLink.
     const admin = createAdmin(SUPABASE_URL, SERVICE_ROLE, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
 
-    // 1. Is this an enrolled student?
+    // 1. Verify enrollment.
     const { data: student, error: lookupError } = await admin
       .from("students")
       .select("id, email, status")
       .ilike("email", email)
       .maybeSingle();
-
     if (lookupError) {
-      console.error("[portal/login] students lookup error:", lookupError.message);
+      console.error("[portal/login] students lookup:", lookupError.message);
       return redirect("/portal/login?notice=submitted");
     }
     if (!student) {
@@ -88,77 +83,88 @@ export async function POST(req: NextRequest) {
       return redirect("/portal/login?error=not-active");
     }
 
-    // 2. Ensure auth user exists (auto-confirmed, no email).
-    try {
-      await admin.auth.admin.createUser({
-        email: student.email,
-        email_confirm: true,
-      });
+    // 2. Find or create auth.users record.
+    let userId: string | null = null;
+    const createRes = await admin.auth.admin.createUser({
+      email: student.email,
+      email_confirm: true,
+    });
+    if (createRes.data?.user?.id) {
+      userId = createRes.data.user.id;
       console.log("[portal/login] created auth user for", email);
-    } catch (err) {
-      // Already exists is fine.
-      const msg = err instanceof Error ? err.message : String(err);
-      if (!/already|registered|exists/i.test(msg)) {
-        console.log("[portal/login] createUser non-fatal:", msg);
+    } else if (createRes.error) {
+      // Already exists — find via listUsers (small-school scale).
+      const listRes = await admin.auth.admin.listUsers({
+        page: 1,
+        perPage: 1000,
+      });
+      const found = listRes.data?.users?.find(
+        (u) => (u.email ?? "").toLowerCase() === email
+      );
+      userId = found?.id ?? null;
+      if (!userId) {
+        console.error(
+          "[portal/login] createUser failed AND lookup failed:",
+          createRes.error.message
+        );
+        return redirect("/portal/login?error=link-failed");
       }
     }
+    if (!userId) {
+      console.error("[portal/login] no user id resolved for", email);
+      return redirect("/portal/login?error=link-failed");
+    }
 
-    // 3. Generate magic link (no email sent).
-    const { data: linkData, error: linkError } =
-      await admin.auth.admin.generateLink({
-        type: "magiclink",
-        email: student.email,
-      });
-
-    if (linkError || !linkData?.properties?.hashed_token) {
+    // 3. Rotate password to a fresh random value.
+    const tempPassword =
+      crypto.randomUUID() + "-" + crypto.randomUUID() + "-Aa1!";
+    const updateRes = await admin.auth.admin.updateUserById(userId, {
+      password: tempPassword,
+    });
+    if (updateRes.error) {
       console.error(
-        "[portal/login] generateLink failed:",
-        linkError?.status,
-        linkError?.code,
-        linkError?.message
+        "[portal/login] updateUserById failed:",
+        updateRes.error.status,
+        updateRes.error.code,
+        updateRes.error.message
       );
       return redirect("/portal/login?error=link-failed");
     }
 
-    // 4. Build the response we'll send. ssr client writes auth cookies onto it.
+    // 4. Build response and sign in via cookie-bound ssr client.
     const response = NextResponse.redirect(new URL("/portal", origin), {
       status: 303,
     });
-
     const supabase = createServerClient(PUBLIC_URL, ANON_KEY, {
       cookies: {
         getAll() {
           return req.cookies.getAll();
         },
         setAll(
-          cookiesToSet: { name: string; value: string; options: CookieOptions }[]
+          toSet: { name: string; value: string; options: CookieOptions }[]
         ) {
-          cookiesToSet.forEach(({ name, value, options }) =>
+          toSet.forEach(({ name, value, options }) =>
             response.cookies.set(name, value, options)
           );
         },
       },
     });
-
-    // 5. Verify the hashed token server-side. This validates the OTP and
-    //    stores the resulting session in our cookie jar (the response).
-    const { data: verifyData, error: verifyError } =
-      await supabase.auth.verifyOtp({
-        token_hash: linkData.properties.hashed_token,
-        type: "magiclink",
+    const { data: signinData, error: signinError } =
+      await supabase.auth.signInWithPassword({
+        email: student.email,
+        password: tempPassword,
       });
-
-    if (verifyError || !verifyData?.session) {
+    if (signinError || !signinData?.session) {
       console.error(
-        "[portal/login] verifyOtp failed:",
-        verifyError?.status,
-        verifyError?.code,
-        verifyError?.message
+        "[portal/login] signInWithPassword failed:",
+        signinError?.status,
+        signinError?.code,
+        signinError?.message
       );
       return redirect("/portal/login?error=verify-failed");
     }
 
-    // 6. Also pass the site-wide gate.
+    // 5. Site-wide gate cookie.
     response.cookies.set("fida_site_auth", "1", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -171,7 +177,7 @@ export async function POST(req: NextRequest) {
     return response;
   } catch (err) {
     console.error(
-      "[portal/login] unexpected error:",
+      "[portal/login] unexpected:",
       err instanceof Error ? err.message : err
     );
     return redirect("/portal/login?error=unexpected");
