@@ -108,18 +108,7 @@ export default async function AdminTicketDetailPage({
           <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${tone}`}>
             {STATUS_LABELS[ticket.status]}
           </span>
-          {!student && (
-            <>
-              <a
-                href={`mailto:${encodeURIComponent(ticket.email)}?subject=${encodeURIComponent("Re: " + ticket.subject)}&body=${encodeURIComponent("Hi" + (ticket.student_name ? " " + ticket.student_name.split(" ")[0] : "") + ",\n\n\n\n— FIDA Support\nsuccess@fldentalassisting.com")}`}
-                className="btn-outline text-sm px-3 py-1.5"
-                title="Open your mail client to reply directly — they don't have a portal yet"
-              >
-                ✉ Email submitter
-              </a>
-              <ConvertToStudentButton ticketId={ticket.id} />
-            </>
-          )}
+          {!student && <ConvertToStudentButton ticketId={ticket.id} />}
           <StatusControls
             ticketId={ticket.id}
             current={ticket.status}
@@ -180,7 +169,12 @@ export default async function AdminTicketDetailPage({
           </ol>
 
           <div className="mt-8">
-<AdminReplyForm ticketId={ticket.id} />
+<AdminReplyForm
+              ticketId={ticket.id}
+              prospectEmail={student ? null : ticket.email}
+              prospectName={student ? null : ticket.student_name}
+              subject={ticket.subject}
+            />
           </div>
         </div>
 
