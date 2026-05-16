@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getServerClient } from "@/lib/supabase";
 import { headers } from "next/headers";
+import InquiryForm from "./inquiry-form";
 
 export const dynamic = "force-dynamic";
 
@@ -51,23 +52,7 @@ export default async function AtticusPage({
           programs — tuition, schedules, financial aid, whether your work experience counts.
         </p>
 
-        <div className="mt-10 border border-rule bg-paper-subtle rounded-sm p-6">
-          <div className="eyebrow text-teal-deep">Talk to a real person</div>
-          <p className="font-display text-xl text-ink mt-2 leading-snug">
-            Drop your number. Get a text back tonight — even if it&rsquo;s after hours.
-          </p>
-          <p className="text-sm text-muted mt-3 leading-relaxed">
-            Other schools make you fill a form and wait until Monday. Debbie and Ashley
-            answer their phones at 9pm because that&rsquo;s when working adults can actually
-            talk. No call center. No bot. Just the people who&rsquo;ll teach you.
-          </p>
-          <Link
-            href="/contact"
-            className="inline-block mt-4 bg-teal text-white text-sm font-semibold px-4 py-2 rounded-sm hover:bg-teal-deep transition"
-          >
-            Text me back tonight
-          </Link>
-        </div>
+        <InquiryForm source={cleanSrc} />
 
         <div className="mt-10 grid sm:grid-cols-3 gap-4 text-sm">
           <div className="border border-rule bg-paper rounded-sm p-4">
