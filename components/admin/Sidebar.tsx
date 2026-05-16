@@ -17,7 +17,7 @@ const nav: { href: string; label: string; hidden?: boolean }[] = [
   { href: "/admin/documents", label: "Documents" },
   { href: "/admin/compliance", label: "Compliance" },
   { href: "/admin/moodle", label: "Moodle" },
-  { href: "/admin/atticusm", label: "AtticusM" },
+  { href: "/admin/atticusm", label: "Atticus™M" },
 ];
 
 /** Count tickets needing staff attention. Returns 0 if the table doesn't exist yet. */
