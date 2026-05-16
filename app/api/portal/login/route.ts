@@ -10,25 +10,20 @@ const EMAIL_RE = /^[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,}$/i;
 /**
  * POST /api/portal/login
  *
- * Email-as-passcode sign-in, fully server-side.
+ * Email-as-passcode sign-in via server-side OTP verification.
  *
- * Strategy:
- *   1. Lookup email in public.students. Reject if not enrolled / withdrawn / paused.
- *   2. Find or create the corresponding auth.users record (email_confirm: true).
- *   3. Rotate that user's password to a fresh random value (admin API).
- *   4. Immediately signInWithPassword using that random password through a
- *      cookie-bound ssr server client — Supabase session cookies land on the
- *      outgoing response.
- *   5. Also set fida_site_auth=1 cookie so the site-wide gate passes.
- *   6. 303 redirect to /portal.
+ * 1. Lookup email in public.students. Reject if not enrolled / inactive.
+ * 2. Ensure auth.users record exists (admin.createUser, email_confirm).
+ * 3. admin.generateLink({ type: 'magiclink' }) — returns properties.email_otp
+ *    (a 6-digit one-time code). No email is sent.
+ * 4. supabase.auth.verifyOtp({ email, token: email_otp, type: 'email' }) via
+ *    a cookie-bound ssr server client — Supabase issues a session and our
+ *    setAll callback writes auth cookies onto the response.
+ * 5. Set fida_site_auth=1.
+ * 6. 303 redirect to /portal.
  *
- * Why this works where verifyOtp didn't: signInWithPassword is the most
- * battle-tested Supabase auth path and doesn't depend on token-hash semantics
- * that vary between SDK and server versions. We never store the password;
- * each login rotates it again, so the previous password is invalidated.
- *
- * Security trade-off: anyone with a student email can sign in as that student.
- * Documented and accepted by the operator.
+ * If anything in 3–4 errors, the full Supabase error (status/code/message)
+ * is logged to Vercel for diagnosis without ambiguity.
  */
 export async function POST(req: NextRequest) {
   const origin =
@@ -64,7 +59,7 @@ export async function POST(req: NextRequest) {
       auth: { persistSession: false, autoRefreshToken: false },
     });
 
-    // 1. Verify enrollment.
+    // 1. Enrollment check.
     const { data: student, error: lookupError } = await admin
       .from("students")
       .select("id, email, status")
@@ -83,55 +78,40 @@ export async function POST(req: NextRequest) {
       return redirect("/portal/login?error=not-active");
     }
 
-    // 2. Find or create auth.users record.
-    let userId: string | null = null;
-    const createRes = await admin.auth.admin.createUser({
-      email: student.email,
-      email_confirm: true,
-    });
-    if (createRes.data?.user?.id) {
-      userId = createRes.data.user.id;
-      console.log("[portal/login] created auth user for", email);
-    } else if (createRes.error) {
-      // Already exists — find via listUsers (small-school scale).
-      const listRes = await admin.auth.admin.listUsers({
-        page: 1,
-        perPage: 1000,
+    // 2. Ensure auth user (no email sent).
+    try {
+      await admin.auth.admin.createUser({
+        email: student.email,
+        email_confirm: true,
       });
-      const found = listRes.data?.users?.find(
-        (u) => (u.email ?? "").toLowerCase() === email
-      );
-      userId = found?.id ?? null;
-      if (!userId) {
-        console.error(
-          "[portal/login] createUser failed AND lookup failed:",
-          createRes.error.message
-        );
-        return redirect("/portal/login?error=link-failed");
+      console.log("[portal/login] auth user ensured for", email);
+    } catch (err) {
+      // Already exists — fine.
+      const msg = err instanceof Error ? err.message : String(err);
+      if (!/already|registered|exists/i.test(msg)) {
+        console.log("[portal/login] createUser non-fatal:", msg);
       }
     }
-    if (!userId) {
-      console.error("[portal/login] no user id resolved for", email);
-      return redirect("/portal/login?error=link-failed");
-    }
 
-    // 3. Rotate password to a fresh random value.
-    const tempPassword =
-      crypto.randomUUID() + "-" + crypto.randomUUID() + "-Aa1!";
-    const updateRes = await admin.auth.admin.updateUserById(userId, {
-      password: tempPassword,
-    });
-    if (updateRes.error) {
+    // 3. Generate a one-time magic-link OTP (no email sent).
+    const { data: linkData, error: linkError } =
+      await admin.auth.admin.generateLink({
+        type: "magiclink",
+        email: student.email,
+      });
+    if (linkError || !linkData?.properties?.email_otp) {
       console.error(
-        "[portal/login] updateUserById failed:",
-        updateRes.error.status,
-        updateRes.error.code,
-        updateRes.error.message
+        "[portal/login] generateLink failed:",
+        linkError?.status,
+        linkError?.code,
+        linkError?.message
       );
       return redirect("/portal/login?error=link-failed");
     }
+    const otp = linkData.properties.email_otp;
+    console.log("[portal/login] otp generated for", email);
 
-    // 4. Build response and sign in via cookie-bound ssr client.
+    // 4. Build response + ssr server client bound to its cookie jar.
     const response = NextResponse.redirect(new URL("/portal", origin), {
       status: 303,
     });
@@ -149,22 +129,26 @@ export async function POST(req: NextRequest) {
         },
       },
     });
-    const { data: signinData, error: signinError } =
-      await supabase.auth.signInWithPassword({
+
+    // 5. Verify the OTP — this is the standard documented path.
+    //    email + token (6-digit) + type 'email' is the v2 universal verify call.
+    const { data: signinData, error: verifyError } =
+      await supabase.auth.verifyOtp({
         email: student.email,
-        password: tempPassword,
+        token: otp,
+        type: "email",
       });
-    if (signinError || !signinData?.session) {
+    if (verifyError || !signinData?.session) {
       console.error(
-        "[portal/login] signInWithPassword failed:",
-        signinError?.status,
-        signinError?.code,
-        signinError?.message
+        "[portal/login] verifyOtp(email) failed:",
+        verifyError?.status,
+        verifyError?.code,
+        verifyError?.message
       );
       return redirect("/portal/login?error=verify-failed");
     }
 
-    // 5. Site-wide gate cookie.
+    // 6. Site gate cookie.
     response.cookies.set("fida_site_auth", "1", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
