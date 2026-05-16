@@ -344,7 +344,7 @@ export async function sendPortalInvite(input: {
     const origin =
       process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
       "https://fida-eight.vercel.app";
-    const redirect = `${origin}/api/auth/callback?next=/portal`;
+    const redirect = `${origin}/auth/callback?next=/portal`;
     const { error } = await supabase.auth.signInWithOtp({
       email: normalizeEmail(input.email),
       options: {

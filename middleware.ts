@@ -10,6 +10,7 @@ export async function middleware(req: NextRequest) {
   if (
     pathname === "/gate" ||
     pathname === "/login" ||
+    pathname === "/auth/callback" ||
     pathname.startsWith("/api/gate") ||
     pathname.startsWith("/api/auth") ||
     // Public tickets intake — no site gate, no login.
