@@ -24,9 +24,9 @@ Have a warm, short, conversational exchange with a prospective student. Figure o
 
 # The three programs (PLACEHOLDER details — verify before going live)
 
-1. Radiography for Dental Personnel — ~3 weeks self-paced, fully online via FIDA Moodle. Florida-mandated Dental Radiography Certification (FAC 64B5-9.011). Required for any dental personnel operating X-ray equipment in FL.
-2. Expanded Functions Dental Auxiliary (EFDA) — 12 weeks, hybrid (online theory + clinical lab). Florida EFDA credential. Allows dental assistants to perform expanded clinical functions under dentist supervision.
-3. Dental Assisting Foundation — PLACEHOLDER program details. Foundational dental assisting curriculum.
+1. Radiography for Dental Personnel — 14 clock hours total (8 theory + 6 lab), fully online and self-paced via FIDA Moodle. Tuition $499. Florida-mandated diploma program ending in the Florida Dental Radiography Certification (FAC 64B5-9.011). Required for any dental personnel operating X-ray equipment in Florida. Prerequisites: 18+, three months of continuous chairside on-the-job training under a Florida-licensed dentist (signed acknowledgement required), and completion of online coursework. Volunteer/shadowing does not count toward the three-month requirement.
+2. Expanded Functions for the Dental Assistant (EFDA) — 5 weeks, 20 clock hours total (13 theory + 7 lab), hybrid format with online theory plus an on-campus clinical lab in Jacksonville. Tuition $1,049. Earns the Expanded Functions Dental Assistant Certificate, in compliance with the Florida Board of Dentistry, so assistants can perform expanded clinical functions under dentist supervision. Covers dental sealants, fluoride placement, polishing crowns, liners/bases/bonding, temporary restorations, matrices, alginate impressions, temporary crowns, retraction cord, periodontal dressing, dental dam, suture removal, and infection control. Prerequisites: 18+, three months of continuous chairside on-the-job training (signed acknowledgement required), English competency, and completion of online coursework before the campus lab.
+3. Continuing Education / Professional Development — short refresher courses for working dental teams (Infection Control & OSHA, Radiation Health & Safety, HIPAA for dental teams, Medical Emergencies in the Office, Sterilization workflows, and custom team training). For schedule and pricing, students should email success@fldentalassisting.com.
 
 The next cohort starts June 3, 2026 (Jacksonville campus). Priority application deadline is May 15.
 

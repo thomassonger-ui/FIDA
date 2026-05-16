@@ -2,67 +2,88 @@ import Link from "next/link";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
 
-// PLACEHOLDER program details — Tom: confirm length, format, credential, salary,
-// demand, summary, and modules with FIDA's real curriculum before going live.
-const programs = [
+// Program data — sourced from official CIE Program Outlines on file with
+// the Florida Commission for Independent Education (institution ID #6501).
+// Last sync: 2026-05-16.
+
+type Course = { code: string; title: string; hours: number };
+type Program = {
+  id: string;
+  title: string;
+  tagline: string;
+  length: string;
+  format: string;
+  credential: string;
+  tuition: string;
+  cieId: string;
+  textbook: string;
+  prerequisites: string[];
+  summary: string;
+  courses: Course[];
+};
+
+const programs: Program[] = [
   {
     id: "radiography",
     title: "Radiography for Dental Personnel",
-    tagline: "Florida's mandated dental radiography certification &mdash; online.",
-    length: "~3 weeks self-paced",
-    format: "Online via FIDA Moodle",
-    credential: "Florida Dental Radiography Certification (FAC 64B5-9.011)",
-    salary: "PLACEHOLDER",
-    demand: "Required for all FL dental personnel operating X-ray equipment",
+    tagline: "Florida-mandated dental radiography certification, delivered online.",
+    length: "14 clock hours (8 theory + 6 lab)",
+    format: "Online — self-paced via FIDA Moodle",
+    credential: "Diploma · Florida Dental Radiography Certification (FAC 64B5-9.011)",
+    tuition: "$499.00",
+    cieId: "6501",
+    textbook:
+      "Essentials of Dental Assisting, 7th Ed. — Robinson & Bird, Elsevier (ISBN 9780323764025)",
+    prerequisites: [
+      "Be at least 18 years of age.",
+      "A minimum of 3 months of continuous on-the-job training assisting in the positioning and exposing of dental radiographs under direct supervision of a Florida-licensed dentist. Volunteer or shadowing experience does NOT count.",
+      "Signed acknowledgement from your supervising dentist confirming the three months of training.",
+      "Complete the online coursework.",
+    ],
     summary:
-      "The state-mandated certification every dental personnel in Florida needs to legally operate dental radiography equipment. Delivered fully online via FIDA's Moodle, with proctored final assessment.",
-    modules: [
-      "Radiation physics &amp; biology",
-      "Radiation safety &amp; protection",
-      "Dental radiographic techniques",
-      "Image evaluation &amp; quality assurance",
-      "Florida-specific regulatory requirements",
-      "Proctored final exam",
+      "A focused review course for dental personnel covering radiation health & safety, intra-oral and extra-oral imaging techniques, and quality control — the criteria currently required by Florida law to operate dental X-ray equipment. Includes self-study readings and a clinical competency assessment submitted via the LMS.",
+    courses: [
+      { code: "RHS101", title: "Foundations of Radiography, Radiographic Equipment, and Radiation Safety", hours: 2 },
+      { code: "RHS102", title: "Dental Imaging, Dental Film, and Processing Radiographs", hours: 3 },
+      { code: "RHS103", title: "Legal Issues, Quality Assurance, and Infection Prevention", hours: 3 },
+      { code: "RHS104", title: "Intraoral Imaging", hours: 4 },
+      { code: "RHS105", title: "Extraoral Imaging", hours: 2 },
     ],
   },
   {
     id: "efda",
-    title: "Expanded Functions Dental Auxiliary (EFDA)",
-    tagline: "Clinical-ready dental auxiliary credential in 12 weeks.",
-    length: "12 weeks",
-    format: "Hybrid &mdash; online theory + clinical lab",
-    credential: "Florida EFDA credential",
-    salary: "PLACEHOLDER",
-    demand: "PLACEHOLDER &mdash; confirm Florida BLS data",
-    summary:
-      "Earn the credential Florida requires for dental assistants to perform expanded clinical functions under dentist supervision. Increases your scope of practice, your value to employers, and your earning potential.",
-    modules: [
-      "Expanded clinical procedures",
-      "Coronal polishing &amp; sealants",
-      "Impression techniques &amp; provisional restorations",
-      "Infection control &amp; OSHA compliance",
-      "Florida dental practice act",
-      "Supervised clinical rotation",
+    title: "Expanded Functions for the Dental Assistant",
+    tagline: "Earn the EFDA certificate Florida requires for expanded clinical procedures.",
+    length: "5 weeks · 20 clock hours (13 theory + 7 lab)",
+    format: "Hybrid — online theory + on-campus clinical lab",
+    credential: "Expanded Functions Dental Assistant Certificate",
+    tuition: "$1,049.00",
+    cieId: "6501",
+    textbook:
+      "Essentials of Dental Assisting, 7th Ed. — Robinson & Bird, Elsevier (ISBN 9780323764025)",
+    prerequisites: [
+      "Be at least 18 years of age.",
+      "A minimum of 3 months of continuous on-the-job chairside training. Volunteer or shadowing does NOT count.",
+      "Signed acknowledgement from your supervising dentist confirming the three months of training.",
+      "Competency in reading, writing, and speaking English.",
+      "Complete the online coursework before attending the campus lab.",
     ],
-  },
-  {
-    id: "dental-assisting",
-    title: "Dental Assisting Foundation",
-    tagline: "PLACEHOLDER tagline.",
-    length: "PLACEHOLDER",
-    format: "PLACEHOLDER",
-    credential: "PLACEHOLDER",
-    salary: "PLACEHOLDER",
-    demand: "PLACEHOLDER",
     summary:
-      "PLACEHOLDER program description &mdash; confirm whether FIDA offers a foundational dental assisting program separate from EFDA, and provide curriculum details.",
-    modules: [
-      "PLACEHOLDER module 1",
-      "PLACEHOLDER module 2",
-      "PLACEHOLDER module 3",
-      "PLACEHOLDER module 4",
-      "PLACEHOLDER module 5",
-      "PLACEHOLDER module 6",
+      "Theory and hands-on training in expanded-function procedures performed by dental assistants in a Florida dental practice. Built around the current Dental Assisting National Board curriculum so graduates can perform expanded clinical functions under dentist supervision, in compliance with the Florida Board of Dentistry.",
+    courses: [
+      { code: "EFDA101", title: "Dental Sealants", hours: 1.5 },
+      { code: "EFDA102", title: "Fluoride Placement", hours: 1.5 },
+      { code: "EFDA103", title: "Polishing Clinical Crowns", hours: 1.5 },
+      { code: "EFDA104", title: "Liners, Bases, and Bonding Systems", hours: 1.5 },
+      { code: "EFDA105", title: "Temporary Restorations", hours: 1.5 },
+      { code: "EFDA106", title: "Matrices", hours: 1.5 },
+      { code: "EFDA107", title: "Alginate Impressions and Study Models", hours: 1.5 },
+      { code: "EFDA108", title: "Fabricating Temporary Crowns", hours: 1.5 },
+      { code: "EFDA109", title: "Placing Retraction Cord", hours: 1.5 },
+      { code: "EFDA110", title: "Place / Remove Periodontal Dressing", hours: 1.5 },
+      { code: "EFDA111", title: "Place / Remove Dental Dam", hours: 1.5 },
+      { code: "EFDA112", title: "Suture Removal", hours: 1.5 },
+      { code: "EFDA113", title: "Infection Control", hours: 2 },
     ],
   },
 ];
@@ -70,7 +91,7 @@ const programs = [
 export const metadata = {
   title: "Programs",
   description:
-    "Radiography for Dental Personnel, EFDA, and Dental Assisting programs at Florida Institute of Dental Assisting.",
+    "FIDA programs — Radiography for Dental Personnel (Florida-mandated dental radiography certification) and Expanded Functions for the Dental Assistant (EFDA certificate).",
 };
 
 export default function ProgramsPage() {
@@ -84,18 +105,19 @@ export default function ProgramsPage() {
           <div className="max-w-3xl">
             <div className="eyebrow">Programs</div>
             <h1 className="mt-3 font-display text-5xl md:text-6xl text-navy tracking-tight leading-[1.05]">
-              Train for the healthcare job you actually want.
+              Florida-credentialed dental training, done right.
             </h1>
             <p className="mt-6 text-muted text-lg leading-relaxed">
-              Three focused programs. Every one builds toward a nationally recognized
-              credential. Every one gets you hire-ready in under a year.
+              Two state-aligned diploma programs plus continuing education for
+              working dental professionals. Both diplomas map directly to
+              Florida Board of Dentistry requirements.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
               <Link href="/admissions" className="btn-primary">
                 Talk to Atticus <span aria-hidden="true">→</span>
               </Link>
               <a href="#compare" className="btn-ghost">
-                Compare all three
+                Compare programs
               </a>
             </div>
           </div>
@@ -116,7 +138,7 @@ export default function ProgramsPage() {
               Credential
             </div>
             <div className="p-5 md:p-6 text-xs font-semibold tracking-[0.12em] uppercase text-navy/60 border-l border-rule">
-              Starting salary
+              Tuition
             </div>
           </div>
           {programs.map((p, i) => (
@@ -125,16 +147,18 @@ export default function ProgramsPage() {
               className={`grid grid-cols-1 md:grid-cols-4 ${i !== programs.length - 1 ? "border-b border-rule" : ""}`}
             >
               <div className="p-5 md:p-6">
-                <a href={`#${p.id}`} className="font-display text-xl text-navy hover:text-teal transition-colors" dangerouslySetInnerHTML={{ __html: p.title }} />
+                <a href={`#${p.id}`} className="font-display text-xl text-navy hover:text-teal transition-colors">
+                  {p.title}
+                </a>
               </div>
               <div className="p-5 md:p-6 text-navy md:border-l border-rule">{p.length}</div>
-              <div className="p-5 md:p-6 text-navy md:border-l border-rule" dangerouslySetInnerHTML={{ __html: p.credential }} />
-              <div
-                className="p-5 md:p-6 text-navy font-semibold md:border-l border-rule"
-                dangerouslySetInnerHTML={{ __html: p.salary }}
-              />
+              <div className="p-5 md:p-6 text-navy md:border-l border-rule">{p.credential}</div>
+              <div className="p-5 md:p-6 text-navy font-semibold md:border-l border-rule">{p.tuition}</div>
             </div>
           ))}
+        </div>
+        <div className="mt-4 text-xs text-subtle">
+          Florida Commission for Independent Education · institution ID #6501.
         </div>
       </section>
 
@@ -151,33 +175,18 @@ export default function ProgramsPage() {
                   </span>
                   <div className="eyebrow">Program 0{idx + 1}</div>
                 </div>
-                <h2
-                  className="mt-4 font-display text-3xl md:text-4xl text-navy leading-tight"
-                  dangerouslySetInnerHTML={{ __html: p.title }}
-                />
+                <h2 className="mt-4 font-display text-3xl md:text-4xl text-navy leading-tight">
+                  {p.title}
+                </h2>
                 <p className="mt-2 text-teal font-semibold">{p.tagline}</p>
 
                 <dl className="mt-6 space-y-4 text-sm">
-                  <div className="flex items-start gap-3">
-                    <dt className="w-24 text-navy/60 font-semibold tracking-wide uppercase text-xs pt-0.5">Length</dt>
-                    <dd className="text-navy">{p.length}</dd>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <dt className="w-24 text-navy/60 font-semibold tracking-wide uppercase text-xs pt-0.5">Format</dt>
-                    <dd className="text-navy" dangerouslySetInnerHTML={{ __html: p.format }} />
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <dt className="w-24 text-navy/60 font-semibold tracking-wide uppercase text-xs pt-0.5">Credential</dt>
-                    <dd className="text-navy" dangerouslySetInnerHTML={{ __html: p.credential }} />
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <dt className="w-24 text-navy/60 font-semibold tracking-wide uppercase text-xs pt-0.5">Salary</dt>
-                    <dd className="text-navy font-semibold" dangerouslySetInnerHTML={{ __html: p.salary }} />
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <dt className="w-24 text-navy/60 font-semibold tracking-wide uppercase text-xs pt-0.5">Demand</dt>
-                    <dd className="text-navy" dangerouslySetInnerHTML={{ __html: p.demand }} />
-                  </div>
+                  <MetaRow label="Length" value={p.length} />
+                  <MetaRow label="Format" value={p.format} />
+                  <MetaRow label="Credential" value={p.credential} />
+                  <MetaRow label="Tuition" value={p.tuition} emphasis />
+                  <MetaRow label="CIE ID" value={`#${p.cieId}`} />
+                  <MetaRow label="Textbook" value={p.textbook} />
                 </dl>
 
                 <Link
@@ -190,31 +199,101 @@ export default function ProgramsPage() {
 
               {/* Right: content */}
               <div className="lg:col-span-2 card bg-white p-8 md:p-10">
-                <p
-                  className="text-navy text-lg leading-relaxed"
-                  dangerouslySetInnerHTML={{ __html: p.summary }}
-                />
+                <p className="text-navy text-lg leading-relaxed">{p.summary}</p>
 
                 <div className="mt-8">
-                  <div className="eyebrow">What you&rsquo;ll learn</div>
-                  <ul className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
-                    {p.modules.map((m) => (
-                      <li key={m} className="flex items-start gap-3 text-navy">
-                        <span className="mt-1.5 w-4 h-4 rounded-full bg-teal/10 border border-teal/40 flex items-center justify-center flex-shrink-0">
-                          <span className="w-1 h-1 rounded-full bg-teal" />
+                  <div className="eyebrow">Before you enroll</div>
+                  <ul className="mt-4 space-y-2.5">
+                    {p.prerequisites.map((pre, i) => (
+                      <li key={i} className="flex items-start gap-3 text-navy">
+                        <span className="mt-1 w-5 h-5 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center flex-shrink-0 text-amber-700 text-[10px] font-bold">
+                          !
                         </span>
-                        <span
-                          className="text-sm leading-relaxed"
-                          dangerouslySetInnerHTML={{ __html: m }}
-                        />
+                        <span className="text-sm leading-relaxed">{pre}</span>
                       </li>
                     ))}
                   </ul>
+                </div>
+
+                <div className="mt-8">
+                  <div className="eyebrow">Course breakdown</div>
+                  <div className="mt-4 border border-rule rounded-sm overflow-hidden">
+                    <table className="w-full text-sm">
+                      <thead className="bg-paper-subtle">
+                        <tr className="text-left text-xs uppercase tracking-wider text-muted">
+                          <th className="px-4 py-2.5 font-semibold">Course #</th>
+                          <th className="px-4 py-2.5 font-semibold">Title</th>
+                          <th className="px-4 py-2.5 font-semibold text-right">Hours</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {p.courses.map((c, i) => (
+                          <tr key={c.code} className={i !== 0 ? "border-t border-rule" : ""}>
+                            <td className="px-4 py-2.5 font-mono text-xs text-navy">{c.code}</td>
+                            <td className="px-4 py-2.5 text-navy">{c.title}</td>
+                            <td className="px-4 py-2.5 text-navy text-right tabular-nums">{c.hours}</td>
+                          </tr>
+                        ))}
+                        <tr className="border-t border-rule bg-paper-subtle/60">
+                          <td className="px-4 py-2.5 font-semibold text-navy" colSpan={2}>Total</td>
+                          <td className="px-4 py-2.5 font-semibold text-navy text-right tabular-nums">
+                            {p.courses.reduce((sum, c) => sum + c.hours, 0)}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
           </article>
         ))}
+      </section>
+
+      {/* PROFESSIONAL DEVELOPMENT / CE SECTION */}
+      <section className="bg-paper-subtle border-t border-rule">
+        <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-20 md:py-24">
+          <div className="max-w-3xl mb-10">
+            <div className="eyebrow">Continuing Education</div>
+            <h2 className="mt-3 font-display text-4xl md:text-5xl text-navy tracking-tight">
+              Professional development for working dental teams.
+            </h2>
+            <p className="mt-5 text-muted text-lg leading-relaxed">
+              Short, focused CE courses for licensed dental assistants and
+              hygienists — designed around Florida licensure requirements and
+              the day-to-day skills working teams ask us for most.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
+            {[
+              { title: "Infection Control & OSHA", body: "Annual refresh on current CDC and OSHA bloodborne-pathogen standards for dental settings." },
+              { title: "Radiation Health & Safety", body: "Short refreshers for radiography-certified personnel between renewals." },
+              { title: "HIPAA for Dental Teams", body: "Practical patient-privacy compliance — what changed, what didn't, what auditors check for." },
+              { title: "Medical Emergencies in the Office", body: "Recognize and respond — syncope, anaphylaxis, cardiac events, airway compromise." },
+              { title: "Sterilization & Instrument Processing", body: "Hands-on review of CDC-aligned reprocessing workflows and biological monitoring." },
+              { title: "Custom team training", body: "Group sessions tailored to your practice — onboarding new assistants, refreshing veterans, prepping for state inspections." },
+            ].map((c) => (
+              <div key={c.title} className="card bg-white p-5">
+                <div className="font-display text-lg text-navy mb-1.5">{c.title}</div>
+                <p className="text-sm text-muted leading-relaxed">{c.body}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="card bg-white p-6 md:p-8 flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <div className="font-display text-xl text-navy mb-1">Want the CE schedule?</div>
+              <p className="text-sm text-muted max-w-md">
+                Tell us which courses your team needs and we&rsquo;ll send dates,
+                pricing, and group rates.
+              </p>
+            </div>
+            <a href="mailto:success@fldentalassisting.com?subject=Professional%20Development%20interest" className="btn-primary">
+              Email success@fldentalassisting.com
+            </a>
+          </div>
+        </div>
       </section>
 
       {/* CTA BAND */}
@@ -239,6 +318,25 @@ export default function ProgramsPage() {
       </section>
 
       <Footer />
+    </div>
+  );
+}
+
+function MetaRow({
+  label,
+  value,
+  emphasis,
+}: {
+  label: string;
+  value: string;
+  emphasis?: boolean;
+}) {
+  return (
+    <div className="flex items-start gap-3">
+      <dt className="w-24 text-navy/60 font-semibold tracking-wide uppercase text-xs pt-0.5 flex-shrink-0">
+        {label}
+      </dt>
+      <dd className={emphasis ? "text-navy font-semibold" : "text-navy"}>{value}</dd>
     </div>
   );
 }
