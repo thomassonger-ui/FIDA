@@ -2,60 +2,23 @@
 
 import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { createBrowserClient } from "@supabase/ssr";
 
 function LoginForm() {
   const sp = useSearchParams();
   const error = sp.get("error");
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
-  const [sendError, setSendError] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (submitting) return;
     setSubmitting(true);
-    setSendError(null);
-
     const fd = new FormData(e.currentTarget);
-    const email = String(fd.get("email") ?? "").trim().toLowerCase();
-
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    if (!url || !key) {
-      setSendError("Portal not configured. Email success@fldentalassisting.com.");
-      setSubmitting(false);
-      return;
+    try {
+      await fetch("/api/portal/login", { method: "POST", body: fd });
+    } catch {
+      /* swallow — endpoint is intentionally silent */
     }
-
-    // Browser-initiated so the PKCE code_verifier is stored locally.
-    // When the user clicks the email link, the callback's
-    // exchangeCodeForSession() will be able to find this verifier.
-    const supabase = createBrowserClient(url, key);
-    const redirectTo = `${window.location.origin}/auth/callback?next=/portal`;
-
-    const { error: otpError } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        shouldCreateUser: true,
-        emailRedirectTo: redirectTo,
-      },
-    });
-
-    if (otpError) {
-      // Friendly handling for the most common free-tier error.
-      const msg = otpError.message.toLowerCase();
-      if (msg.includes("rate") || msg.includes("seconds")) {
-        setSendError(
-          "Please wait at least 1 minute between sign-in link requests."
-        );
-      } else {
-        setSendError(otpError.message);
-      }
-      setSubmitting(false);
-      return;
-    }
-
     setDone(true);
     setSubmitting(false);
   }
@@ -66,16 +29,13 @@ function LoginForm() {
         <div className="eyebrow mb-2">Check your email</div>
         <h3 className="font-display text-xl text-navy mb-2">Link sent.</h3>
         <p className="text-sm text-muted">
-          Your new sign-in link should arrive within a few minutes. Each link is
-          single-use &mdash; if it stops working, come back here and request another.
+          A sign-in link is on the way. The email subject will say{" "}
+          <strong>&ldquo;Reset Password&rdquo;</strong> &mdash; that&rsquo;s normal.
+          Click the link inside to land in your portal.
         </p>
         <p className="text-xs text-subtle mt-3 italic">
-          Tip: if you don&rsquo;t see it within 10 minutes, check spam. Please wait
-          at least 1 minute before requesting another link.
-        </p>
-        <p className="text-xs text-subtle mt-3">
-          Important: open the email link in <strong>this same browser</strong> so the
-          sign-in finishes correctly.
+          If you don&rsquo;t see it within 10 minutes, check spam. Please wait at
+          least 1 minute before requesting another link.
         </p>
       </div>
     );
@@ -94,13 +54,7 @@ function LoginForm() {
       )}
       {error === "auth-failed" && (
         <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
-          That sign-in link didn&rsquo;t complete. Request a new one below and
-          open the email in the same browser.
-        </div>
-      )}
-      {sendError && (
-        <div className="rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-xs text-rose-900">
-          {sendError}
+          That sign-in link didn&rsquo;t complete. Request a new one below.
         </div>
       )}
       <div className="rounded-md border border-teal/30 bg-teal/5 px-3 py-2.5 text-xs text-navy">
