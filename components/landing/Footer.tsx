@@ -48,10 +48,10 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-14 pt-8 border-t border-white/10 text-xs text-navy-200 text-center md:text-left">
-          &copy; {new Date().getFullYear()} Florida Institute of Dental Assisting. All rights reserved.
-        </div>
-        <div className="mt-4">
+        <div className="mt-14 pt-8 border-t border-white/10 flex flex-col gap-3 md:flex-row md:items-center md:justify-between text-xs text-navy-200">
+          <div>
+            &copy; {new Date().getFullYear()} Florida Institute of Dental Assisting. All rights reserved.
+          </div>
           <AtticusCopyrightBar variant="light" />
         </div>
       </div>
