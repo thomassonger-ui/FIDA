@@ -23,11 +23,6 @@ export function Footer() {
                 </span>
               </span>
             </div>
-            <p className="text-navy-100 leading-relaxed max-w-sm">
-              A modern allied-health institute powered by Atticus&trade; &mdash; the AI
-              platform designed and developed by WorldTeachPathways dba WorldTeachESL LLC,
-              deployed in partnership with Florida Institute of Dental Assisting.
-            </p>
           </div>
 
           <div>
