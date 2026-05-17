@@ -55,7 +55,7 @@ const programs: Program[] = [
     title: "Expanded Functions for the Dental Assistant",
     tagline: "Earn the EFDA certificate Florida requires for expanded clinical procedures.",
     length: "5 weeks · 20 clock hours (13 theory + 7 lab)",
-    format: "Hybrid — online theory + on-campus clinical lab",
+    format: "Hybrid — online theory + in office clinical lab",
     credential: "Expanded Functions Dental Assistant Certificate",
     tuition: "$1,049.00",
     cieId: "6501",
