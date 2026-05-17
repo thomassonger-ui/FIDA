@@ -184,12 +184,14 @@ export default function ProgramsPage() {
                   <MetaRow label="Textbook" value={p.textbook} />
                 </dl>
 
-                <Link
-                  href={`/admissions?program=${p.id}`}
+                <a
+                  href="https://fldentalassisting.moodlecloud.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="btn-primary mt-8 w-full"
                 >
                   Apply to this program <span aria-hidden="true">→</span>
-                </Link>
+                </a>
               </div>
 
               {/* Right: content */}
