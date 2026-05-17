@@ -169,12 +169,7 @@ export default function ProgramsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
               {/* Left: meta */}
               <div className="lg:col-span-1">
-                <div className="flex items-center gap-2">
-                  <span className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-teal/10 border border-teal/30 text-teal font-display text-lg">
-                    {idx + 1}
-                  </span>
-                  <div className="eyebrow">Program 0{idx + 1}</div>
-                </div>
+                <div className="eyebrow">Program 0{idx + 1}</div>
                 <h2 className="mt-4 font-display text-3xl md:text-4xl text-navy leading-tight">
                   {p.title}
                 </h2>
@@ -340,3 +335,4 @@ function MetaRow({
     </div>
   );
 }
+
