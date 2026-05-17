@@ -69,22 +69,26 @@ export default function AboutPage() {
 
       {/* OPERATING MODEL */}
       <section className="bg-paper-subtle border-y border-rule">
-        <div className="max-w-4xl mx-auto px-6 md:px-10 lg:px-12 py-20">
-          <div className="eyebrow">Operating model</div>
-          <h2 className="mt-3 font-display text-4xl text-navy tracking-tight">
-            Powered by Atticus&trade;
-          </h2>
-          <p className="mt-5 text-muted leading-relaxed">
-            FIDA runs on Atticus &mdash; a four-pillar AI operating system for education:
-            an AI Brain that answers student questions, an OS that handles scheduling and
-            compliance, an LMS for coursework, and an LLS that keeps every student on
-            track to graduation and beyond.
-          </p>
-          <p className="mt-4 text-muted leading-relaxed">
-            The result: less paperwork for staff, faster answers for students, and more
-            time for what actually matters &mdash; real instruction and real outcomes. FIDA
-            is where we bring the best of that playbook to allied health.
-          </p>
+        <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-20">
+          <div className="max-w-2xl mb-8">
+            <div className="eyebrow">Operating model</div>
+            <h2 className="mt-3 font-display text-4xl text-navy tracking-tight">
+              Powered by Atticus&trade;
+            </h2>
+          </div>
+          <div className="max-w-3xl">
+            <p className="mt-0 text-muted leading-relaxed">
+              FIDA runs on Atticus &mdash; a four-pillar AI operating system for education:
+              an AI Brain that answers student questions, an OS that handles scheduling and
+              compliance, an LMS for coursework, and an LLS that keeps every student on
+              track to graduation and beyond.
+            </p>
+            <p className="mt-4 text-muted leading-relaxed">
+              The result: less paperwork for staff, faster answers for students, and more
+              time for what actually matters &mdash; real instruction and real outcomes. FIDA
+              is where we bring the best of that playbook to allied health.
+            </p>
+          </div>
         </div>
       </section>
 
