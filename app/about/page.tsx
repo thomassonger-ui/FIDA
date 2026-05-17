@@ -93,9 +93,11 @@ export default function AboutPage() {
               Built by people who&rsquo;ve done this before.
             </h2>
             <p className="mt-5 text-muted leading-relaxed">
-              Florida Institute of Dental Assisting is operated by <strong className="text-navy">WorldTeachPathways
-              dba WorldTeachESL LLC</strong>, architected in collaboration with{" "}
-              <strong className="text-navy">Florida Institute of Dental Assisting</strong>.
+              <strong className="text-navy">Florida Institute of Dental Assisting</strong> partners with{" "}
+              <strong className="text-navy">WorldTeachPathways dba WorldTeachESL LLC</strong> for the{" "}
+              <strong className="text-navy">Atticus&trade;</strong> learning platform and digital infrastructure
+              that powers our online programs. FIDA is independently owned and operated; WorldTeachPathways
+              provides the technology layer that runs alongside it.
             </p>
             <p className="mt-4 text-muted leading-relaxed">
               Between our teams we&rsquo;ve built, advised, and operated K-12, ESL, and
