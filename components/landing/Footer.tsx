@@ -48,14 +48,8 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-14 pt-8 border-t border-white/10 text-xs text-navy-200 flex flex-col md:flex-row md:items-start md:justify-between gap-3">
-          <div>
-            &copy; {new Date().getFullYear()} Florida Institute of Dental Assisting. All rights reserved.
-          </div>
-          <div className="md:text-right md:max-w-md">
-            Atticus&trade; is an AI platform by WorldTeachPathways dba WorldTeachESL LLC,
-            deployed in partnership with Florida Institute of Dental Assisting.
-          </div>
+        <div className="mt-14 pt-8 border-t border-white/10 text-xs text-navy-200 text-center md:text-left">
+          &copy; {new Date().getFullYear()} Florida Institute of Dental Assisting. All rights reserved.
         </div>
         <div className="mt-4">
           <AtticusCopyrightBar variant="light" />
