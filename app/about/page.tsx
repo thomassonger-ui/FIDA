@@ -67,44 +67,24 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* OPERATING PARTNERS */}
+      {/* OPERATING MODEL */}
       <section className="bg-paper-subtle border-y border-rule">
-        <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-20 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-          <div>
-            <div className="eyebrow">Operating model</div>
-            <h2 className="mt-3 font-display text-4xl text-navy tracking-tight">
-              Powered by Atticus.
-            </h2>
-            <p className="mt-5 text-muted leading-relaxed">
-              FIDA runs on Atticus &mdash; a four-pillar AI operating system for education:
-              an AI Brain that answers student questions, an OS that handles scheduling and
-              compliance, an LMS for coursework, and an LLS that keeps every student on
-              track to graduation and beyond.
-            </p>
-            <p className="mt-4 text-muted leading-relaxed">
-              The result: less paperwork for staff, faster answers for students, and more
-              time for what actually matters &mdash; real instruction and real outcomes.
-            </p>
-          </div>
-
-          <div>
-            <div className="eyebrow">Institutional partners</div>
-            <h2 className="mt-3 font-display text-4xl text-navy tracking-tight">
-              Built by people who&rsquo;ve done this before.
-            </h2>
-            <p className="mt-5 text-muted leading-relaxed">
-              <strong className="text-navy">Florida Institute of Dental Assisting</strong> partners with{" "}
-              <strong className="text-navy">WorldTeachPathways dba WorldTeachESL LLC</strong> for the{" "}
-              <strong className="text-navy">Atticus&trade;</strong> learning platform and digital infrastructure
-              that powers our online programs. FIDA is independently owned and operated; WorldTeachPathways
-              provides the technology layer that runs alongside it.
-            </p>
-            <p className="mt-4 text-muted leading-relaxed">
-              Between our teams we&rsquo;ve built, advised, and operated K-12, ESL, and
-              post-secondary programs across three continents. FIDA is where we bring the
-              best of that playbook to allied health.
-            </p>
-          </div>
+        <div className="max-w-4xl mx-auto px-6 md:px-10 lg:px-12 py-20">
+          <div className="eyebrow">Operating model</div>
+          <h2 className="mt-3 font-display text-4xl text-navy tracking-tight">
+            Powered by Atticus&trade;
+          </h2>
+          <p className="mt-5 text-muted leading-relaxed">
+            FIDA runs on Atticus &mdash; a four-pillar AI operating system for education:
+            an AI Brain that answers student questions, an OS that handles scheduling and
+            compliance, an LMS for coursework, and an LLS that keeps every student on
+            track to graduation and beyond.
+          </p>
+          <p className="mt-4 text-muted leading-relaxed">
+            The result: less paperwork for staff, faster answers for students, and more
+            time for what actually matters &mdash; real instruction and real outcomes. FIDA
+            is where we bring the best of that playbook to allied health.
+          </p>
         </div>
       </section>
 
