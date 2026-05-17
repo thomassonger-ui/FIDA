@@ -33,7 +33,7 @@ const programs: Program[] = [
     tuition: "$499.00",
     cieId: "6501",
     textbook:
-      "Essentials of Dental Assisting, 7th Ed. — Robinson & Bird, Elsevier (ISBN 9780323764025)",
+      "Modern Dental Assisting, 14th Ed. — Robinson, Elsevier, 2024 (ISBN 978-0-323-82440-8)",
     prerequisites: [
       "Be at least 18 years of age.",
       "A minimum of 3 months of continuous on-the-job training assisting in the positioning and exposing of dental radiographs under direct supervision of a Florida-licensed dentist. Volunteer or shadowing experience does NOT count.",
@@ -60,7 +60,7 @@ const programs: Program[] = [
     tuition: "$1,049.00",
     cieId: "6501",
     textbook:
-      "Essentials of Dental Assisting, 7th Ed. — Robinson & Bird, Elsevier (ISBN 9780323764025)",
+      "Modern Dental Assisting, 14th Ed. — Robinson, Elsevier, 2024 (ISBN 978-0-323-82440-8)",
     prerequisites: [
       "Be at least 18 years of age.",
       "A minimum of 3 months of continuous on-the-job chairside training. Volunteer or shadowing does NOT count.",
