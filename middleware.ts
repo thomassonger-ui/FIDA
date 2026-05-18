@@ -20,6 +20,7 @@ export async function middleware(req: NextRequest) {
     pathname.startsWith("/tickets/") ||
     pathname.startsWith("/api/tickets") ||
     pathname === "/portal/login" ||
+    pathname.startsWith("/api/admin/login") ||
     pathname.startsWith("/api/portal/login") ||
     pathname.startsWith("/api/portal/logout") ||
     pathname === "/atticus" ||
@@ -119,3 +120,4 @@ export async function middleware(req: NextRequest) {
 export const config = {
   matcher: ["/((?!_next/static|_next/image).*)"],
 };
+
