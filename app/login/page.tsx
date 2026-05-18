@@ -71,6 +71,12 @@ function PasswordSignInForm() {
       >
         Sign in
       </button>
+      <a
+        href="/login/forgot"
+        className="mt-1 text-center text-xs text-muted hover:text-teal"
+      >
+        Forgot password?
+      </a>
     </form>
   );
 }
