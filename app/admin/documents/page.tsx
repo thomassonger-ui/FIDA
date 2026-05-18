@@ -13,32 +13,15 @@
 
 import { getServerClient } from "@/lib/supabase";
 import {
-  categoryLabel,
-  categoryTone,
   RETENTION_YEARS,
   type DocumentCategory,
 } from "@/lib/demo-documents";
 import { DocumentsToolbar } from "./documents-toolbar";
+import { DocumentsTable, type DocRow } from "./documents-table";
 
 export const dynamic = "force-dynamic";
 
-type DocRecord = {
-  id: number;
-  student_id: string | null;
-  student_name: string;
-  category: DocumentCategory;
-  filename: string;
-  file_size_kb: number;
-  mime_type: string;
-  storage_path: string;
-  sha256: string;
-  uploaded_by: string;
-  uploaded_at: string;
-  retention_years: number;
-  retention_expires: string;
-  locked: boolean;
-  notes: string | null;
-};
+type DocRecord = DocRow;
 
 const CATEGORY_OPTIONS: { value: DocumentCategory; label: string }[] = [
   { value: "enrollment_agreement", label: "Enrollment agreement" },
@@ -72,114 +55,6 @@ async function fetchDocs(): Promise<DocRecord[]> {
   }
 }
 
-function fmtDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-}
-
-function fmtDateTime(iso: string): string {
-  return new Date(iso).toLocaleString("en-US", {
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  });
-}
-
-function CategoryBadge({ category }: { category: DocumentCategory }) {
-  const tone = categoryTone(category);
-  const cls =
-    tone === "blue"
-      ? "bg-blue-50 text-blue-900 border-blue-200"
-      : tone === "green"
-      ? "bg-green-50 text-green-900 border-green-200"
-      : tone === "amber"
-      ? "bg-amber-50 text-amber-900 border-amber-200"
-      : tone === "red"
-      ? "bg-red-50 text-red-900 border-red-200"
-      : "bg-paper-subtle text-muted border-rule";
-  return (
-    <span
-      className={`inline-block text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-sm border ${cls}`}
-    >
-      {categoryLabel(category)}
-    </span>
-  );
-}
-
-function LockIcon({ locked }: { locked: boolean }) {
-  return (
-    <span
-      className={`inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] ${
-        locked
-          ? "bg-green-100 text-green-800"
-          : "bg-red-100 text-red-800"
-      }`}
-      title={locked ? "WORM locked" : "Unlocked"}
-      aria-label={locked ? "Locked" : "Unlocked"}
-    >
-      {locked ? "\u{1F512}" : "\u{1F513}"}
-    </span>
-  );
-}
-
-function DocRow({ doc }: { doc: DocRecord }) {
-  return (
-    <tr className="border-t border-rule hover:bg-paper-subtle transition-colors">
-      <td className="px-4 py-3">
-        <LockIcon locked={doc.locked} />
-      </td>
-      <td className="px-4 py-3">
-        <div className="text-ink font-medium">{doc.student_name}</div>
-        {doc.student_id && (
-          <div className="text-[11px] text-subtle">ID {doc.student_id}</div>
-        )}
-      </td>
-      <td className="px-4 py-3">
-        <CategoryBadge category={doc.category} />
-      </td>
-      <td className="px-4 py-3">
-        <a
-          href={`/api/admin/documents/${doc.id}/download`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-xs text-blue-700 hover:text-blue-900 hover:underline font-mono truncate max-w-[200px] inline-block"
-          title="Open in new tab (60s signed link)"
-        >
-          {doc.filename}
-        </a>
-        <div className="text-[10px] text-subtle">
-          {doc.file_size_kb} KB &middot;{" "}
-          <a
-            href={`/api/admin/documents/${doc.id}/download?download=1`}
-            className="text-blue-700 hover:text-blue-900 hover:underline"
-            title="Download to disk"
-          >
-            Download
-          </a>
-        </div>
-      </td>
-      <td className="px-4 py-3">
-        <code className="text-[10px] text-subtle font-mono">
-          {doc.sha256.slice(0, 16)}&hellip;
-        </code>
-      </td>
-      <td className="px-4 py-3 text-xs text-muted whitespace-nowrap">
-        <div>{fmtDateTime(doc.uploaded_at)}</div>
-        <div className="text-[10px] text-subtle">{doc.uploaded_by}</div>
-      </td>
-      <td className="px-4 py-3 text-xs text-muted">
-        <div>{doc.retention_years}yr</div>
-        <div className="text-[10px] text-subtle">
-          Expires {fmtDate(doc.retention_expires)}
-        </div>
-      </td>
-    </tr>
-  );
-}
 
 export default async function DocumentsPage() {
   const docs = await fetchDocs();
@@ -264,47 +139,7 @@ export default async function DocumentsPage() {
       {/* Document table */}
       <section className="mb-14">
         <div className="eyebrow mb-4">Vault contents</div>
-        {docs.length === 0 ? (
-          <div className="border border-rule rounded-sm p-8 text-center text-sm text-muted bg-paper-subtle">
-            No documents in the vault yet. Click <strong>Upload document</strong>{" "}
-            above to add the first one.
-          </div>
-        ) : (
-          <div className="border border-rule rounded-sm overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-paper-subtle text-left">
-                <tr>
-                  <th className="px-4 py-3 font-medium text-xs uppercase tracking-wider text-muted">
-                    Lock
-                  </th>
-                  <th className="px-4 py-3 font-medium text-xs uppercase tracking-wider text-muted">
-                    Student
-                  </th>
-                  <th className="px-4 py-3 font-medium text-xs uppercase tracking-wider text-muted">
-                    Category
-                  </th>
-                  <th className="px-4 py-3 font-medium text-xs uppercase tracking-wider text-muted">
-                    Filename
-                  </th>
-                  <th className="px-4 py-3 font-medium text-xs uppercase tracking-wider text-muted">
-                    SHA-256
-                  </th>
-                  <th className="px-4 py-3 font-medium text-xs uppercase tracking-wider text-muted">
-                    Uploaded
-                  </th>
-                  <th className="px-4 py-3 font-medium text-xs uppercase tracking-wider text-muted">
-                    Retention
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {docs.map((doc) => (
-                  <DocRow key={doc.id} doc={doc} />
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        <DocumentsTable docs={docs} />
       </section>
 
       {/* Retention schedule */}
