@@ -40,7 +40,7 @@ async function fetchDocs(): Promise<DocRecord[]> {
     const { data, error } = await supabase
       .from("document_records")
       .select(
-        "id, student_id, student_name, category, filename, file_size_kb, mime_type, storage_path, sha256, uploaded_by, uploaded_at, retention_years, retention_expires, locked, notes"
+        "id, student_id, student_name, category, program, filename, file_size_kb, mime_type, storage_path, sha256, uploaded_by, uploaded_at, retention_years, retention_expires, locked, notes"
       )
       .order("uploaded_at", { ascending: false })
       .limit(500);

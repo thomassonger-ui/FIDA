@@ -42,6 +42,7 @@ function UploadPanel({ onClose }: { onClose: () => void }) {
   const [category, setCategory] = useState<DocumentCategory>(
     "enrollment_agreement"
   );
+  const [program, setProgram] = useState<string>("");
   const [notes, setNotes] = useState("");
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -70,6 +71,7 @@ function UploadPanel({ onClose }: { onClose: () => void }) {
       fd.append("student_name", studentName.trim());
       fd.append("student_id", studentId.trim());
       fd.append("category", category);
+      if (program) fd.append("program", program);
       fd.append("notes", notes.trim());
 
       const res = await fetch("/api/admin/documents", {
@@ -144,6 +146,23 @@ function UploadPanel({ onClose }: { onClose: () => void }) {
                 {o.label} ({RETENTION_YEARS[o.value]}yr retention)
               </option>
             ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-xs text-muted mb-1">
+            Program <span className="text-muted">(optional)</span>
+          </label>
+          <select
+            value={program}
+            onChange={(e) => setProgram(e.target.value)}
+            className="w-full px-3 py-2 text-sm border border-rule rounded-sm bg-paper-subtle focus:border-ink focus:outline-none"
+          >
+            <option value="">— Not specified —</option>
+            <option value="efda">EFDA (Expanded Functions Dental Assistant)</option>
+            <option value="rdp_ce">RDP-CE (Radiography for Dental Personnel)</option>
+            <option value="both">Both programs</option>
+            <option value="other">Other</option>
           </select>
         </div>
 

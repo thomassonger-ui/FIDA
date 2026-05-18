@@ -89,7 +89,12 @@ export async function POST(req: NextRequest) {
     const category = formData.get("category") as string | null;
     const studentId = formData.get("student_id") as string | null;
     const studentName = formData.get("student_name") as string | null;
+    const programRaw = formData.get("program") as string | null;
     const notes = formData.get("notes") as string | null;
+
+    const VALID_PROGRAMS = new Set(["efda", "rdp_ce", "both", "other"]);
+    const program =
+      programRaw && VALID_PROGRAMS.has(programRaw) ? programRaw : null;
 
     if (!file) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
@@ -151,6 +156,7 @@ export async function POST(req: NextRequest) {
         student_id: (studentId ?? "").trim() || null,
         student_name: studentName,
         category: cat,
+        program,
         filename: file.name,
         file_size_kb: Math.round(file.size / 1024),
         mime_type: file.type || "application/octet-stream",
@@ -202,7 +208,7 @@ export async function GET() {
     const { data, error } = await supabase
       .from("document_records")
       .select(
-        "id, student_id, student_name, category, filename, file_size_kb, mime_type, storage_path, sha256, uploaded_by, uploaded_at, retention_years, retention_expires, locked, notes"
+        "id, student_id, student_name, category, program, filename, file_size_kb, mime_type, storage_path, sha256, uploaded_by, uploaded_at, retention_years, retention_expires, locked, notes"
       )
       .order("uploaded_at", { ascending: false })
       .limit(500);

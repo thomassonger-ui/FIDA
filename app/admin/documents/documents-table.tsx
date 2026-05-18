@@ -22,6 +22,7 @@ export type DocRow = {
   student_id: string | null;
   student_name: string;
   category: DocumentCategory;
+  program: string | null;
   filename: string;
   file_size_kb: number;
   mime_type: string;
@@ -104,6 +105,7 @@ export function DocumentsTable({ docs }: { docs: DocRow[] }) {
         d.student_name,
         d.student_id ?? "",
         d.filename,
+        d.program ?? "",
       ]
         .join(" ")
         .toLowerCase();
@@ -360,11 +362,21 @@ export function DocumentsTable({ docs }: { docs: DocRow[] }) {
                     <div className="text-ink font-medium">
                       {doc.student_name}
                     </div>
-                    {doc.student_id && (
-                      <div className="text-[11px] text-subtle">
-                        ID {doc.student_id}
-                      </div>
-                    )}
+                    <div className="text-[11px] text-subtle">
+                      {doc.student_id && <>ID {doc.student_id}</>}
+                      {doc.student_id && doc.program && " · "}
+                      {doc.program && (
+                        <span className="uppercase tracking-wider">
+                          {doc.program === "rdp_ce"
+                            ? "RDP-CE"
+                            : doc.program === "efda"
+                            ? "EFDA"
+                            : doc.program === "both"
+                            ? "EFDA + RDP-CE"
+                            : "Other"}
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="px-4 py-3">
                     <CategoryBadge category={doc.category} />

@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
     const supabase = getServerClient();
     const { data: docs, error } = await supabase
       .from("document_records")
-      .select("id, filename, storage_path, student_id, student_name, category")
+      .select("id, filename, storage_path, student_id, student_name, category, program")
       .in("id", ids);
 
     if (error) {
@@ -91,13 +91,25 @@ export async function POST(req: NextRequest) {
       }
 
       // Build a human-readable archive name:
-      //   FIDA - {Student Name} - {Category Label} - {Original Filename}
+      //   FIDA - {Program?} - {Student Name} - {Category Label} - {Original Filename}
       // Sanitise each part separately so we never produce illegal characters,
       // then de-dup on collision.
       const studentPart = safe(doc.student_name);
       const categoryPart = safe(categoryLabel(doc.category));
       const filePart = safe(doc.filename);
-      let name = `FIDA - ${studentPart} - ${categoryPart} - ${filePart}`;
+      const programLabel = (p: string | null): string => {
+        if (!p) return "";
+        if (p === "efda") return "EFDA";
+        if (p === "rdp_ce") return "RDP-CE";
+        if (p === "both") return "EFDA + RDP-CE";
+        return "Other";
+      };
+      const progPart = programLabel(
+        (doc as { program?: string | null }).program ?? null
+      );
+      let name = progPart
+        ? `FIDA - ${progPart} - ${studentPart} - ${categoryPart} - ${filePart}`
+        : `FIDA - ${studentPart} - ${categoryPart} - ${filePart}`;
       if (usedNames.has(name)) {
         const dot = name.lastIndexOf(".");
         const base = dot > 0 ? name.slice(0, dot) : name;
@@ -126,10 +138,12 @@ export async function POST(req: NextRequest) {
       `Documents requested: ${ids.length}`,
       `Documents retrieved: ${docs.length - missing.length}`,
       ``,
-      `# id  category  student  filename`,
+      `# id\tprogram\tcategory\tstudent\tfilename`,
       ...docs.map(
-        (d) =>
-          `${d.id}\t${d.category}\t${d.student_name}\t${d.filename}`
+        (d) => {
+          const dr = d as { program?: string | null };
+          return `${d.id}\t${dr.program ?? "-"}\t${d.category}\t${d.student_name}\t${d.filename}`;
+        }
       ),
     ];
     zip.file("_manifest.txt", manifestLines.join("\n") + "\n");
