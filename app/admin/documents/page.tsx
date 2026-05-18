@@ -142,10 +142,25 @@ function DocRow({ doc }: { doc: DocRecord }) {
         <CategoryBadge category={doc.category} />
       </td>
       <td className="px-4 py-3">
-        <div className="text-xs text-ink font-mono truncate max-w-[200px]">
+        <a
+          href={`/api/admin/documents/${doc.id}/download`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs text-blue-700 hover:text-blue-900 hover:underline font-mono truncate max-w-[200px] inline-block"
+          title="Open in new tab (60s signed link)"
+        >
           {doc.filename}
+        </a>
+        <div className="text-[10px] text-subtle">
+          {doc.file_size_kb} KB &middot;{" "}
+          <a
+            href={`/api/admin/documents/${doc.id}/download?download=1`}
+            className="text-blue-700 hover:text-blue-900 hover:underline"
+            title="Download to disk"
+          >
+            Download
+          </a>
         </div>
-        <div className="text-[10px] text-subtle">{doc.file_size_kb} KB</div>
       </td>
       <td className="px-4 py-3">
         <code className="text-[10px] text-subtle font-mono">
