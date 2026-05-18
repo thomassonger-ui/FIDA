@@ -10,7 +10,7 @@
  * Receives the docs list as a prop from the parent server component.
  */
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   categoryLabel,
   categoryTone,
@@ -93,16 +93,46 @@ export function DocumentsTable({ docs }: { docs: DocRow[] }) {
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [downloading, setDownloading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
 
-  const allSelected = docs.length > 0 && selected.size === docs.length;
-  const someSelected = selected.size > 0 && !allSelected;
+  // Case-insensitive substring match across student name, student ID, and filename.
+  const filteredDocs = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return docs;
+    return docs.filter((d) => {
+      const hay = [
+        d.student_name,
+        d.student_id ?? "",
+        d.filename,
+      ]
+        .join(" ")
+        .toLowerCase();
+      return hay.includes(q);
+    });
+  }, [docs, query]);
+
+  // "Select all" applies to the currently visible (filtered) set.
+  const visibleIds = useMemo(
+    () => new Set(filteredDocs.map((d) => d.id)),
+    [filteredDocs]
+  );
+  const visibleSelected = filteredDocs.filter((d) => selected.has(d.id)).length;
+  const allSelected =
+    filteredDocs.length > 0 && visibleSelected === filteredDocs.length;
+  const someSelected = visibleSelected > 0 && !allSelected;
 
   const toggleAll = () => {
-    if (allSelected) {
-      setSelected(new Set());
-    } else {
-      setSelected(new Set(docs.map((d) => d.id)));
-    }
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (allSelected) {
+        // Unselect everything currently visible.
+        for (const id of visibleIds) next.delete(id);
+      } else {
+        // Select everything currently visible.
+        for (const id of visibleIds) next.add(id);
+      }
+      return next;
+    });
   };
 
   const toggleRow = (id: number) => {
@@ -158,21 +188,60 @@ export function DocumentsTable({ docs }: { docs: DocRow[] }) {
     }
   };
 
-  if (docs.length === 0) {
-    return (
-      <div className="border border-rule rounded-sm p-8 text-center text-sm text-muted bg-paper-subtle">
-        No documents in the vault yet. Click <strong>Upload document</strong>{" "}
-        above to add the first one.
-      </div>
-    );
-  }
+  // Note: we DON'T early-return on filteredDocs.length === 0 anymore — we
+  // still want the search bar visible so the user can clear / refine the
+  // query without losing context.
+
+  const vaultEmpty = docs.length === 0;
 
   return (
     <>
+      {/* Search */}
+      <div className="mb-3">
+        <div className="relative">
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search by student name, ID, or filename…"
+            className="w-full md:max-w-md px-3 py-2 pr-8 text-sm border border-rule rounded-sm bg-paper-subtle focus:border-ink focus:outline-none"
+            aria-label="Search documents"
+          />
+          {query && (
+            <button
+              type="button"
+              onClick={() => setQuery("")}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-muted hover:text-ink text-xs"
+              aria-label="Clear search"
+              title="Clear search"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+      </div>
+
       {/* Bulk action bar */}
       <div className="flex items-center justify-between gap-4 mb-3">
         <div className="text-xs text-muted">
-          {selected.size > 0 ? (
+          {query ? (
+            <>
+              Showing <strong className="text-ink">{filteredDocs.length}</strong>{" "}
+              of {docs.length}
+              {selected.size > 0 && (
+                <>
+                  {" · "}
+                  <strong className="text-ink">{selected.size}</strong> selected{" "}
+                  <button
+                    onClick={() => setSelected(new Set())}
+                    className="text-blue-700 hover:text-blue-900 hover:underline"
+                  >
+                    (clear)
+                  </button>
+                </>
+              )}
+            </>
+          ) : selected.size > 0 ? (
             <>
               <strong className="text-ink">{selected.size}</strong> selected
               {" · "}
@@ -200,14 +269,34 @@ export function DocumentsTable({ docs }: { docs: DocRow[] }) {
         </button>
       </div>
 
+      {vaultEmpty && (
+        <div className="border border-rule rounded-sm p-8 text-center text-sm text-muted bg-paper-subtle">
+          No documents in the vault yet. Click <strong>Upload document</strong>{" "}
+          above to add the first one.
+        </div>
+      )}
+
+      {!vaultEmpty && filteredDocs.length === 0 && (
+        <div className="border border-rule rounded-sm p-8 text-center text-sm text-muted bg-paper-subtle">
+          No matches for <strong className="text-ink">&ldquo;{query}&rdquo;</strong>.{" "}
+          <button
+            onClick={() => setQuery("")}
+            className="text-blue-700 hover:text-blue-900 hover:underline"
+          >
+            Clear search
+          </button>
+        </div>
+      )}
+
       {error && (
         <div className="mb-3 border border-red-200 bg-red-50 text-red-900 rounded-sm px-3 py-2 text-sm">
           {error}
         </div>
       )}
 
-      <div className="border border-rule rounded-sm overflow-x-auto">
-        <table className="w-full text-sm">
+      {filteredDocs.length > 0 && (
+        <div className="border border-rule rounded-sm overflow-x-auto">
+          <table className="w-full text-sm">
           <thead className="bg-paper-subtle text-left">
             <tr>
               <th className="px-4 py-3 w-10">
@@ -246,7 +335,7 @@ export function DocumentsTable({ docs }: { docs: DocRow[] }) {
             </tr>
           </thead>
           <tbody>
-            {docs.map((doc) => {
+            {filteredDocs.map((doc) => {
               const isChecked = selected.has(doc.id);
               return (
                 <tr
@@ -321,9 +410,10 @@ export function DocumentsTable({ docs }: { docs: DocRow[] }) {
                 </tr>
               );
             })}
-          </tbody>
-        </table>
-      </div>
+            </tbody>
+          </table>
+        </div>
+      )}
     </>
   );
 }
