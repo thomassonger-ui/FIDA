@@ -15,6 +15,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import JSZip from "jszip";
 import { getServerClient } from "@/lib/supabase";
+import { categoryLabel } from "@/lib/demo-documents";
+
+/**
+ * Filesystem-safe sanitiser. Replaces characters that are illegal or
+ * awkward in zip-extracted filenames on Windows/macOS/Linux.
+ */
+function safe(s: string): string {
+  return s
+    .replace(/[\/\\:*?"<>|\u0000-\u001f]/g, "-")
+    .replace(/\s+/g, " ")
+    .trim();
+}
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -78,8 +90,14 @@ export async function POST(req: NextRequest) {
         continue;
       }
 
-      // Disambiguate name within the zip if two files have the same filename.
-      let name = doc.filename;
+      // Build a human-readable archive name:
+      //   FIDA - {Student Name} - {Category Label} - {Original Filename}
+      // Sanitise each part separately so we never produce illegal characters,
+      // then de-dup on collision.
+      const studentPart = safe(doc.student_name);
+      const categoryPart = safe(categoryLabel(doc.category));
+      const filePart = safe(doc.filename);
+      let name = `FIDA - ${studentPart} - ${categoryPart} - ${filePart}`;
       if (usedNames.has(name)) {
         const dot = name.lastIndexOf(".");
         const base = dot > 0 ? name.slice(0, dot) : name;
