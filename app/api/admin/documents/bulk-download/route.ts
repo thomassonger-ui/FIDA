@@ -116,7 +116,7 @@ export async function POST(req: NextRequest) {
     ];
     zip.file("_manifest.txt", manifestLines.join("\n") + "\n");
 
-    const zipBuffer = await zip.generateAsync({ type: "uint8array" });
+    const zipBuffer = await zip.generateAsync({ type: "arraybuffer" });
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
     const filename = `fida-vault-${timestamp}.zip`;
 
