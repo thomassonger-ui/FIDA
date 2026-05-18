@@ -334,7 +334,7 @@ export async function allInterventions(): Promise<Intervention[]> {
   let i = 0;
   for (const c of tracked) {
     const cohortName = c.shortname ?? c.fullname ?? `Course ${c.course_id}`;
-    const students = demoStudents(c.course_id);
+    const students = await demoStudents(c.course_id);
     // Every risk-tier student gets an intervention. One of the watch-tier
     // students per cohort also gets a monitoring intervention so there are
     // more active cases than just the at-risk three.

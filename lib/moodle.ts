@@ -418,3 +418,155 @@ export async function getAttendanceSession(
     return null;
   }
 }
+
+// ============================================================
+// Cohort aggregation — live Moodle, role-aware classification
+// Appended 2026-05-18. Replaces the demo-data dashboard stub.
+// ============================================================
+
+/** Moodle role shortnames that mean "staff", not "student". */
+const STAFF_ROLE_SHORTNAMES = new Set([
+  "manager",
+  "editingteacher",
+  "teacher",
+  "coursecreator",
+]);
+
+/**
+ * Classify an enrolled user as "student" or "staff" based on their role set.
+ * Mixed roles like "Student + Manager" are treated as staff.
+ */
+export function classifyEnrollee(user: EnrolledUser): "student" | "staff" {
+  return (user.roles ?? []).some((r) =>
+    STAFF_ROLE_SHORTNAMES.has(r.shortname)
+  )
+    ? "staff"
+    : "student";
+}
+
+/**
+ * Per-user attendance % for one course, derived from every mod_attendance
+ * instance + session in the course. Returns Map<userid, percent>.
+ * Empty map if plugin unavailable, no instances, or no sessions logged.
+ * Counts a session as "attended" when status acronym is P (present) or L (late).
+ */
+export async function getCohortAttendance(
+  courseId: number
+): Promise<Map<number, number>> {
+  const result = new Map<number, number>();
+  try {
+    const instances = await getCourseAttendanceInstances(courseId);
+    if (instances.length === 0) return result;
+
+    const totals = new Map<number, { attended: number; total: number }>();
+
+    for (const inst of instances) {
+      const sessions = await getAttendanceSessions(inst.instance);
+      for (const sess of sessions) {
+        const detail = await getAttendanceSession(sess.id);
+        if (!detail) continue;
+        const statusAcronym = new Map<number, string>();
+        for (const st of detail.statuses ?? []) {
+          statusAcronym.set(st.id, (st.acronym || "").toUpperCase());
+        }
+        for (const log of detail.log ?? []) {
+          const acr = statusAcronym.get(log.statusid) ?? "";
+          const attended = acr === "P" || acr === "L";
+          const t = totals.get(log.studentid) ?? { attended: 0, total: 0 };
+          t.total += 1;
+          if (attended) t.attended += 1;
+          totals.set(log.studentid, t);
+        }
+      }
+    }
+
+    for (const [uid, t] of totals.entries()) {
+      result.set(uid, t.total > 0 ? (t.attended / t.total) * 100 : 100);
+    }
+  } catch {
+    // mod_attendance unavailable or transient failure — return empty
+  }
+  return result;
+}
+
+export type CohortStudent = {
+  id: number;
+  fullname: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+  attendancePct: number;   // 0–100; defaults to 100 if no attendance data
+  gradePct: number;        // 0–100; 0 if not graded yet
+  completionPct: number;   // 0–100 fraction of activities marked complete
+  lastaccess: number;      // unix seconds
+  riskTier: "ok" | "watch" | "risk";
+};
+
+/**
+ * Live Moodle roster for one course, filtered to pure students.
+ * Anyone with a staff role (manager/teacher/editingteacher/coursecreator) is
+ * excluded — they can still appear in Moodle's enrollment list, but they
+ * don't count toward "students enrolled" or at-risk metrics.
+ *
+ * Risk tiers (FIDA spec, 2026-05-18):
+ *   risk  = completion < 75% OR grade < 70%
+ *   watch = completion 75–89% OR grade 72–84%
+ *   ok    = everything else
+ */
+export async function getCohortStudents(
+  courseId: number
+): Promise<CohortStudent[]> {
+  const [enrolled, gradesList, attendance] = await Promise.all([
+    getEnrolledUsers(courseId),
+    getCourseGrades(courseId),
+    getCohortAttendance(courseId),
+  ]);
+
+  const students = enrolled.filter((u) => classifyEnrollee(u) === "student");
+
+  const gradeByUser = new Map<number, number>();
+  for (const ug of gradesList) {
+    const courseGrade = ug.gradeitems?.find((gi) => gi.itemtype === "course");
+    if (courseGrade?.percentageformatted) {
+      const pct = parseFloat(courseGrade.percentageformatted);
+      if (!isNaN(pct)) gradeByUser.set(ug.userid, pct);
+    }
+  }
+
+  const completions = await Promise.all(
+    students.map((u) => getUserActivityCompletion(courseId, u.id))
+  );
+
+  return students.map((u, i) => {
+    const cs = completions[i];
+    const completedCount = cs.filter((c) => c.state === 1 || c.state === 2).length;
+    const completionPct = cs.length > 0 ? (completedCount / cs.length) * 100 : 0;
+    const gradePct = gradeByUser.get(u.id) ?? 0;
+    const attendancePct = attendance.get(u.id) ?? 100;
+
+    let riskTier: "ok" | "watch" | "risk";
+    if (completionPct < 75 || gradePct < 70) {
+      riskTier = "risk";
+    } else if (
+      (completionPct >= 75 && completionPct < 90) ||
+      (gradePct >= 72 && gradePct < 85)
+    ) {
+      riskTier = "watch";
+    } else {
+      riskTier = "ok";
+    }
+
+    return {
+      id: u.id,
+      fullname: u.fullname,
+      firstname: u.firstname,
+      lastname: u.lastname,
+      email: u.email ?? "",
+      attendancePct: Math.round(attendancePct),
+      gradePct: Math.round(gradePct),
+      completionPct: Math.round(completionPct),
+      lastaccess: u.lastaccess ?? 0,
+      riskTier,
+    };
+  });
+}

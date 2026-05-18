@@ -159,7 +159,7 @@ async function TrackedCourseAttendance({
 }: {
   course: TrackedCourse;
 }) {
-  const students = demoStudents(course.course_id);
+  const students = await demoStudents(course.course_id);
   const sessions = simulateSessions(course.course_id, students);
 
   // Per-student totals from overall attendance %.

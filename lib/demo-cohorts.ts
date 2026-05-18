@@ -1,13 +1,19 @@
 /**
- * Demo cohort + KPI helpers.
+ * Cohort + KPI helpers — live from Moodle.
  *
- * These are derived from the tracked courses table + deterministic ghost
- * students, so every dashboard shows consistent numbers without needing
- * Supabase seed tables. Swap to real tables whenever they exist.
+ * Aggregates pulled directly from tracked Moodle courses on every page load.
+ * Role-aware: only pure students (not managers/teachers) count toward the
+ * rolled-up numbers. At-risk threshold = completion <75% OR grade <70%.
+ *
+ * File name preserved as `demo-cohorts.ts` for import-stability across the
+ * admin codebase. Despite the name, this is no longer demo data.
  */
 
-import { getTrackedCourses, type TrackedCourse } from "@/lib/moodle";
-import { demoStudents } from "@/lib/demo-students";
+import {
+  getTrackedCourses,
+  getCohortStudents,
+  type CohortStudent,
+} from "@/lib/moodle";
 
 export type DemoCohort = {
   id: number;
@@ -18,7 +24,7 @@ export type DemoCohort = {
   atRiskCount: number;
   avgAttendance: number;
   avgGrade: number;
-  startDate: string; // ISO date
+  startDate: string; // ISO date (YYYY-MM-DD)
 };
 
 export type OverviewKpis = {
@@ -31,14 +37,28 @@ export type OverviewKpis = {
   atRiskCount: number;
 };
 
-/** Build a cohort summary for every tracked course. */
+/** Cohort summary for every tracked course, aggregated live from Moodle. */
 export async function getDemoCohorts(): Promise<DemoCohort[]> {
   const tracked = await getTrackedCourses();
-  return tracked.map((c) => cohortFromTracked(c));
+  return Promise.all(
+    tracked.map(async (c) => {
+      const students = await getCohortStudents(c.course_id);
+      return buildCohort(
+        c.course_id,
+        c.shortname ?? "",
+        c.fullname ?? "",
+        students
+      );
+    })
+  );
 }
 
-function cohortFromTracked(c: TrackedCourse): DemoCohort {
-  const students = demoStudents(c.course_id);
+function buildCohort(
+  courseId: number,
+  shortname: string,
+  fullname: string,
+  students: CohortStudent[]
+): DemoCohort {
   const n = students.length;
   const avgAttendance = n
     ? students.reduce((s, r) => s + r.attendancePct, 0) / n
@@ -47,15 +67,16 @@ function cohortFromTracked(c: TrackedCourse): DemoCohort {
     ? students.reduce((s, r) => s + r.gradePct, 0) / n
     : 0;
   const atRiskCount = students.filter((s) => s.riskTier === "risk").length;
-  // Start 16 weeks ago, matching the attendance session count.
+  // Placeholder 16-week start window. Future pass: surface real
+  // Moodle course.startdate from the tracked-courses table.
   const start = new Date();
   start.setDate(start.getDate() - 16 * 7);
   return {
-    id: c.course_id,
-    courseId: c.course_id,
-    shortname: c.shortname ?? "",
-    fullname: c.fullname ?? "",
-    studentCount: students.length,
+    id: courseId,
+    courseId,
+    shortname,
+    fullname,
+    studentCount: n,
     atRiskCount,
     avgAttendance,
     avgGrade,
@@ -63,7 +84,7 @@ function cohortFromTracked(c: TrackedCourse): DemoCohort {
   };
 }
 
-/** Roll-up KPIs across every tracked cohort. */
+/** Roll-up KPIs across every tracked cohort, weighted by student count. */
 export async function getOverviewKpis(): Promise<OverviewKpis> {
   const cohorts = await getDemoCohorts();
   if (cohorts.length === 0) {
@@ -79,22 +100,30 @@ export async function getOverviewKpis(): Promise<OverviewKpis> {
   }
   const studentsEnrolled = cohorts.reduce((s, c) => s + c.studentCount, 0);
   const atRiskCount = cohorts.reduce((s, c) => s + c.atRiskCount, 0);
-  const avgGrade =
-    cohorts.reduce((s, c) => s + c.avgGrade, 0) / cohorts.length;
-  const avgAttendance =
-    cohorts.reduce((s, c) => s + c.avgAttendance, 0) / cohorts.length;
-  // Stable demo placement % — allied-health schools commonly report 75-90%.
+  const weightedGrade =
+    studentsEnrolled > 0
+      ? cohorts.reduce((s, c) => s + c.avgGrade * c.studentCount, 0) /
+        studentsEnrolled
+      : 0;
+  const weightedAttendance =
+    studentsEnrolled > 0
+      ? cohorts.reduce((s, c) => s + c.avgAttendance * c.studentCount, 0) /
+        studentsEnrolled
+      : 0;
+  // Placement still placeholder — wire to real outcomes when first cohort
+  // graduates and FIDA starts tracking employment status in Supabase.
   const placement90Day = 82;
-  // Compliance flags = at-risk students + a small fixed baseline for
-  // expiring certifications (BLS, HIPAA) so the card is never empty.
-  const complianceFlags = atRiskCount + Math.max(2, Math.round(studentsEnrolled * 0.04));
+  // Compliance: at-risk students + small fixed baseline so the card isn't
+  // empty before the compliance subsystem is wired up.
+  const complianceFlags =
+    atRiskCount + Math.max(2, Math.round(studentsEnrolled * 0.04));
   return {
     studentsEnrolled,
     activeCohorts: cohorts.length,
     placement90Day,
     complianceFlags,
-    avgGrade,
-    avgAttendance,
+    avgGrade: studentsEnrolled > 0 ? weightedGrade : null,
+    avgAttendance: studentsEnrolled > 0 ? weightedAttendance : null,
     atRiskCount,
   };
 }

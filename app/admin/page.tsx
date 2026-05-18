@@ -119,6 +119,7 @@ export default async function AdminOverviewPage() {
   ]);
 
   // Pull the top at-risk students across every cohort for the watchlist.
+  // demoStudents is now async (live Moodle), so we Promise.all in parallel.
   type WatchRow = {
     courseId: number;
     cohortName: string;
@@ -128,8 +129,12 @@ export default async function AdminOverviewPage() {
     grade: number;
   };
   const watchlist: WatchRow[] = [];
-  for (const c of cohorts) {
-    const students = demoStudents(c.courseId);
+  const studentsPerCohort = await Promise.all(
+    cohorts.map((c) => demoStudents(c.courseId))
+  );
+  for (let i = 0; i < cohorts.length; i++) {
+    const c = cohorts[i];
+    const students = studentsPerCohort[i];
     for (const s of students) {
       if (s.riskTier === "risk") {
         watchlist.push({
@@ -202,7 +207,7 @@ export default async function AdminOverviewPage() {
           value={kpis.atRiskCount}
           label="Students at risk"
           tone={kpis.atRiskCount > 0 ? "risk" : "default"}
-          sub="attendance <75% or grade <70%"
+          sub="completion <75% or grade <70%"
         />
         <Link
           href="/admin/tickets"
