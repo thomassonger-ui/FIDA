@@ -37,67 +37,93 @@ export default async function StudentsPage() {
 
   return (
     <div>
-      <div className="flex items-start justify-between gap-6 mb-8">
-        <div>
-          <div className="eyebrow mb-3">Students</div>
-          <h1 className="text-3xl md:text-4xl mb-2">Enrolled students</h1>
-          <p className="text-muted">
-            {students.length}{" "}
-            {students.length === 1 ? "student" : "students"} in the roster ·{" "}
-            <span className="text-emerald-800">{activeCount} active</span>
-            {withdrawnCount > 0 ? (
-              <>
-                {" "}
-                · <span className="text-subtle">{withdrawnCount} withdrawn</span>
-              </>
-            ) : null}
-            {sync.errors.length === 0 ? (
-              <> · synced from Moodle just now</>
-            ) : (
-              <>
-                {" "}
-                ·{" "}
-                <span className="text-amber-800">
-                  sync had {sync.errors.length} warning
-                  {sync.errors.length === 1 ? "" : "s"}
-                </span>
-              </>
-            )}
-          </p>
+      {/* HEADER ROW — title block + action buttons on the left, training-video
+          card on the right (lg+). On smaller screens the video stacks below. */}
+      <div className="grid lg:grid-cols-[1fr_320px] gap-6 items-start mb-8">
+        <div className="flex items-start justify-between gap-6 flex-wrap">
+          <div>
+            <div className="eyebrow mb-3">Students</div>
+            <h1 className="text-3xl md:text-4xl mb-2">Enrolled students</h1>
+            <p className="text-muted">
+              {students.length}{" "}
+              {students.length === 1 ? "student" : "students"} in the roster ·{" "}
+              <span className="text-emerald-800">{activeCount} active</span>
+              {withdrawnCount > 0 ? (
+                <>
+                  {" "}
+                  ·{" "}
+                  <span className="text-subtle">{withdrawnCount} withdrawn</span>
+                </>
+              ) : null}
+              {sync.errors.length === 0 ? (
+                <> · synced from Moodle just now</>
+              ) : (
+                <>
+                  {" "}
+                  ·{" "}
+                  <span className="text-amber-800">
+                    sync had {sync.errors.length} warning
+                    {sync.errors.length === 1 ? "" : "s"}
+                  </span>
+                </>
+              )}
+            </p>
+          </div>
+          <div className="flex gap-2 shrink-0">
+            <Link
+              href="/admin/students/new"
+              className="btn-primary whitespace-nowrap"
+            >
+              + New Student
+            </Link>
+            <Link href="/admin/students/upload" className="btn-outline">
+              Import
+            </Link>
+            <a
+              href="/api/admin/students/export"
+              className="btn-outline"
+              download
+            >
+              Export CSV
+            </a>
+          </div>
         </div>
-        <div className="flex gap-2 shrink-0">
-          <Link
-            href="/admin/students/new"
-            className="btn-primary whitespace-nowrap"
-          >
-            + New Student
-          </Link>
-          <Link href="/admin/students/upload" className="btn-outline">
-            Import
-          </Link>
-          <a
-            href="/api/admin/students/export"
-            className="btn-outline"
-            download
-          >
-            Export CSV
-          </a>
-        </div>
+
+        {/* Training video — 60-second Synthesia primer on the enrollment flow.
+            iframe is lazy-loaded so it doesn't slow down the initial page paint;
+            YouTube scripts only load when the user scrolls the card into view. */}
+        <aside className="border border-rule bg-paper rounded-sm overflow-hidden">
+          <div className="aspect-video bg-black">
+            <iframe
+              src="https://www.youtube.com/embed/ML8m2KB9bk8?rel=0"
+              title="How enrollment works at FIDA"
+              loading="lazy"
+              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              className="w-full h-full"
+            />
+          </div>
+          <div className="px-3 py-2.5 border-t border-rule">
+            <div className="text-sm font-semibold text-ink">
+              How enrollment works
+            </div>
+            <div className="text-[11px] text-muted">
+              PayPal → Moodle → Atticus · 60 sec
+            </div>
+          </div>
+        </aside>
       </div>
 
       {/* HOW THIS WORKS — written for Debbie & Ashley, especially when two
-          cohorts (e.g. EFDA-S26 + RDP-CE-S26) are running side by side.
-          Paired with the training-video card on the right at lg+ widths;
-          stacks below the panel on smaller screens. */}
-      <div className="grid lg:grid-cols-[1fr_320px] gap-6 items-start mb-8">
+          cohorts (e.g. EFDA-S26 + RDP-CE-S26) are running side by side. */}
       <details
-        className="border border-rule bg-paper-subtle rounded-sm"
+        className="mb-8 border border-rule bg-paper-subtle rounded-sm"
         open
       >
         <summary className="cursor-pointer px-5 py-3 font-semibold text-ink select-none">
           How this list works
         </summary>
-        <div className="px-5 pb-5 pt-1 text-sm text-muted space-y-3">
+        <div className="px-5 pb-5 pt-1 text-sm text-muted space-y-3 max-w-3xl">
           <p>
             <strong className="text-ink">Moodle is the source of truth.</strong>{" "}
             Every time this page loads, the list is rebuilt from your Moodle
@@ -149,31 +175,6 @@ export default async function StudentsPage() {
           </p>
         </div>
       </details>
-
-      {/* Training video — 60-second Synthesia primer on the enrollment flow.
-          iframe is lazy-loaded so it doesn't slow down the initial page paint;
-          YouTube scripts only load when the user scrolls the card into view. */}
-      <aside className="border border-rule bg-paper rounded-sm overflow-hidden lg:sticky lg:top-6 self-start">
-        <div className="aspect-video bg-black">
-          <iframe
-            src="https://www.youtube.com/embed/ML8m2KB9bk8?rel=0"
-            title="How enrollment works at FIDA"
-            loading="lazy"
-            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-            className="w-full h-full"
-          />
-        </div>
-        <div className="px-3 py-2.5 border-t border-rule">
-          <div className="text-sm font-semibold text-ink">
-            How enrollment works
-          </div>
-          <div className="text-[11px] text-muted">
-            PayPal → Moodle → Atticus · 60 sec
-          </div>
-        </div>
-      </aside>
-      </div>
 
       {students.length === 0 ? (
         <div className="border border-rule bg-paper-subtle p-10 rounded-sm text-center">
