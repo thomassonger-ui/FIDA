@@ -59,7 +59,7 @@ export async function PortalSidebar() {
 
       <nav className="space-y-1">
         <SidebarLink href="/portal" label="Overview" />
-        <SidebarLink href="/portal/tickets" label="Tickets" badge={unread} />
+        <SidebarLink href="/portal/tickets" label="Messages" badge={unread} />
         <SidebarLink href="/portal/documents" label="Documents" />
         <SidebarLink href="/portal/profile" label="Profile" />
       </nav>
