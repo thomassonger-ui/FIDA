@@ -84,13 +84,13 @@ export default async function AdminTicketDetailPage({
     <div>
       <div className="text-xs text-subtle mb-4">
         <Link href="/admin/tickets" className="hover:text-teal">
-          ← All tickets
+          ← All messages
         </Link>
       </div>
 
       <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
         <div className="min-w-0">
-          <div className="eyebrow">Ticket</div>
+          <div className="eyebrow">Message thread</div>
           <h1 className="mt-1 text-2xl md:text-3xl break-words">{ticket.subject}</h1>
           <div className="mt-2 text-xs text-subtle flex flex-wrap items-center gap-2">
             <span>{ticket.student_name || "—"}</span>
