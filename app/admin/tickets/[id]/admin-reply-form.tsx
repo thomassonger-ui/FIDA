@@ -44,7 +44,9 @@ export function AdminReplyForm({ ticketId }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [isListening, setIsListening] = useState(false);
   const [dictationSupported, setDictationSupported] = useState(false);
+  const [attachedFilename, setAttachedFilename] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Web Speech API — browser-native, no API keys, free. Chrome/Edge/Safari.
   // Sets up a SpeechRecognition instance once on mount and toggles via button.
@@ -130,8 +132,17 @@ export function AdminReplyForm({ ticketId }: Props) {
         setSubmitting(false);
         return;
       }
+      if (json.attachmentError) {
+        setError(
+          `Message sent, but the attachment failed to upload: ${json.attachmentError}`
+        );
+        setSubmitting(false);
+        router.refresh();
+        return;
+      }
       form.reset();
       setInternal(false);
+      setAttachedFilename(null);
       router.refresh();
     } catch {
       setError("Network error. Please try again.");
@@ -189,12 +200,42 @@ export function AdminReplyForm({ ticketId }: Props) {
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
-          <label className="text-sm text-muted cursor-pointer hover:text-teal transition-colors">
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-rule hover:border-teal">
+          {/* Always-mounted file input; the visible label changes based on
+              whether a file is selected so the user can see what's attached. */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            name="attachment"
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              setAttachedFilename(f ? f.name : null);
+            }}
+          />
+          {attachedFilename ? (
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-teal bg-teal/10 text-sm text-teal-deep">
+              <span className="font-medium">📎 {attachedFilename}</span>
+              <button
+                type="button"
+                onClick={() => {
+                  if (fileInputRef.current) fileInputRef.current.value = "";
+                  setAttachedFilename(null);
+                }}
+                className="text-xs underline hover:text-ink"
+                title="Remove attachment"
+              >
+                remove
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-rule hover:border-teal hover:text-teal-deep text-sm text-muted transition-colors"
+            >
               📎 Attach a file (max 10 MB)
-            </span>
-            <input type="file" name="attachment" className="hidden" />
-          </label>
+            </button>
+          )}
           {dictationSupported && (
             <button
               type="button"
