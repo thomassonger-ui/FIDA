@@ -495,15 +495,51 @@ export default async function MoodlePage({
 
   return (
     <div>
-      <div className="eyebrow mb-3">Integrations</div>
-      <h1 className="text-3xl md:text-4xl mb-2">Moodle</h1>
-      <p className="text-muted max-w-prose mb-8">
-        Server-to-server connection to{" "}
-        <code className="text-xs bg-paper-subtle px-1">
-          {process.env.MOODLE_URL ?? "fldentalassisting.moodlecloud.com"}
-        </code>
-        . Uses a web-service token stored in Vercel env.
-      </p>
+      {/* HEADER ROW — title block on the left, training-video card on the right
+          (lg+). Markup mirrors the Bear Team OS portal ExplainerVideo
+          convention exactly (1fr_400px, gap-8, youtube-nocookie, modestbranding,
+          inline 16/9 aspect ratio, eyebrow caption + Watch on YouTube link). */}
+      <div className="grid lg:grid-cols-[1fr_400px] gap-8 items-start mb-8">
+        <div>
+          <div className="eyebrow mb-3">Integrations</div>
+          <h1 className="text-3xl md:text-4xl mb-2">Moodle</h1>
+          <p className="text-muted max-w-prose">
+            Server-to-server connection to{" "}
+            <code className="text-xs bg-paper-subtle px-1">
+              {process.env.MOODLE_URL ?? "fldentalassisting.moodlecloud.com"}
+            </code>
+            . Uses a web-service token stored in Vercel env.
+          </p>
+        </div>
+
+        {/* Training video — 60-second primer on the Moodle integration page. */}
+        <div className="border border-rule rounded-sm bg-paper-subtle overflow-hidden">
+          <div className="relative w-full" style={{ aspectRatio: "16 / 9" }}>
+            <iframe
+              src="https://www.youtube-nocookie.com/embed/APkvj0fk3Hc?rel=0&modestbranding=1"
+              title="Moodle integration — explainer"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+              className="absolute inset-0 w-full h-full"
+            />
+          </div>
+          <div className="px-3 py-2 flex items-center justify-between text-[11px] text-muted border-t border-rule">
+            <span className="uppercase tracking-wider text-teal-deep font-semibold">
+              Moodle integration — explainer
+            </span>
+            <a
+              href="https://www.youtube.com/watch?v=APkvj0fk3Hc"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-ink"
+            >
+              Watch on YouTube
+            </a>
+          </div>
+        </div>
+      </div>
 
       {/* --- Connection status --- */}
       <section className="card bg-white p-6 mb-8">
