@@ -176,7 +176,7 @@ export default async function AtticusMPage() {
   });
 
   return (
-    <div className="max-w-6xl">
+    <div>
       {/* HEADER ROW — eyebrow + title + tagline + action buttons on the left,
           training-video card on the right (lg+). Markup mirrors the Bear Team
           OS portal ExplainerVideo convention exactly (1fr_400px, gap-8,
