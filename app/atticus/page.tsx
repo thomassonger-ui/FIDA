@@ -43,16 +43,6 @@ export default async function AtticusPage({
   return (
     <main className="min-h-screen bg-paper">
       <div className="max-w-2xl mx-auto px-6 py-16 md:py-24">
-        {/* TOP VIDEO */}
-        <div style={{ position: "relative", paddingBottom: "56.25%", height: 0, overflow: "hidden", borderRadius: "12px", marginBottom: "2.5rem" }}>
-          <iframe
-            src="https://www.youtube.com/embed/2pMICkOGgyE"
-            title="FIDA admissions"
-            style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 0 }}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-          />
-        </div>
         <div className="eyebrow text-teal-deep">Atticus™M · FIDA admissions</div>
         <h1 className="font-display text-5xl md:text-6xl text-ink mt-3 tracking-tight leading-tight">
           Hi — I&rsquo;m Atticus.
