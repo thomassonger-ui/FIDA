@@ -38,8 +38,9 @@ export default async function StudentsPage() {
   return (
     <div>
       {/* HEADER ROW — title block + action buttons on the left, training-video
-          card on the right (lg+). On smaller screens the video stacks below. */}
-      <div className="grid lg:grid-cols-[1fr_320px] gap-6 items-start mb-8">
+          card on the right (lg+). On smaller screens the video stacks below.
+          Right column sized to match the Bear Team OS dashboard explainer card. */}
+      <div className="grid lg:grid-cols-[1fr_420px] gap-6 items-start mb-8">
         <div className="flex items-start justify-between gap-6 flex-wrap">
           <div>
             <div className="eyebrow mb-3">Students</div>
