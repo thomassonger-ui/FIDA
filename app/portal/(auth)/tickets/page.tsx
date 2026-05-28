@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { cookies } from "next/headers";
-import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import { redirect } from "next/navigation";
 import { getServerClient } from "@/lib/supabase";
+import { getPortalStudent } from "@/lib/portal-auth";
 import {
   CATEGORY_LABELS,
   STATUS_LABELS,
@@ -43,22 +43,9 @@ async function ticketsForEmail(email: string): Promise<Ticket[]> {
 }
 
 export default async function PortalTicketsList() {
-  const cookieStore = await cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll: () => cookieStore.getAll(),
-        setAll: (toSet: { name: string; value: string; options: CookieOptions }[]) => {
-          toSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
-        },
-      },
-    }
-  );
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user?.email) return null;
-  const tickets = await ticketsForEmail(user.email);
+  const student = await getPortalStudent();
+  if (!student) redirect("/portal/login");
+  const tickets = await ticketsForEmail(student.email);
 
   return (
     <div>
