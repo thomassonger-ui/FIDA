@@ -66,7 +66,7 @@ export default async function AtticusPage({
               </p>
             </div>
             <a
-              href={`https://calendly.com/thomas-songer/atticus${
+              href={`https://calendly.com/fldentalassisting/appointment${
                 cleanSrc
                   ? `?utm_source=${encodeURIComponent(cleanSrc)}&utm_campaign=atticusm`
                   : "?utm_campaign=atticusm"
