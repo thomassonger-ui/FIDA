@@ -62,6 +62,7 @@ export async function POST(
   });
   if ("error" in append) return bad(append.error, 500);
 
+  let attachmentError: string | null = null;
   if (hasFile) {
     const buf = await file.arrayBuffer();
     const up = await uploadAttachment({
@@ -72,10 +73,15 @@ export async function POST(
       buffer: buf,
     });
     if ("error" in up) {
+      attachmentError = up.error;
       // eslint-disable-next-line no-console
       console.warn("[portal tickets] attachment upload failed:", up.error);
     }
   }
 
-  return NextResponse.json({ ok: true, messageId: append.message.id });
+  return NextResponse.json({
+    ok: true,
+    messageId: append.message.id,
+    attachmentError,
+  });
 }
