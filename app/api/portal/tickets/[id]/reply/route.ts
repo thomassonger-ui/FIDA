@@ -1,5 +1,3 @@
-import { createServerClient, type CookieOptions } from "@supabase/ssr";
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import {
   appendMessage,
@@ -10,6 +8,7 @@ import {
   MAX_FILE_BYTES,
   MAX_TICKET_BYTES,
 } from "@/lib/tickets-db";
+import { getPortalStudent } from "@/lib/portal-auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -23,28 +22,13 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const cookieStore = await cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll: () => cookieStore.getAll(),
-        setAll: (toSet: { name: string; value: string; options: CookieOptions }[]) => {
-          toSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options)
-          );
-        },
-      },
-    }
-  );
 
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user?.email) return bad("Not signed in", 401);
+  const student = await getPortalStudent();
+  if (!student) return bad("Not signed in", 401);
 
   const ticket = await getTicket(id);
   if (!ticket) return bad("Message thread not found", 404);
-  if (normalizeEmail(ticket.email) !== normalizeEmail(user.email)) {
+  if (normalizeEmail(ticket.email) !== normalizeEmail(student.email)) {
     return bad("You don't have permission to reply here.", 403);
   }
 
@@ -72,8 +56,8 @@ export async function POST(
   const append = await appendMessage({
     ticketId: id,
     authorType: "student",
-    authorName: (user.user_metadata?.full_name as string) ?? null,
-    authorEmail: user.email,
+    authorName: student.full_name ?? null,
+    authorEmail: student.email,
     body: body || "(attachment)",
   });
   if ("error" in append) return bad(append.error, 500);
