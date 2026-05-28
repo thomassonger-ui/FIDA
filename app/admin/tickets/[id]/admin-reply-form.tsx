@@ -5,11 +5,6 @@ import { useRouter } from "next/navigation";
 
 type Props = {
   ticketId: string;
-  // When the ticket isn't linked to an enrolled student, supply these so the
-  // form can also open the staff member's mail client to deliver the reply.
-  prospectEmail?: string | null;
-  prospectName?: string | null;
-  subject?: string | null;
 };
 
 /** Staff-side quick replies — click a chip to populate the textarea, then edit
@@ -23,7 +18,7 @@ const STAFF_PROMPTS: { label: string; body: string }[] = [
   {
     label: "Request a document",
     body:
-      "Could you upload a copy of [document] when you get a chance? You can attach it directly to this message thread, or upload it from your /portal/documents page. Let me know if you have any trouble.",
+      "Could you upload a copy of [document] when you get a chance? You can attach it directly to this message thread. Let me know if you have any trouble.",
   },
   {
     label: "Schedule confirmation",
@@ -42,26 +37,7 @@ const STAFF_PROMPTS: { label: string; body: string }[] = [
   },
 ];
 
-function buildReplyMailto(opts: {
-  to: string;
-  subject: string;
-  prospectName: string | null;
-  replyBody: string;
-}): string {
-  const firstName = opts.prospectName?.split(" ")[0] ?? "";
-  const greeting = firstName ? `Hi ${firstName},\n\n` : "Hi,\n\n";
-  const body = `${greeting}${opts.replyBody}\n\n— FIDA Support\nsuccess@fldentalassisting.com`;
-  return `mailto:${encodeURIComponent(opts.to)}?subject=${encodeURIComponent(
-    "Re: " + opts.subject
-  )}&body=${encodeURIComponent(body)}`;
-}
-
-export function AdminReplyForm({
-  ticketId,
-  prospectEmail,
-  prospectName,
-  subject,
-}: Props) {
+export function AdminReplyForm({ ticketId }: Props) {
   const router = useRouter();
   const [internal, setInternal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -73,7 +49,6 @@ export function AdminReplyForm({
   // Web Speech API — browser-native, no API keys, free. Chrome/Edge/Safari.
   // Sets up a SpeechRecognition instance once on mount and toggles via button.
   // Falls back gracefully if the API isn't available (Firefox, older browsers).
-  // We keep the instance on a ref so the button handlers can stop/start it.
   const recognitionRef = useRef<unknown>(null);
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -130,12 +105,9 @@ export function AdminReplyForm({
     if (!ta) return;
     ta.value = body;
     ta.focus();
-    // Place caret at the end so the user can start editing immediately.
     const len = ta.value.length;
     ta.setSelectionRange(len, len);
   }
-
-  const isProspect = !!prospectEmail;
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -146,7 +118,6 @@ export function AdminReplyForm({
     const form = e.currentTarget;
     const fd = new FormData(form);
     fd.set("internal", internal ? "1" : "0");
-    const replyBody = String(fd.get("body") ?? "").trim();
 
     try {
       const res = await fetch(`/api/admin/tickets/${ticketId}/reply`, {
@@ -158,17 +129,6 @@ export function AdminReplyForm({
         setError(json.error || "Could not send. Please try again.");
         setSubmitting(false);
         return;
-      }
-      // For prospects (unlinked tickets), also open the mail client with the
-      // saved reply pre-filled. Skip when it's an internal note.
-      if (isProspect && !internal && replyBody && prospectEmail && subject) {
-        const href = buildReplyMailto({
-          to: prospectEmail,
-          subject,
-          prospectName: prospectName ?? null,
-          replyBody,
-        });
-        window.location.href = href;
       }
       form.reset();
       setInternal(false);
@@ -184,11 +144,7 @@ export function AdminReplyForm({
     <form onSubmit={handleSubmit} className="card p-5 space-y-3">
       <div className="flex items-center justify-between gap-3">
         <div className="eyebrow">
-          {internal
-            ? "Internal note (not visible to student)"
-            : isProspect
-            ? "Reply to submitter"
-            : "Reply to student"}
+          {internal ? "Internal note (not visible to student)" : "Reply"}
         </div>
         <label className="text-xs text-muted inline-flex items-center gap-2 cursor-pointer">
           <input
@@ -226,9 +182,7 @@ export function AdminReplyForm({
         placeholder={
           internal
             ? "Add a private note for the team…"
-            : isProspect
-            ? "Reply — saves to the ticket thread and opens your mail client with this text pre-filled…"
-            : "Reply to the student…"
+            : "Type your reply…"
         }
         className="w-full rounded-md border border-rule bg-white px-3 py-2 text-sm text-ink outline-none transition focus:border-teal resize-y"
       />
@@ -266,22 +220,14 @@ export function AdminReplyForm({
           disabled={submitting}
           className="btn-primary disabled:opacity-50"
         >
-          {submitting
-            ? "Saving…"
-            : internal
-            ? "Save note"
-            : isProspect
-            ? "Save & open email"
-            : "Send reply"}
+          {submitting ? "Saving…" : internal ? "Save note" : "Send reply"}
         </button>
       </div>
 
       <div className="text-xs text-subtle">
         {internal
           ? "Internal notes stay in the admin queue — students never see them."
-          : isProspect
-          ? "Prospect messages aren't connected to a portal yet, so we'll save your reply to the thread for the record AND open your mail client to send it directly. Convert them to a student to switch to portal-only replies."
-          : "Replies post into the student's portal at /portal/tickets. The student sees it next time they sign in."}
+          : "Replies stay inside the FIDA portal for compliance. All communication is logged to the message thread."}
       </div>
 
       {error && (
