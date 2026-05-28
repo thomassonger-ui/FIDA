@@ -257,7 +257,7 @@ export default async function AdminOverviewPage() {
             {ticketStats.open}
           </div>
           <div className="eyebrow mt-1 group-hover:text-teal-deep transition-colors">
-            Open tickets
+            Open messages
           </div>
           <div className="text-xs text-subtle mt-1">
             {ticketStats.awaitingStaff > 0
@@ -269,12 +269,12 @@ export default async function AdminOverviewPage() {
         </Link>
       </div>
 
-      {/* Tickets activity card */}
+      {/* Messages activity card */}
       {(ticketStats.recent.length > 0 || ticketStats.resolvedLast7d > 0) && (
         <section className="card bg-white p-6 mb-8">
           <div className="flex flex-wrap items-baseline justify-between gap-3 mb-4">
             <div>
-              <div className="eyebrow mb-1">Recent tickets</div>
+              <div className="eyebrow mb-1">Recent messages</div>
               <div className="text-xs text-subtle">
                 Latest 5 by activity &middot; {ticketStats.resolvedLast7d} resolved in last 7 days
               </div>
