@@ -1,8 +1,6 @@
 import Link from "next/link";
-import { cookies } from "next/headers";
-import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { getServerClient } from "@/lib/supabase";
-import { resolvePortalStudent } from "@/lib/students-db";
+import { getPortalStudent } from "@/lib/portal-auth";
 
 async function unreadTicketCount(email: string): Promise<number> {
   try {
@@ -20,26 +18,8 @@ async function unreadTicketCount(email: string): Promise<number> {
 }
 
 export async function PortalSidebar() {
-  const cookieStore = await cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll: () => cookieStore.getAll(),
-        setAll: (toSet: { name: string; value: string; options: CookieOptions }[]) => {
-          toSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options)
-          );
-        },
-      },
-    }
-  );
-  const { data: { user } } = await supabase.auth.getUser();
-  const student = user?.email
-    ? await resolvePortalStudent({ userId: user.id, email: user.email })
-    : null;
-  const unread = user?.email ? await unreadTicketCount(user.email) : 0;
+  const student = await getPortalStudent();
+  const unread = student?.email ? await unreadTicketCount(student.email) : 0;
 
   return (
     <aside className="w-60 shrink-0 border-r border-rule bg-paper-subtle min-h-screen p-6 flex flex-col">
@@ -52,7 +32,7 @@ export async function PortalSidebar() {
 
       {student && (
         <div className="mb-6 text-xs">
-          <div className="text-ink font-medium">{student.full_name || user?.email}</div>
+          <div className="text-ink font-medium">{student.full_name || student.email}</div>
           <div className="text-subtle truncate">{student.email}</div>
         </div>
       )}
