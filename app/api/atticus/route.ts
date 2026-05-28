@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 
 const CALENDLY_URL =
   process.env.NEXT_PUBLIC_CALENDLY_URL ||
-  "https://calendly.com/thomas-songer/cole-middleton-advisors";
+  "https://calendly.com/fldentalassisting/appointment";
 
 const SYSTEM_PROMPT = `You are Atticus, the AI admissions advisor for Florida Institute of Dental Assisting — a state-licensed dental assisting school in Jacksonville, FL, operated by WorldTeachPathways dba WorldTeachESL LLC.
 
