@@ -70,16 +70,16 @@ export default async function AdminTicketsPage({
 
   return (
     <div>
-      <div className="eyebrow mb-3">Support</div>
+      <div className="eyebrow mb-3">Message Center</div>
       <div className="flex flex-wrap items-end justify-between gap-3 mb-2">
-        <h1 className="text-3xl md:text-4xl">Tickets</h1>
+        <h1 className="text-3xl md:text-4xl">Messages</h1>
         <div className="text-sm text-muted">
           {allOpen.length} open across all states
         </div>
       </div>
       <p className="text-muted max-w-prose mb-8">
-        Student-submitted inquiries. Click any subject to open the conversation
-        and reply directly to the student via email.
+        Two-way conversations with students and prospects. Click any subject to
+        open the thread, attach files, dictate, and reply.
       </p>
 
       {/* Filter pills */}
@@ -106,7 +106,7 @@ export default async function AdminTicketsPage({
         <div className="border border-rule bg-paper-subtle rounded-sm p-10 text-center">
           <div className="font-display text-2xl text-navy mb-1">Inbox zero</div>
           <p className="text-sm text-muted">
-            No tickets match this filter. Nice work.
+            No messages match this filter. Nice work.
           </p>
         </div>
       ) : (
