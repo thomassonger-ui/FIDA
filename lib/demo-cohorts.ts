@@ -42,7 +42,20 @@ export async function getDemoCohorts(): Promise<DemoCohort[]> {
   const tracked = await getTrackedCourses();
   return Promise.all(
     tracked.map(async (c) => {
-      const students = await getCohortStudents(c.course_id);
+      // Defensive try/catch — a single failing Moodle webservice call
+      // (e.g. gradereport_user_get_grade_items returning an errorcode
+      // for a freshly-enrolled student with no grade history) used to
+      // bring down the entire /admin page. Now the bad cohort just
+      // renders with 0 students until the underlying issue is fixed.
+      let students: CohortStudent[] = [];
+      try {
+        students = await getCohortStudents(c.course_id);
+      } catch (err) {
+        console.error(
+          `[demo-cohorts] getCohortStudents(${c.course_id}) failed:`,
+          err instanceof Error ? err.message : err
+        );
+      }
       return buildCohort(
         c.course_id,
         c.shortname ?? "",
@@ -127,3 +140,4 @@ export async function getOverviewKpis(): Promise<OverviewKpis> {
     atRiskCount,
   };
 }
+
