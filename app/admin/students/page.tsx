@@ -39,8 +39,10 @@ export default async function StudentsPage() {
     <div>
       {/* HEADER ROW — title block + action buttons on the left, training-video
           card on the right (lg+). On smaller screens the video stacks below.
-          Right column sized to match the Bear Team OS dashboard explainer card. */}
-      <div className="grid lg:grid-cols-[1fr_420px] gap-6 items-start mb-8">
+          Grid + video markup mirror the Bear Team OS portal ExplainerVideo
+          convention exactly (1fr_400px, gap-8, youtube-nocookie, modestbranding,
+          inline 16/9 aspect ratio, eyebrow caption + Watch on YouTube link). */}
+      <div className="grid lg:grid-cols-[1fr_400px] gap-8 items-start mb-8">
         <div className="flex items-start justify-between gap-6 flex-wrap">
           <div>
             <div className="eyebrow mb-3">Students</div>
@@ -90,29 +92,35 @@ export default async function StudentsPage() {
           </div>
         </div>
 
-        {/* Training video — 60-second Synthesia primer on the enrollment flow.
-            iframe is lazy-loaded so it doesn't slow down the initial page paint;
-            YouTube scripts only load when the user scrolls the card into view. */}
-        <aside className="border border-rule bg-paper rounded-sm overflow-hidden">
-          <div className="aspect-video bg-black">
+        {/* Training video — 60-second primer on the enrollment flow.
+            Markup mirrors components/portal/ExplainerVideo.tsx in the BT repo
+            so sizing is consistent across both portals. */}
+        <div className="border border-rule rounded-sm bg-paper-subtle overflow-hidden">
+          <div className="relative w-full" style={{ aspectRatio: "16 / 9" }}>
             <iframe
-              src="https://www.youtube.com/embed/ML8m2KB9bk8?rel=0"
+              src="https://www.youtube-nocookie.com/embed/ML8m2KB9bk8?rel=0&modestbranding=1"
               title="How enrollment works at FIDA"
               loading="lazy"
-              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
               allowFullScreen
-              className="w-full h-full"
+              className="absolute inset-0 w-full h-full"
             />
           </div>
-          <div className="px-3 py-2.5 border-t border-rule">
-            <div className="text-sm font-semibold text-ink">
-              How enrollment works
-            </div>
-            <div className="text-[11px] text-muted">
-              PayPal → Moodle → Atticus · 60 sec
-            </div>
+          <div className="px-3 py-2 flex items-center justify-between text-[11px] text-muted border-t border-rule">
+            <span className="uppercase tracking-wider text-teal-deep font-semibold">
+              How enrollment works — explainer
+            </span>
+            <a
+              href="https://www.youtube.com/watch?v=ML8m2KB9bk8"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-ink"
+            >
+              Watch on YouTube
+            </a>
           </div>
-        </aside>
+        </div>
       </div>
 
       {/* HOW THIS WORKS — written for Debbie & Ashley, especially when two
