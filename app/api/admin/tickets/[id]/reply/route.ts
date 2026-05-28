@@ -75,6 +75,7 @@ export async function POST(
   });
   if ("error" in append) return bad(append.error, 500);
 
+  let attachmentError: string | null = null;
   if (hasFile) {
     const buf = await file.arrayBuffer();
     const up = await uploadAttachment({
@@ -85,19 +86,18 @@ export async function POST(
       buffer: buf,
     });
     if ("error" in up) {
+      attachmentError = up.error;
       // eslint-disable-next-line no-console
       console.warn("[admin tickets] attachment upload failed:", up.error);
     }
   }
 
-  // TODO (future): when a non-internal staff reply lands, fire a
-  // sendTicketMagicLink({ email: ticket.email, ticketId, context: "staff-replied" })
-  // so the student gets an email pinging them back. Skipped for now since the
-  // Supabase magic-link email is currently styled for sign-in only; needs a
-  // template tweak in the dashboard before turning on.
-
   // Reference isAdmin to keep the helper available for stricter checks later.
   void isAdmin;
 
-  return NextResponse.json({ ok: true, messageId: append.message.id });
+  return NextResponse.json({
+    ok: true,
+    messageId: append.message.id,
+    attachmentError,
+  });
 }
