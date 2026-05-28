@@ -177,38 +177,74 @@ export default async function AtticusMPage() {
 
   return (
     <div className="max-w-6xl">
-      {/* HEADER */}
-      <div className="flex items-center gap-2 mb-3 flex-wrap">
-        <span className="eyebrow">Marketing playbook</span>
-        <span className="text-xs text-subtle">· 30-day cohort fill · resets the 15th</span>
-      </div>
-      <div className="flex items-start justify-between gap-4 flex-wrap">
+      {/* HEADER ROW — eyebrow + title + tagline + action buttons on the left,
+          training-video card on the right (lg+). Markup mirrors the Bear Team
+          OS portal ExplainerVideo convention exactly (1fr_400px, gap-8,
+          youtube-nocookie, modestbranding, inline 16/9 aspect ratio, eyebrow
+          caption + Watch on YouTube link). */}
+      <div className="grid lg:grid-cols-[1fr_400px] gap-8 items-start">
         <div>
-          <h1 className="font-display text-5xl text-ink tracking-tight leading-tight">Atticus™M</h1>
-          <p className="font-display text-xl text-muted mt-2 max-w-3xl leading-snug">
-            The AI admissions advisor who actually shows up at 11pm — when your future
-            students are finally off shift.
-          </p>
+          <div className="flex items-center gap-2 mb-3 flex-wrap">
+            <span className="eyebrow">Marketing playbook</span>
+            <span className="text-xs text-subtle">· 30-day cohort fill · resets the 15th</span>
+          </div>
+          <div className="flex items-start justify-between gap-4 flex-wrap">
+            <div>
+              <h1 className="font-display text-5xl text-ink tracking-tight leading-tight">Atticus™M</h1>
+              <p className="font-display text-xl text-muted mt-2 max-w-3xl leading-snug">
+                The AI admissions advisor who actually shows up at 11pm — when your future
+                students are finally off shift.
+              </p>
+            </div>
+            <div className="mt-2 flex flex-wrap gap-2">
+              <Link
+                href="/admin/atticusm/market"
+                className="inline-block border border-teal text-teal-deep text-sm font-semibold px-4 py-2 rounded-sm hover:bg-teal/10 transition"
+              >
+                Market analysis →
+              </Link>
+              <Link
+                href="/admin/atticusm/templates"
+                className="inline-block border border-teal text-teal-deep text-sm font-semibold px-4 py-2 rounded-sm hover:bg-teal/10 transition"
+              >
+                Campaign templates →
+              </Link>
+              <Link
+                href="/admin/atticusm/qr"
+                className="inline-block bg-teal text-white text-sm font-semibold px-4 py-2 rounded-sm hover:bg-teal-deep transition"
+              >
+                Manage QR codes →
+              </Link>
+            </div>
+          </div>
         </div>
-        <div className="mt-2 flex flex-wrap gap-2">
-          <Link
-            href="/admin/atticusm/market"
-            className="inline-block border border-teal text-teal-deep text-sm font-semibold px-4 py-2 rounded-sm hover:bg-teal/10 transition"
-          >
-            Market analysis →
-          </Link>
-          <Link
-            href="/admin/atticusm/templates"
-            className="inline-block border border-teal text-teal-deep text-sm font-semibold px-4 py-2 rounded-sm hover:bg-teal/10 transition"
-          >
-            Campaign templates →
-          </Link>
-          <Link
-            href="/admin/atticusm/qr"
-            className="inline-block bg-teal text-white text-sm font-semibold px-4 py-2 rounded-sm hover:bg-teal-deep transition"
-          >
-            Manage QR codes →
-          </Link>
+
+        {/* Training video — Atticus™M explainer. */}
+        <div className="border border-rule rounded-sm bg-paper-subtle overflow-hidden">
+          <div className="relative w-full" style={{ aspectRatio: "16 / 9" }}>
+            <iframe
+              src="https://www.youtube-nocookie.com/embed/_D7nmIQYjgc?rel=0&modestbranding=1"
+              title="Atticus™M — explainer"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+              className="absolute inset-0 w-full h-full"
+            />
+          </div>
+          <div className="px-3 py-2 flex items-center justify-between text-[11px] text-muted border-t border-rule">
+            <span className="uppercase tracking-wider text-teal-deep font-semibold">
+              Atticus™M — explainer
+            </span>
+            <a
+              href="https://www.youtube.com/watch?v=_D7nmIQYjgc"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-ink"
+            >
+              Watch on YouTube
+            </a>
+          </div>
         </div>
       </div>
 
