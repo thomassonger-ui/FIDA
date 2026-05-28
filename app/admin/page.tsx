@@ -152,13 +152,49 @@ export default async function AdminOverviewPage() {
 
   return (
     <div>
-      <div className="eyebrow mb-3">Overview</div>
-      <h1 className="text-3xl md:text-4xl mb-2">Operations dashboard</h1>
-      <p className="text-muted max-w-prose mb-10">
-        Live view of Florida Institute of Dental Assisting &mdash; enrollment,
-        attendance, grades, and compliance rolled up across every active
-        cohort.
-      </p>
+      {/* HEADER ROW — title block on the left, training-video card on the right
+          (lg+). Markup mirrors the Bear Team OS portal ExplainerVideo
+          convention exactly (1fr_400px, gap-8, youtube-nocookie, modestbranding,
+          inline 16/9 aspect ratio, eyebrow caption + Watch on YouTube link). */}
+      <div className="grid lg:grid-cols-[1fr_400px] gap-8 items-start mb-10">
+        <div>
+          <div className="eyebrow mb-3">Overview</div>
+          <h1 className="text-3xl md:text-4xl mb-2">Operations dashboard</h1>
+          <p className="text-muted max-w-prose">
+            Live view of Florida Institute of Dental Assisting &mdash; enrollment,
+            attendance, grades, and compliance rolled up across every active
+            cohort.
+          </p>
+        </div>
+
+        {/* Training video — operations dashboard explainer. */}
+        <div className="border border-rule rounded-sm bg-paper-subtle overflow-hidden">
+          <div className="relative w-full" style={{ aspectRatio: "16 / 9" }}>
+            <iframe
+              src="https://www.youtube-nocookie.com/embed/u6HXJVPxsI4?rel=0&modestbranding=1"
+              title="Operations dashboard — explainer"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+              className="absolute inset-0 w-full h-full"
+            />
+          </div>
+          <div className="px-3 py-2 flex items-center justify-between text-[11px] text-muted border-t border-rule">
+            <span className="uppercase tracking-wider text-teal-deep font-semibold">
+              Operations dashboard — explainer
+            </span>
+            <a
+              href="https://www.youtube.com/watch?v=u6HXJVPxsI4"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-ink"
+            >
+              Watch on YouTube
+            </a>
+          </div>
+        </div>
+      </div>
 
       {/* Primary KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
