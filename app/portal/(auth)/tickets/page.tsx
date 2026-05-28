@@ -64,22 +64,23 @@ export default async function PortalTicketsList() {
     <div>
       <div className="flex flex-wrap items-end justify-between gap-3 mb-2">
         <div>
-          <div className="eyebrow mb-3">Tickets</div>
-          <h1 className="text-3xl md:text-4xl">Your tickets</h1>
+          <div className="eyebrow mb-3">Message Center</div>
+          <h1 className="text-3xl md:text-4xl">Your messages</h1>
         </div>
-        <Link href="/portal/tickets/new" className="btn-primary">+ New ticket</Link>
+        <Link href="/portal/tickets/new" className="btn-primary">+ New message</Link>
       </div>
       <p className="text-muted max-w-prose mb-8">
         Conversations with FIDA staff — academics, financial aid, scheduling, tech.
+        All replies stay inside the portal for compliance.
       </p>
 
       {tickets.length === 0 ? (
         <div className="card p-10 text-center">
-          <div className="font-display text-2xl text-navy mb-2">No tickets yet</div>
+          <div className="font-display text-2xl text-navy mb-2">No messages yet</div>
           <p className="text-muted text-sm mb-6">
-            When you open a ticket, it&rsquo;ll show up here.
+            When you start a conversation, it&rsquo;ll show up here.
           </p>
-          <Link href="/portal/tickets/new" className="btn-primary">Open your first ticket</Link>
+          <Link href="/portal/tickets/new" className="btn-primary">Start your first message</Link>
         </div>
       ) : (
         <ul className="space-y-3">
