@@ -240,14 +240,23 @@ export async function POST(req: NextRequest) {
       .map((block) => block.text)
       .join("\n");
 
-    // 7) Persist assistant message + detect handoff phrase
+    // 7) Persist assistant message + detect handoff phrase.
+    // Broadened regex so the model has multiple ways to signal "I'm done":
+    // any "FIDA advisor … (follow up | reach out | be in touch)" works.
+    // Primary handoff trigger now lives in upsertSession (fires the moment
+    // we capture an email) — this remains a safety net for the case where
+    // the user didn't share an email but Atticus still chose to close.
     if (sessionId) {
       await logMessage({
         sessionId,
         role: "assistant",
         content: text,
       });
-      if (/a fida advisor will follow up within one business day/i.test(text)) {
+      if (
+        /fida\s+(?:advisor|admissions)[^.]{0,80}(?:follow\s*up|reach\s*out|be\s*in\s*touch|get\s*back)/i.test(
+          text
+        )
+      ) {
         await markHandoff(sessionId);
       }
     }
