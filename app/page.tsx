@@ -384,16 +384,6 @@ export default function Home() {
                 Academic, financial aid, scheduling, or tech help. No sign-in needed.
               </div>
             </Link>
-            <a
-              href="mailto:success@fldentalassisting.com"
-              className="card card-hover block p-6"
-            >
-              <div className="eyebrow mb-2">Contact</div>
-              <div className="font-display text-xl text-navy mb-1">Email us</div>
-              <div className="text-sm text-muted">
-                success@fldentalassisting.com &middot; Jacksonville, FL
-              </div>
-            </a>
           </div>
         </div>
       </section>
