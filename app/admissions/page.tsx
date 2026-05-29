@@ -59,45 +59,16 @@ export default async function AdmissionsPage({
           used throughout /admin. */}
       <section className="bg-paper-subtle border-b border-rule">
         <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-16 md:py-20">
-          <div className="grid lg:grid-cols-[1fr_400px] gap-8 items-start">
-            <div>
-              <div className="eyebrow">Admissions</div>
-              <h1 className="mt-3 font-display text-5xl md:text-6xl text-navy tracking-tight leading-[1.05]">
-                Skip the form. Talk to <span className="text-teal">Atticus.</span>
-              </h1>
-              <p className="mt-6 text-muted text-lg leading-relaxed max-w-2xl">
-                Atticus is our AI admissions advisor. It knows every program, every deadline,
-                and every next step &mdash; and it&rsquo;s available right now. Tell it where
-                you are, and it&rsquo;ll help you figure out where to go.
-              </p>
-            </div>
-
-            <div className="border border-rule rounded-sm bg-paper overflow-hidden">
-              <div className="relative w-full" style={{ aspectRatio: "16 / 9" }}>
-                <iframe
-                  src="https://www.youtube-nocookie.com/embed/F4sXsc1US5Q?rel=0&modestbranding=1"
-                  title="Admissions — explainer"
-                  loading="lazy"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  allowFullScreen
-                  className="absolute inset-0 w-full h-full"
-                />
-              </div>
-              <div className="px-3 py-2 flex items-center justify-between text-[11px] text-muted border-t border-rule">
-                <span className="uppercase tracking-wider text-teal-deep font-semibold">
-                  Admissions — explainer
-                </span>
-                <a
-                  href="https://www.youtube.com/watch?v=F4sXsc1US5Q"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline hover:text-ink"
-                >
-                  Watch on YouTube
-                </a>
-              </div>
-            </div>
+          <div className="max-w-3xl">
+            <div className="eyebrow">Admissions</div>
+            <h1 className="mt-3 font-display text-5xl md:text-6xl text-navy tracking-tight leading-[1.05]">
+              Skip the form. Talk to <span className="text-teal">Atticus.</span>
+            </h1>
+            <p className="mt-6 text-muted text-lg leading-relaxed max-w-2xl">
+              Atticus is our AI admissions advisor. It knows every program, every deadline,
+              and every next step &mdash; and it&rsquo;s available right now. Tell it where
+              you are, and it&rsquo;ll help you figure out where to go.
+            </p>
           </div>
         </div>
       </section>
