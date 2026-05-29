@@ -12,6 +12,7 @@
 import {
   getTrackedCourses,
   getCohortStudents,
+  getCourses,
   type CohortStudent,
 } from "@/lib/moodle";
 
@@ -25,6 +26,7 @@ export type DemoCohort = {
   avgAttendance: number;
   avgGrade: number;
   startDate: string; // ISO date (YYYY-MM-DD)
+  endDate: string | null; // ISO date (YYYY-MM-DD) or null if unset in Moodle
 };
 
 export type OverviewKpis = {
@@ -40,13 +42,27 @@ export type OverviewKpis = {
 /** Cohort summary for every tracked course, aggregated live from Moodle. */
 export async function getDemoCohorts(): Promise<DemoCohort[]> {
   const tracked = await getTrackedCourses();
+
+  // Pull every course once so we can look up real Moodle startdate/enddate
+  // by id. Fall back to an empty map if the call fails so the page still
+  // renders (without dates).
+  const courseByIdPromise = (async () => {
+    try {
+      const list = await getCourses();
+      return new Map(list.map((c) => [c.id, c]));
+    } catch (err) {
+      console.error(
+        "[demo-cohorts] getCourses failed:",
+        err instanceof Error ? err.message : err
+      );
+      return new Map<number, { startdate?: number; enddate?: number }>();
+    }
+  })();
+
+  const courseById = await courseByIdPromise;
+
   return Promise.all(
     tracked.map(async (c) => {
-      // Defensive try/catch — a single failing Moodle webservice call
-      // (e.g. gradereport_user_get_grade_items returning an errorcode
-      // for a freshly-enrolled student with no grade history) used to
-      // bring down the entire /admin page. Now the bad cohort just
-      // renders with 0 students until the underlying issue is fixed.
       let students: CohortStudent[] = [];
       try {
         students = await getCohortStudents(c.course_id);
@@ -56,21 +72,33 @@ export async function getDemoCohorts(): Promise<DemoCohort[]> {
           err instanceof Error ? err.message : err
         );
       }
+      const meta = courseById.get(c.course_id);
       return buildCohort(
         c.course_id,
         c.shortname ?? "",
         c.fullname ?? "",
-        students
+        students,
+        meta?.startdate,
+        meta?.enddate
       );
     })
   );
+}
+
+/** Convert a Moodle startdate (unix seconds) to ISO date. Moodle treats 0
+ *  as "unset", so fall back when missing. */
+function unixToIsoDate(secs: number | undefined): string | null {
+  if (!secs || secs <= 0) return null;
+  return new Date(secs * 1000).toISOString().slice(0, 10);
 }
 
 function buildCohort(
   courseId: number,
   shortname: string,
   fullname: string,
-  students: CohortStudent[]
+  students: CohortStudent[],
+  moodleStartdate: number | undefined,
+  moodleEnddate: number | undefined
 ): DemoCohort {
   const n = students.length;
   const avgAttendance = n
@@ -80,10 +108,14 @@ function buildCohort(
     ? students.reduce((s, r) => s + r.gradePct, 0) / n
     : 0;
   const atRiskCount = students.filter((s) => s.riskTier === "risk").length;
-  // Placeholder 16-week start window. Future pass: surface real
-  // Moodle course.startdate from the tracked-courses table.
-  const start = new Date();
-  start.setDate(start.getDate() - 16 * 7);
+
+  // Real Moodle course.startdate (unix seconds) is the source of truth.
+  // If Moodle doesn't have one, we leave startDate as today (so the UI shows
+  // something) — but the admin should set the date in Moodle for accuracy.
+  const startISO =
+    unixToIsoDate(moodleStartdate) ?? new Date().toISOString().slice(0, 10);
+  const endISO = unixToIsoDate(moodleEnddate);
+
   return {
     id: courseId,
     courseId,
@@ -93,7 +125,8 @@ function buildCohort(
     atRiskCount,
     avgAttendance,
     avgGrade,
-    startDate: start.toISOString().slice(0, 10),
+    startDate: startISO,
+    endDate: endISO,
   };
 }
 
