@@ -42,6 +42,7 @@ const nav: NavItem[] = [
   { href: "/admin/compliance", label: "Compliance", tag: "LLS" },
   { href: "/admin/moodle", label: "Moodle", tag: "LMS" },
   { href: "/admin/atticusm", label: "Atticus™M", tag: "M" },
+  { href: "/admin/it-tickets", label: "Tickets to IT" },
 ];
 
 function tagClass(tag: ModuleTag): string {
