@@ -286,9 +286,9 @@ export default function ProgramsPage() {
                 pricing, and group rates.
               </p>
             </div>
-            <a href="mailto:success@fldentalassisting.com?subject=Professional%20Development%20interest" className="btn-primary">
-              Email Us Today
-            </a>
+            <Link href="/tickets" className="btn-primary">
+              Submit a Ticket
+            </Link>
           </div>
         </div>
       </section>
