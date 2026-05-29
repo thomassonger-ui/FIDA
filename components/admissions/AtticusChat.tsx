@@ -3,9 +3,16 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
+type ChatCTA = {
+  label: string;
+  url: string;
+  urgency?: string;
+};
+
 type ChatMessage = {
   role: "user" | "assistant";
   content: string;
+  cta?: ChatCTA | null;
 };
 
 const OPENING_MESSAGE: ChatMessage = {
@@ -118,7 +125,11 @@ export function AtticusChat({ initialProgram }: { initialProgram?: string }) {
       }
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: data.reply ?? "(no response)" },
+        {
+          role: "assistant",
+          content: data.reply ?? "(no response)",
+          cta: data.cta ?? null,
+        },
       ]);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
@@ -183,18 +194,35 @@ export function AtticusChat({ initialProgram }: { initialProgram?: string }) {
             key={i}
             className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
           >
-            <div
-              className={
-                m.role === "user"
-                  ? "max-w-[82%] bg-navy text-white px-4 py-3 rounded-2xl rounded-br-sm text-sm leading-relaxed"
-                  : "max-w-[82%] bg-paper-subtle text-navy px-4 py-3 rounded-2xl rounded-bl-sm text-sm leading-relaxed border border-rule"
-              }
-            >
-              {m.content.split("\n").map((line, j) => (
-                <p key={j} className={j > 0 ? "mt-2" : ""}>
-                  {line}
-                </p>
-              ))}
+            <div className="max-w-[82%] flex flex-col items-start gap-2">
+              <div
+                className={
+                  m.role === "user"
+                    ? "bg-navy text-white px-4 py-3 rounded-2xl rounded-br-sm text-sm leading-relaxed"
+                    : "bg-paper-subtle text-navy px-4 py-3 rounded-2xl rounded-bl-sm text-sm leading-relaxed border border-rule"
+                }
+              >
+                {m.content.split("\n").map((line, j) => (
+                  <p key={j} className={j > 0 ? "mt-2" : ""}>
+                    {line}
+                  </p>
+                ))}
+              </div>
+              {m.role === "assistant" && m.cta && (
+                <a
+                  href={m.cta.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-teal hover:bg-teal-deep text-white text-sm font-semibold px-4 py-2.5 rounded-md shadow-sm transition-colors"
+                >
+                  <span>{m.cta.label} →</span>
+                  {m.cta.urgency && (
+                    <span className="text-[11px] font-normal uppercase tracking-wider bg-white/20 px-1.5 py-0.5 rounded">
+                      {m.cta.urgency}
+                    </span>
+                  )}
+                </a>
+              )}
             </div>
           </div>
         ))}
