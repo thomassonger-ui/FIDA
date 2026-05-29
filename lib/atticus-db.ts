@@ -46,16 +46,25 @@ export function extractLeadFields(userText: string): LeadFields {
   );
   if (nameMatch) out.name = nameMatch[1];
 
-  // Program interest: coarse keyword match
+  // Program interest: FIDA-specific keywords (EFDA + RDP-CE).
   const programRegex =
-    /(medical assisting|medical billing|medical coding|billing (?:and|&) coding|patient care|phlebotomy|ccma|cpc|cpct)/i;
+    /(expanded functions|efda|rdp-?ce|rdp|radiography|radiology|x-?ray|dental assisting|dental assistant)/i;
   const programMatch = userText.match(programRegex);
   if (programMatch) {
     const t = programMatch[1].toLowerCase();
-    if (t.includes("patient")) out.programInterest = "Patient Care Technology";
-    else if (t.includes("billing") || t.includes("coding") || t === "cpc")
-      out.programInterest = "Medical Billing & Coding";
-    else out.programInterest = "Medical Assisting";
+    if (
+      t.includes("rdp") ||
+      t.includes("radio") ||
+      t.includes("x-ray") ||
+      t.includes("xray")
+    ) {
+      out.programInterest = "RDP-CE (Radiography)";
+    } else if (t.includes("efda") || t.includes("expanded functions")) {
+      out.programInterest = "EFDA";
+    } else {
+      // Generic "dental assistant/assisting" — leave as-is so staff can route.
+      out.programInterest = "Dental Assisting (program TBD)";
+    }
   }
 
   // Timeline: catchphrases
@@ -69,7 +78,10 @@ export function extractLeadFields(userText: string): LeadFields {
   return out;
 }
 
-/** Upsert session row (create on first message, update on subsequent). */
+/** Upsert session row (create on first message, update on subsequent).
+ *  Also marks the session as handed off the moment we capture an email,
+ *  so the lead appears on /admin/leads even if the model never said the
+ *  sentinel closing phrase. */
 export async function upsertSession(params: {
   sessionId: string;
   ipHash: string | null;
@@ -80,6 +92,17 @@ export async function upsertSession(params: {
     const supabase = getServerClient();
     const { sessionId, ipHash, userAgent, lead } = params;
 
+    // Read the current row so we know whether this is the first time we've
+    // seen an email/phone for this session (to set handed_off_at exactly once).
+    const { data: existing } = await supabase
+      .from("atticus_sessions")
+      .select("id, lead_email, handed_off_at")
+      .eq("id", sessionId)
+      .maybeSingle();
+
+    const captureFirstEmail =
+      !!lead?.email && !existing?.lead_email && !existing?.handed_off_at;
+
     // Try update first; if no row, insert.
     const patch: Record<string, unknown> = {
       last_activity_at: new Date().toISOString(),
@@ -89,20 +112,21 @@ export async function upsertSession(params: {
     if (lead?.phone) patch.lead_phone = lead.phone;
     if (lead?.programInterest) patch.program_interest = lead.programInterest;
     if (lead?.timeline) patch.lead_timeline = lead.timeline;
+    if (captureFirstEmail) patch.handed_off_at = new Date().toISOString();
 
-    const { data: updated, error: updateErr } = await supabase
-      .from("atticus_sessions")
-      .update(patch)
-      .eq("id", sessionId)
-      .select("id")
-      .maybeSingle();
-
-    if (updateErr) {
-      console.error("[atticus-db] update session failed:", updateErr.message);
+    if (existing) {
+      const { error: updateErr } = await supabase
+        .from("atticus_sessions")
+        .update(patch)
+        .eq("id", sessionId);
+      if (updateErr) {
+        console.error("[atticus-db] update session failed:", updateErr.message);
+      }
+      return;
     }
-    if (updated) return;
 
-    // No row yet — insert.
+    // No row yet — insert. If we already captured an email on the very first
+    // message (unusual but possible), mark handoff at insert time too.
     const { error: insertErr } = await supabase.from("atticus_sessions").insert({
       id: sessionId,
       ip_hash: ipHash,
@@ -112,6 +136,7 @@ export async function upsertSession(params: {
       lead_phone: lead?.phone ?? null,
       program_interest: lead?.programInterest ?? null,
       lead_timeline: lead?.timeline ?? null,
+      handed_off_at: lead?.email ? new Date().toISOString() : null,
     });
     if (insertErr) {
       console.error("[atticus-db] insert session failed:", insertErr.message);
