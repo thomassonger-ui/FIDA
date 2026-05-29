@@ -51,14 +51,13 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // ── Site-wide password gate ────────────────────────────────────────────────
-  const siteAuth = req.cookies.get(SITE_COOKIE)?.value;
-  if (siteAuth !== "1") {
-    const url = req.nextUrl.clone();
-    url.pathname = "/gate";
-    if (pathname !== "/") url.searchParams.set("from", pathname);
-    return NextResponse.redirect(url);
-  }
+  // ── Site-wide password gate — REMOVED ─────────────────────────────────────
+  // Public pages (homepage, /admissions, /programs, /atticus, /tickets) are
+  // now open. Only /admin/* (gated below) and /portal/* (gated above) require
+  // auth. The /gate page itself still resolves for anyone who bookmarked it,
+  // and the SITE_COOKIE is still set by the portal login route so password-
+  // reset / portal flows that depend on it continue to work.
+  void SITE_COOKIE;
 
   // ── Admin guard — accept EITHER Supabase user OR admin cookie ─────────────
   if (pathname.startsWith("/admin")) {
