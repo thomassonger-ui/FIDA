@@ -35,26 +35,12 @@ function LoginForm() {
 
           {error === "supabase-not-configured" && (
             <div className="mb-4 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
-              The portal isn&rsquo;t fully wired yet. Contact{" "}
-              <a
-                className="underline"
-                href="mailto:success@fldentalassisting.com"
-              >
-                success@fldentalassisting.com
-              </a>
-              .
+              The portal isn&rsquo;t fully wired yet. Ask a FIDA staff member to help you get signed in.
             </div>
           )}
           {error === "not-active" && (
             <div className="mb-4 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
-              Your portal access isn&rsquo;t active. Contact{" "}
-              <a
-                className="underline"
-                href="mailto:success@fldentalassisting.com"
-              >
-                success@fldentalassisting.com
-              </a>
-              .
+              Your portal access isn&rsquo;t active. Ask a FIDA staff member to help you get set up.
             </div>
           )}
           {error === "auth-failed" && (
@@ -64,14 +50,7 @@ function LoginForm() {
           )}
           {error === "link-failed" && (
             <div className="mb-4 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-xs text-rose-900">
-              Something went wrong on our side. Try again, or email{" "}
-              <a
-                className="underline"
-                href="mailto:success@fldentalassisting.com"
-              >
-                success@fldentalassisting.com
-              </a>
-              .
+              Something went wrong on our side. Try again, or ask a FIDA staff member for help.
             </div>
           )}
           {error === "unexpected" && (
@@ -82,14 +61,7 @@ function LoginForm() {
           {notice === "submitted" && !error && (
             <div className="mb-4 rounded-md border border-teal/30 bg-teal/5 px-3 py-2 text-xs text-navy">
               If that email is on file as a FIDA student, you&rsquo;ll be signed
-              in. If not, email{" "}
-              <a
-                className="underline"
-                href="mailto:success@fldentalassisting.com"
-              >
-                success@fldentalassisting.com
-              </a>{" "}
-              and we&rsquo;ll get you set up.
+              in. If not, ask a FIDA staff member to add you.
             </div>
           )}
 
