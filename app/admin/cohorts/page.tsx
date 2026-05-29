@@ -64,9 +64,14 @@ export default async function CohortsPage() {
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <div>
                   <div className="text-[10px] uppercase tracking-wider text-subtle">
-                    Started
+                    Starts
                   </div>
                   <div className="text-ink">{fmtDate(c.startDate)}</div>
+                  {c.endDate && (
+                    <div className="text-[11px] text-subtle">
+                      ends {fmtDate(c.endDate)}
+                    </div>
+                  )}
                 </div>
                 <div>
                   <div className="text-[10px] uppercase tracking-wider text-subtle">
