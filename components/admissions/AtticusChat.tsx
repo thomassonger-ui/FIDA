@@ -18,7 +18,7 @@ type ChatMessage = {
 const OPENING_MESSAGE: ChatMessage = {
   role: "assistant",
   content:
-    "Hi — I'm Atticus, the admissions advisor for Florida Institute of Dental Assisting. I'm here to help you figure out if one of our programs is the right fit, and walk you through next steps if it is. What's bringing you to us today?",
+    "Hi — I'm Atticus, the admissions advisor for Florida Institute of Dental Assisting. I can help you figure out which path fits — the Entry Level Dental Assisting diploma program (for new students) or one of our Professional Development courses (EFDA, Radiography). To start: are you currently working as a dental assistant in a Florida dental office?",
 };
 
 const QUICK_PROMPTS = [
