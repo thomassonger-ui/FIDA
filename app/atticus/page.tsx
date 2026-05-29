@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { getServerClient } from "@/lib/supabase";
 import { headers } from "next/headers";
-import InquiryForm from "./inquiry-form";
 
 export const dynamic = "force-dynamic";
 
@@ -93,11 +92,35 @@ export default async function AtticusPage({
         {/* OR DIVIDER */}
         <div className="mt-6 flex items-center gap-3 text-xs text-subtle uppercase tracking-eyebrow">
           <div className="flex-1 h-px bg-rule"></div>
-          <span>or have us text you back</span>
+          <span>or chat with Atticus</span>
           <div className="flex-1 h-px bg-rule"></div>
         </div>
 
-        <InquiryForm source={cleanSrc} />
+        {/* TALK WITH ATTICUS — replaces the older SMS callback form so every
+            inbound channel runs through the portal (compliance). */}
+        <div className="mt-6 border-2 border-teal/30 bg-teal/5 rounded-sm p-6">
+          <div className="flex items-start justify-between gap-4 flex-wrap">
+            <div className="flex-1 min-w-[220px]">
+              <div className="eyebrow text-teal-deep">Talk With Atticus</div>
+              <p className="font-display text-xl text-ink mt-2 leading-snug">
+                Get answers right now — Atticus is online.
+              </p>
+              <p className="text-sm text-muted mt-2">
+                Available 24/7. Ask about tuition, schedules, financial aid, or
+                whether your background fits. No forms, no waiting — just a
+                conversation.
+              </p>
+            </div>
+            <Link
+              href={`/admissions${
+                cleanSrc ? `?src=${encodeURIComponent(cleanSrc)}` : ""
+              }`}
+              className="inline-block bg-navy text-white text-sm font-semibold px-5 py-3 rounded-sm hover:bg-navy-deep transition whitespace-nowrap"
+            >
+              Open Atticus →
+            </Link>
+          </div>
+        </div>
 
         <div className="mt-10 grid sm:grid-cols-3 gap-4 text-sm">
           <div className="border border-rule bg-paper rounded-sm p-4">
