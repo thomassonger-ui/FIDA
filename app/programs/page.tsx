@@ -2,9 +2,10 @@ import Link from "next/link";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
 
-// Program data — sourced from official CIE Program Outlines on file with
-// the Florida Commission for Independent Education (institution ID #6501).
-// Last sync: 2026-05-16.
+// Course data — Radiography and EFDA are approved by the Florida Board of
+// Dentistry. CIE applies only to FIDA's Entry Level Dental Assisting diploma
+// program (handled separately).
+// Last updated: 2026-05-29.
 
 type Course = { code: string; title: string; hours: number };
 type Program = {
@@ -29,16 +30,17 @@ const programs: Program[] = [
     tagline: "Florida-mandated dental radiography certification, delivered online.",
     length: "6 weeks · 14 clock hours (8 theory + 6 lab)",
     format: "Online — self-paced via FIDA Moodle",
-    credential: "Diploma · Florida Dental Radiography Certification (FAC 64B5-9.011)",
+    credential: "Professional Development Certificate · Florida Dental Radiography (FAC 64B5-9.011)",
     tuition: "$499.00",
     cieId: "6501",
     textbook:
       "Modern Dental Assisting, 14th Ed. — Robinson, Elsevier, 2024 (ISBN 978-0-323-82440-8)",
     prerequisites: [
       "Be at least 18 years of age.",
-      "A minimum of 3 months of continuous on-the-job training assisting in the positioning and exposing of dental radiographs under direct supervision of a Florida-licensed dentist. Volunteer or shadowing experience does NOT count.",
+      "A minimum of 3 months of continuous on-the-job training in the positioning and exposing of dental radiographs under a Florida-licensed dentist. Volunteer or shadowing does NOT count.",
       "Signed acknowledgement from your supervising dentist confirming the three months of training.",
-      "Complete the online coursework.",
+      "Working competency in English — verified through completion of FIDA's online Continuing Education Assessment course alongside an in-office capstone performed under your supervising dentist.",
+      "Complete the online coursework with capstone project.",
     ],
     summary:
       "A focused review course for dental personnel covering radiation health & safety, intra-oral and extra-oral imaging techniques, and quality control — the criteria currently required by Florida law to operate dental X-ray equipment. Includes self-study readings and a clinical competency assessment submitted via the LMS.",
@@ -56,7 +58,7 @@ const programs: Program[] = [
     tagline: "Earn the EFDA certificate Florida requires for expanded clinical procedures.",
     length: "5 weeks · 20 clock hours (13 theory + 7 in-office hours)",
     format: "Hybrid — online theory + in office clinical lab",
-    credential: "Expanded Functions Dental Assistant Certificate",
+    credential: "Professional Development Certificate · Expanded Functions Dental Assistant",
     tuition: "$1,049.00",
     cieId: "6501",
     textbook:
@@ -65,8 +67,8 @@ const programs: Program[] = [
       "Be at least 18 years of age.",
       "A minimum of 3 months of continuous on-the-job chairside training. Volunteer or shadowing does NOT count.",
       "Signed acknowledgement from your supervising dentist confirming the three months of training.",
-      "Competency in reading, writing, and speaking English.",
-      "Complete the online coursework before attending the campus lab.",
+      "Working competency in English — verified through completion of FIDA's online Continuing Education Assessment course alongside an in-office capstone performed under your supervising dentist.",
+      "Complete the online coursework with capstone project.",
     ],
     summary:
       "Theory and hands-on training in expanded-function procedures performed by dental assistants in a Florida dental practice. Built around the current Dental Assisting National Board curriculum so graduates can perform expanded clinical functions under dentist supervision, in compliance with the Florida Board of Dentistry.",
@@ -108,9 +110,9 @@ export default function ProgramsPage() {
               Florida-credentialed dental training, done right.
             </h1>
             <p className="mt-6 text-muted text-lg leading-relaxed">
-              Two state-aligned diploma programs plus continuing education for
-              working dental professionals. Both diplomas map directly to
-              Florida Board of Dentistry requirements.
+              Two professional development courses approved by the Florida
+              Board of Dentistry — for working dental assistants advancing
+              their credentials in Florida.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
               <Link href="/admissions" className="btn-primary">
@@ -129,7 +131,7 @@ export default function ProgramsPage() {
         <div className="card bg-white overflow-hidden">
           <div className="grid grid-cols-1 md:grid-cols-4 border-b border-rule bg-paper-subtle">
             <div className="p-5 md:p-6 text-xs font-semibold tracking-[0.12em] uppercase text-navy/60">
-              Program
+              Course
             </div>
             <div className="p-5 md:p-6 text-xs font-semibold tracking-[0.12em] uppercase text-navy/60 border-l border-rule">
               Length
@@ -158,7 +160,7 @@ export default function ProgramsPage() {
           ))}
         </div>
         <div className="mt-4 text-xs text-subtle">
-          Florida Commission for Independent Education · institution ID #6501.
+          The Radiography and EFDA courses shown above are approved by the Florida Board of Dentistry.
         </div>
       </section>
 
@@ -169,7 +171,7 @@ export default function ProgramsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
               {/* Left: meta */}
               <div className="lg:col-span-1">
-                <div className="eyebrow">Program 0{idx + 1}</div>
+                <div className="eyebrow">Course 0{idx + 1}</div>
                 <h2 className="mt-4 font-display text-3xl md:text-4xl text-navy leading-tight">
                   {p.title}
                 </h2>
@@ -180,7 +182,6 @@ export default function ProgramsPage() {
                   <MetaRow label="Format" value={p.format} />
                   <MetaRow label="Credential" value={p.credential} />
                   <MetaRow label="Tuition" value={p.tuition} emphasis />
-                  <MetaRow label="CIE ID" value={`#${p.cieId}`} />
                   <MetaRow label="Textbook" value={p.textbook} />
                 </dl>
 
@@ -190,7 +191,7 @@ export default function ProgramsPage() {
                   rel="noopener noreferrer"
                   className="btn-primary mt-8 w-full"
                 >
-                  Apply to this program <span aria-hidden="true">→</span>
+                  Apply to this course <span aria-hidden="true">→</span>
                 </a>
               </div>
 

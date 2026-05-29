@@ -58,7 +58,7 @@ export default async function AtticusPage({
         </h1>
         <p className="font-display text-xl md:text-2xl text-muted mt-4 leading-snug">
           FIDA&rsquo;s AI admissions advisor. Ask me anything about our dental assisting
-          programs — tuition, schedules, financial aid, whether your work experience counts.
+          courses — tuition, schedules, prerequisites, whether your work experience counts.
         </p>
 
         {/* CALENDLY HANDOFF — primary path */}
@@ -71,7 +71,7 @@ export default async function AtticusPage({
               </p>
               <p className="text-sm text-muted mt-2">
                 Pick a slot that works — evenings and weekends included. They&rsquo;ll answer
-                every question about programs, schedules, and financial aid directly.
+                every question about courses, schedules, and prerequisites directly.
               </p>
             </div>
             <a
@@ -106,7 +106,7 @@ export default async function AtticusPage({
                 Get answers right now — Atticus is online.
               </p>
               <p className="text-sm text-muted mt-2">
-                Available 24/7. Ask about tuition, schedules, financial aid, or
+                Available 24/7. Ask about tuition, schedules, prerequisites, or
                 whether your background fits. No forms, no waiting — just a
                 conversation.
               </p>

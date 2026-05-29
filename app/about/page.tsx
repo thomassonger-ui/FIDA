@@ -11,7 +11,7 @@ export const metadata = {
 const values = [
   {
     title: "Hire-ready graduates.",
-    body: "Every program maps to a nationally recognized credential. We train for the job, not for the classroom.",
+    body: "Each course maps to a Florida-recognized credential — issued by FIDA and aligned to Board of Dentistry approval criteria.",
   },
   {
     title: "Small by design.",
@@ -23,7 +23,7 @@ const values = [
   },
   {
     title: "Built for working adults.",
-    body: "Hybrid schedules. Evening cohorts. Clinical placements near your zip code.",
+    body: "In-person diploma program in Jacksonville. Online and hybrid continuing-education courses — finish the clinical capstone at your own dentist's office, signed off by your supervising dentist.",
   },
 ];
 
@@ -99,14 +99,14 @@ export default function AboutPage() {
             <div className="eyebrow">Campus</div>
             <div className="mt-3 font-display text-2xl text-navy">Jacksonville, Florida</div>
             <p className="mt-2 text-muted text-sm leading-relaxed">
-              Hybrid and in-person programs with clinical placements across Central Florida.
+              In-person Entry Level Dental Assisting diploma program in Jacksonville. Online and hybrid continuing-education courses (EFDA, Radiography) — the clinical capstone is completed at the student&rsquo;s own dentist&rsquo;s office and signed off by the supervising dentist.
             </p>
           </div>
           <div className="card p-8 bg-white">
             <div className="eyebrow">Licensure</div>
             <div className="mt-3 font-display text-2xl text-navy">State of Florida</div>
             <p className="mt-2 text-muted text-sm leading-relaxed">
-              Licensed by the Florida Commission for Independent Education.
+              FIDA&rsquo;s Entry Level Dental Assisting diploma program is licensed by the Florida Commission for Independent Education (institution #6501). The EFDA and Radiography courses are approved by the Florida Board of Dentistry.
             </p>
           </div>
           <div className="card p-8 bg-white">

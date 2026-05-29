@@ -6,28 +6,20 @@ import { Footer } from "@/components/landing/Footer";
 // PLACEHOLDER program data — Tom: confirm lengths, credentials, and add real FIDA program details.
 const programs = [
   {
-    title: "Radiography for Dental Personnel",
-    length: "Self-paced &middot; ~3 weeks",
-    outcome: "Florida Dental Radiography Cert. (FAC 64B5-9.011)",
+    title: "Entry Level Dental Assisting",
+    length: "Diploma program",
+    outcome: "Licensed by the Commission for Independent Education",
     blurb:
-      "The state-mandated radiography certification for dental personnel in Florida &mdash; delivered online via FIDA's Moodle.",
-    href: "/programs#radiography",
+      "Florida&rsquo;s licensed entry path for new dental assistants. The Entry Level Dental Assisting diploma program is operated in Jacksonville, FL.",
+    href: "/programs#entry-level-dental-assisting",
   },
   {
-    title: "Expanded Functions Dental Auxiliary (EFDA)",
-    length: "12 weeks",
-    outcome: "Florida EFDA credential",
+    title: "Professional Development Courses",
+    length: "EFDA + Radiography",
+    outcome: "Approved by the Florida Board of Dentistry",
     blurb:
-      "Earn the expanded-functions credential Florida dental assistants need to deliver more clinical services under dentist supervision.",
-    href: "/programs#efda",
-  },
-  {
-    title: "Dental Assisting Foundation",
-    length: "PLACEHOLDER",
-    outcome: "PLACEHOLDER credential",
-    blurb:
-      "Foundational dental assisting training &mdash; confirm program details with FIDA before going live.",
-    href: "/programs#dental-assisting",
+      "Continuing-education courses for working dental assistants advancing their credentials. Study online; finish the clinical capstone at your own dentist&rsquo;s office.",
+    href: "/programs#professional-development",
   },
 ];
 
@@ -83,15 +75,11 @@ export default function Home() {
             <div className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-3 text-xs text-navy-200">
               <div className="flex items-center gap-2">
                 <span className="w-1 h-1 rounded-full bg-teal" />
-                Licensed by the State of Florida
+                Dental Assisting Program licensed by the Commission for Independent Education.
               </div>
               <div className="flex items-center gap-2">
                 <span className="w-1 h-1 rounded-full bg-teal" />
-                Nationally recognized certifications
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-1 h-1 rounded-full bg-teal" />
-                Financial aid available
+                EFDA and Radiography courses approved by the Florida Board of Dentistry.
               </div>
             </div>
           </div>
@@ -113,51 +101,53 @@ export default function Home() {
         </div>
       </section>
 
-      {/* AUDIENCE-PICKER BAND — three paths in one row */}
+      {/* AUDIENCE-PICKER BAND — two enrollment paths + student portal */}
       <section className="bg-white border-b border-rule">
         <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-10 md:py-14">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Link
-              href="/admissions"
+              href="/programs#entry-level-dental-assisting"
               className="card card-hover block p-6"
             >
               <div className="flex items-center gap-3 mb-3">
                 <span className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-teal/10 border border-teal/30 font-display text-teal text-lg">
                   01
                 </span>
-                <div className="eyebrow">New to FIDA</div>
+                <div className="eyebrow">Not yet a dental assistant</div>
               </div>
               <div className="font-display text-xl text-navy mb-1">
-                Explore programs
+                Entry Level Dental Assisting
               </div>
               <p className="text-sm text-muted leading-relaxed">
-                Radiography, EFDA, and dental assisting foundations. Talk to
-                Atticus to find your fit.
+                Florida&rsquo;s licensed diploma program for new dental assistants &mdash;
+                operated in Jacksonville, FL. Licensed by the Commission for
+                Independent Education.
               </p>
               <div className="mt-4 text-sm font-semibold text-teal">
-                Start with admissions <span aria-hidden="true">→</span>
+                Explore the diploma program <span aria-hidden="true">&rarr;</span>
               </div>
             </Link>
 
             <Link
-              href="/programs"
+              href="/programs#professional-development"
               className="card card-hover block p-6"
             >
               <div className="flex items-center gap-3 mb-3">
                 <span className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-teal/10 border border-teal/30 font-display text-teal text-lg">
                   02
                 </span>
-                <div className="eyebrow">Working professional</div>
+                <div className="eyebrow">Already a working dental assistant</div>
               </div>
               <div className="font-display text-xl text-navy mb-1">
-                Continuing education
+                Professional Development Courses
               </div>
               <p className="text-sm text-muted leading-relaxed">
-                Professional development courses and CE credits for working
-                dental assistants and hygienists.
+                EFDA and Radiography continuing-education courses approved by the
+                Florida Board of Dentistry &mdash; for working dental assistants
+                advancing their credentials.
               </p>
               <div className="mt-4 text-sm font-semibold text-teal">
-                Browse PD courses <span aria-hidden="true">→</span>
+                Browse PD courses <span aria-hidden="true">&rarr;</span>
               </div>
             </Link>
 
@@ -192,15 +182,15 @@ export default function Home() {
           <div className="max-w-xl">
             <div className="eyebrow">Programs</div>
             <h2 className="mt-3 font-display text-4xl md:text-5xl text-navy tracking-tight">
-              Three paths. One destination: <em className="text-teal not-italic">a real career.</em>
+              Two paths. One destination: <em className="text-teal not-italic">a real career.</em>
             </h2>
           </div>
           <Link href="/programs" className="btn-ghost">
-            See all programs <span aria-hidden="true">→</span>
+            See all courses and programs <span aria-hidden="true">&rarr;</span>
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {programs.map((p) => (
             <Link key={p.title} href={p.href} className="card card-hover p-8 flex flex-col group">
               <div className="flex items-center gap-3 text-xs font-semibold tracking-[0.1em] uppercase text-teal">
@@ -239,11 +229,11 @@ export default function Home() {
                   },
                   {
                     title: "Built for working adults.",
-                    body: "Hybrid schedules, evening cohorts, and clinical placements near your zip code. You shouldn&rsquo;t have to quit your job to change your career.",
+                    body: "The Entry Level Dental Assisting diploma program is operated in Jacksonville, Florida. EFDA and Radiography CE courses are hybrid &mdash; study online, finish the clinical capstone at your own dentist&rsquo;s office &mdash; under your supervising dentist&rsquo;s sign-off. Keep your job while you advance your credentials.",
                   },
                   {
                     title: "Credentials that employers trust.",
-                    body: "Every program aligns to a nationally recognized certification &mdash; CCMA, CPC, CCA, CPCT/A &mdash; so you graduate hire-ready.",
+                    body: "FIDA&rsquo;s Entry Level Dental Assisting diploma program is licensed by the Florida Commission for Independent Education. The EFDA and Radiography courses are approved by the Florida Board of Dentistry.",
                   },
                 ].map((item) => (
                   <div key={item.title} className="flex gap-4">
@@ -266,7 +256,7 @@ export default function Home() {
               <div className="eyebrow">Next cohort</div>
               <div className="mt-2 font-display text-4xl text-navy">June 3, 2026</div>
               <p className="mt-3 text-muted text-sm leading-relaxed">
-                Jacksonville campus. Hybrid and evening options. Seats fill 6&ndash;8 weeks before start date.
+                Jacksonville-based. Online and hybrid CE schedules. Seats fill 6&ndash;8 weeks before start date.
               </p>
 
               <div className="mt-8 grid grid-cols-2 gap-4 text-sm">
@@ -381,7 +371,7 @@ export default function Home() {
               <div className="eyebrow mb-2">Support</div>
               <div className="font-display text-xl text-navy mb-1">Open a ticket</div>
               <div className="text-sm text-muted">
-                Academic, financial aid, scheduling, or tech help. No sign-in needed.
+                Academic, tuition, scheduling, or tech help. No sign-in needed.
               </div>
             </Link>
           </div>

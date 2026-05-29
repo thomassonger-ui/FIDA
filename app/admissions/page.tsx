@@ -18,7 +18,7 @@ const steps = [
   {
     n: "02",
     title: "Meet a real human",
-    body: "A FIDA advisor follows up within one business day to walk you through financial aid, scheduling, and any questions.",
+    body: "A FIDA advisor follows up within one business day to walk you through tuition, scheduling, and any questions.",
   },
   {
     n: "03",
@@ -35,10 +35,6 @@ const faqs = [
   {
     q: "Do I have to decide anything right now?",
     a: "No. You can talk to Atticus, explore programs, and walk away. There&rsquo;s no pressure and no commitment.",
-  },
-  {
-    q: "What about financial aid?",
-    a: "Financial aid is available for eligible students. A human advisor will walk you through specific options once we understand your situation.",
   },
   {
     q: "Can I talk to a real person instead?",
