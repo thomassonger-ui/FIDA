@@ -42,7 +42,7 @@ const faqs = [
   },
   {
     q: "Can I talk to a real person instead?",
-    a: "Absolutely. Email success@fldentalassisting.com and we&rsquo;ll schedule a call. But most people find Atticus faster for initial questions.",
+    a: "Absolutely. Submit a ticket and a FIDA staff member will follow up. Most people find Atticus faster for initial questions, though.",
   },
 ];
 
@@ -118,19 +118,6 @@ export default async function AdmissionsPage({
               </div>
             </div>
 
-            <div className="card p-6 bg-white">
-              <div className="eyebrow">Prefer a human right now?</div>
-              <p className="mt-3 text-muted text-sm leading-relaxed">
-                Email us at{" "}
-                <a
-                  href="mailto:success@fldentalassisting.com"
-                  className="text-navy font-semibold underline decoration-teal underline-offset-4 hover:text-teal"
-                >
-                  success@fldentalassisting.com
-                </a>{" "}
-                and we&rsquo;ll schedule a call.
-              </p>
-            </div>
           </aside>
         </div>
       </section>
