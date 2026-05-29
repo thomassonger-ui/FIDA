@@ -42,7 +42,6 @@ export function Footer() {
             </div>
             <ul className="space-y-3 text-navy-100">
               <li><Link href="/tickets" className="hover:text-teal transition-colors">Submit a Ticket</Link></li>
-              <li><a href="mailto:support@fldentalassisting.com" className="hover:text-teal transition-colors">support@fldentalassisting.com</a></li>
               <li><Link href="/admin" className="hover:text-teal transition-colors">Admin Dashboard</Link></li>
             </ul>
           </div>
