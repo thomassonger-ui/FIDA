@@ -235,10 +235,38 @@ export async function POST(req: NextRequest) {
       messages,
     });
 
-    const text = response.content
+    const rawText = response.content
       .filter((block): block is Anthropic.TextBlock => block.type === "text")
       .map((block) => block.text)
       .join("\n");
+
+    // 6b) Promote any Calendly URL the model dropped inline into a structured
+    // CTA so the chat UI renders a real button (not a raw link) and we can add
+    // urgency framing.
+    const CTA_LABEL = "Book a 15-min call";
+    const CTA_URGENCY = "4 seats available this week";
+    const calendlyMatch = rawText.match(
+      /https?:\/\/calendly\.com\/[^\s)>\]]+/i
+    );
+    const cta = calendlyMatch
+      ? {
+          label: CTA_LABEL,
+          url: calendlyMatch[0],
+          urgency: CTA_URGENCY,
+        }
+      : null;
+    // Strip the inline link + any nearby "here's my advisor's calendar:" lead-in
+    // so the bubble reads cleanly above the button.
+    const text = calendlyMatch
+      ? rawText
+          .replace(
+            /(?:[Hh]ere(?:'|’)s (?:my|the) advisor(?:'|’)?s? calendar:?\s*)?https?:\/\/calendly\.com\/[^\s)>\]]+\.?/i,
+            ""
+          )
+          .replace(/[ \t]+\n/g, "\n")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim()
+      : rawText;
 
     // 7) Persist assistant message + detect handoff phrase.
     // Broadened regex so the model has multiple ways to signal "I'm done":
@@ -264,6 +292,7 @@ export async function POST(req: NextRequest) {
     return new Response(
       JSON.stringify({
         reply: text,
+        cta,
         stopReason: response.stop_reason,
       }),
       { status: 200, headers: { "content-type": "application/json" } }
