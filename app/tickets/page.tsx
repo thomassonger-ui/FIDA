@@ -79,25 +79,14 @@ export default function TicketsLandingPage() {
                     03
                   </div>
                   <div>
-                    <div className="font-semibold text-navy">Reply by email</div>
+                    <div className="font-semibold text-navy">Reply inside the portal</div>
                     <p className="mt-1 text-muted text-sm leading-relaxed">
-                      A FIDA staff member emails you a response within one
-                      business day. Just reply to keep the conversation going.
+                      A FIDA staff member replies inside your portal within one
+                      business day. Sign in to continue the conversation.
                     </p>
                   </div>
                 </li>
               </ol>
-            </div>
-
-            <div className="text-xs text-subtle">
-              For urgent issues, email{" "}
-              <Link
-                href="mailto:success@fldentalassisting.com"
-                className="text-teal hover:underline"
-              >
-                success@fldentalassisting.com
-              </Link>{" "}
-              directly.
             </div>
           </aside>
         </div>
