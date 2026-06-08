@@ -3,6 +3,33 @@ import Image from "next/image";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
 
+export const metadata = {
+  title: {
+    absolute:
+      "Dental Assisting School in Jacksonville, FL | Florida Institute of Dental Assisting",
+  },
+  description:
+    "Become a dental assistant in Jacksonville, Florida. FIDA offers an Entry Level Dental Assisting diploma plus EFDA and Radiography courses approved by the Florida Board of Dentistry.",
+  alternates: { canonical: "/" },
+};
+
+const orgJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "EducationalOrganization",
+  name: "Florida Institute of Dental Assisting",
+  alternateName: "FIDA",
+  url: "https://fldentalassisting.online",
+  description:
+    "Dental assisting school in Jacksonville, Florida offering an Entry Level Dental Assisting diploma and EFDA and Radiography courses approved by the Florida Board of Dentistry.",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Jacksonville",
+    addressRegion: "FL",
+    addressCountry: "US",
+  },
+  areaServed: "Florida",
+};
+
 // PLACEHOLDER program data — Tom: confirm lengths, credentials, and add real FIDA program details.
 const programs = [
   {
@@ -32,6 +59,10 @@ const pillars = [
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+      />
       <Nav />
 
       {/* HERO */}

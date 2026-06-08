@@ -94,11 +94,35 @@ export const metadata = {
   title: "Programs",
   description:
     "FIDA programs — Radiography for Dental Personnel (Florida-mandated dental radiography certification) and Expanded Functions for the Dental Assistant (EFDA certificate).",
+  alternates: { canonical: "/programs" },
+};
+
+const courseJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  itemListElement: programs.map((p, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    item: {
+      "@type": "Course",
+      name: p.title,
+      description: p.summary,
+      provider: {
+        "@type": "EducationalOrganization",
+        name: "Florida Institute of Dental Assisting",
+        sameAs: "https://fldentalassisting.online",
+      },
+    },
+  })),
 };
 
 export default function ProgramsPage() {
   return (
     <div className="min-h-screen flex flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(courseJsonLd) }}
+      />
       <Nav />
 
       {/* HEADER */}

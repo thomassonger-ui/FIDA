@@ -16,16 +16,53 @@ const body = Inter({
   display: "swap",
 });
 
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://fldentalassisting.online";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Florida Institute of Dental Assisting",
     template: "%s | Florida Institute of Dental Assisting",
   },
   description:
-    "A modern allied-health institute powered by Atticus. Clinical-ready programs in Medical Assisting, Medical Billing & Coding, and Patient Care Technology.",
-  metadataBase: process.env.NEXT_PUBLIC_SITE_URL
-    ? new URL(process.env.NEXT_PUBLIC_SITE_URL)
-    : undefined,
+    "Florida Institute of Dental Assisting (FIDA) trains dental assistants in Jacksonville, FL — an Entry Level Dental Assisting diploma plus EFDA and Radiography courses approved by the Florida Board of Dentistry.",
+  keywords: [
+    "dental assisting school Florida",
+    "dental assistant training Jacksonville",
+    "EFDA certification Florida",
+    "dental radiography certification Florida",
+    "expanded functions dental assistant",
+    "Florida Board of Dentistry approved courses",
+  ],
+  openGraph: {
+    type: "website",
+    siteName: "Florida Institute of Dental Assisting",
+    title: "Florida Institute of Dental Assisting",
+    description:
+      "Dental assisting training in Jacksonville, FL — Entry Level Dental Assisting diploma plus EFDA and Radiography courses approved by the Florida Board of Dentistry.",
+    url: SITE_URL,
+    locale: "en_US",
+    images: [{ url: "/hero.png", alt: "Florida Institute of Dental Assisting" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Florida Institute of Dental Assisting",
+    description:
+      "Dental assisting training in Jacksonville, FL — diploma, EFDA, and Radiography programs.",
+    images: ["/hero.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
 };
 
 export default function RootLayout({

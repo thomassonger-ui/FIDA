@@ -7,6 +7,7 @@ export const metadata = {
   title: "Admissions",
   description:
     "Talk to Atticus, our AI admissions advisor. No forms, no pressure — just a conversation about where you want to go.",
+  alternates: { canonical: "/admissions" },
 };
 
 const steps = [

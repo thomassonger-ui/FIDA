@@ -6,6 +6,7 @@ export const metadata = {
   title: "About",
   description:
     "Florida Institute of Dental Assisting is a modern, AI-powered dental assisting school in Jacksonville, FL.",
+  alternates: { canonical: "/about" },
 };
 
 const values = [
