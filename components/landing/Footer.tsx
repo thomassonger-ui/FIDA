@@ -23,6 +23,31 @@ export function Footer() {
                 </span>
               </span>
             </div>
+
+            <address className="not-italic text-navy-100 space-y-2 leading-relaxed">
+              <p>
+                8761 Perimeter Park Blvd, Ste. 107
+                <br />
+                Jacksonville, FL 32216
+              </p>
+              <p>
+                <a
+                  href="tel:+19046743131"
+                  className="hover:text-teal transition-colors"
+                >
+                  (904) 674-3131
+                </a>
+                <span className="text-navy-200"> &middot; Open 9 a.m.&ndash;3 p.m.</span>
+              </p>
+              <p>
+                <a
+                  href="mailto:success@fldentalassisting.com"
+                  className="hover:text-teal transition-colors"
+                >
+                  success@fldentalassisting.com
+                </a>
+              </p>
+            </address>
           </div>
 
           <div>
