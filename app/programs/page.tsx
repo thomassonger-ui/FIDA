@@ -217,6 +217,18 @@ export default function ProgramsPage() {
                 >
                   Apply to this course <span aria-hidden="true">→</span>
                 </a>
+
+                <Link
+                  href={
+                    p.id === "efda"
+                      ? "/programs/efda-certification-florida"
+                      : "/programs/dental-radiography-certification"
+                  }
+                  className="block mt-3 text-center text-sm font-semibold text-teal hover:underline"
+                >
+                  Full requirements &amp; cost{" "}
+                  <span aria-hidden="true">&rarr;</span>
+                </Link>
               </div>
 
               {/* Right: content */}
