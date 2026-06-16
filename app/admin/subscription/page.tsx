@@ -28,11 +28,10 @@ const MODULES: Module[] = [
     name: "AtticusEnroll",
     tagline: "Everything in Tier 1",
     description:
-      "Lead capture, the public Atticus admissions chat, ticketing, and the full inquiry-to-application workflow.",
+      "Lead capture and ticketing.",
     powers: [
       { label: "Leads", href: "/admin/leads", status: "live" },
       { label: "Tickets", href: "/admin/tickets", status: "live" },
-      { label: "Atticus chat (public)", href: "/atticus", status: "live" },
     ],
     included: true,
     status: "active",
