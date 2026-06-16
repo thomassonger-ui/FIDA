@@ -57,7 +57,7 @@ const programs = [
 const pillars = [
   { stat: "94%", label: "Graduate placement rate", note: "Within 6 months of completion" },
   { stat: "1:12", label: "Instructor-to-student ratio", note: "Real mentorship, not lecture halls" },
-  { stat: "AI", label: "Powered operations", note: "Atticus runs admissions, scheduling, and student success" },
+  { stat: "Hybrid", label: "Study on your schedule", note: "Online coursework with an in-office clinical capstone at your own practice" },
 ];
 
 export default function Home() {
@@ -94,8 +94,8 @@ export default function Home() {
 
             <p className="mt-6 text-navy-100 text-lg md:text-xl leading-relaxed max-w-xl">
               Florida Institute of Dental Assisting trains the next generation of dental assistants &mdash;
-              radiography-certified, EFDA-credentialed, and clinic-ready. Meet <strong className="text-white">Atticus</strong>,
-              our AI admissions advisor, and figure out your next step in five minutes.
+              radiography-certified, EFDA-credentialed, and clinic-ready. Explore our programs and
+              figure out your next step.
             </p>
 
             <div className="mt-10 flex flex-col sm:flex-row gap-3">
@@ -259,8 +259,8 @@ export default function Home() {
               <div className="mt-8 space-y-5">
                 {[
                   {
-                    title: "An AI advisor in your corner, 24/7.",
-                    body: "Atticus answers your questions, walks you through admissions, and keeps your enrollment on track &mdash; even at 11pm before a shift.",
+                    title: "Support when you need it.",
+                    body: "Our team answers your questions and helps keep your enrollment on track &mdash; submit a ticket anytime and a FIDA advisor follows up.",
                   },
                   {
                     title: "Built for working adults.",
@@ -309,77 +309,11 @@ export default function Home() {
                 </div>
               </div>
 
-              <Link href="/admissions" className="btn-primary w-full mt-8">
-                Start with Atticus <span aria-hidden="true">→</span>
-              </Link>
-              <p className="mt-3 text-xs text-subtle text-center">Free, no commitment. 5 minutes.</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* MEET ATTICUS */}
-      <section className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-20 md:py-24">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16 items-center">
-          <div className="lg:col-span-2">
-            <div className="relative aspect-square max-w-sm mx-auto">
-              {/* Soft teal halo */}
-              <div
-                aria-hidden="true"
-                className="absolute inset-0 rounded-full opacity-70"
-                style={{
-                  background:
-                    "radial-gradient(circle, rgba(44,177,188,0.25), rgba(44,177,188,0) 70%)",
-                }}
-              />
-              <Image
-                src="/atticus-logo.png"
-                alt="Atticus — AI admissions advisor"
-                width={512}
-                height={512}
-                priority
-                className="relative w-full h-full object-contain p-8"
-              />
-            </div>
-            <div className="mt-6 text-center">
-              <div className="font-display text-2xl text-navy">Atticus</div>
-              <div className="mt-1 text-[11px] font-semibold tracking-[0.14em] uppercase text-teal">
-                AI Admissions Advisor
-              </div>
-            </div>
-          </div>
-
-          <div className="lg:col-span-3">
-            <div className="eyebrow">Meet Atticus</div>
-            <h2 className="mt-3 font-display text-4xl md:text-5xl text-navy tracking-tight leading-tight">
-              An AI admissions advisor &mdash; <span className="text-teal">not a chatbot.</span>
-            </h2>
-            <p className="mt-5 text-muted text-lg leading-relaxed max-w-xl">
-              Atticus is our real AI advisor, built on Claude. It knows our programs inside-out,
-              answers your questions honestly, and helps you figure out the right fit &mdash;
-              without pressure, without forms, and without putting you in a phone queue.
-            </p>
-            <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-              {[
-                { title: "No forms to fill out", body: "Just a five-minute conversation." },
-                { title: "Honest program guidance", body: "Atticus will tell you if FIDA isn't the right fit." },
-                { title: "Real human hand-off", body: "A FIDA advisor follows up within one business day." },
-                { title: "Available anytime", body: "2am the night before a shift? Atticus is up." },
-              ].map((f) => (
-                <li key={f.title} className="flex gap-3">
-                  <div className="mt-1 w-4 h-4 rounded-full bg-teal/15 border border-teal/40 flex items-center justify-center flex-shrink-0">
-                    <span className="w-1.5 h-1.5 rounded-full bg-teal" />
-                  </div>
-                  <div>
-                    <div className="font-semibold text-navy">{f.title}</div>
-                    <div className="text-muted text-xs mt-0.5 leading-relaxed">{f.body}</div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
 
       {/* ALREADY A STUDENT BAND — quick portal/support paths */}
       <section className="bg-paper-subtle border-t border-rule">

@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 
 const LINKS = [
   { href: "/programs", label: "Programs" },
-  { href: "/admissions", label: "Admissions" },
   { href: "/about", label: "About" },
   { href: "/tickets", label: "Tickets" },
 ];
@@ -72,13 +71,6 @@ export function Nav() {
           >
             Student sign in
           </Link>
-          <Link
-            href="/admissions"
-            className="hidden sm:inline-flex items-center gap-1.5 bg-teal hover:bg-teal-deep text-white px-4 py-2 text-sm font-semibold rounded-md transition-colors"
-          >
-            Talk to Atticus
-            <span aria-hidden="true">→</span>
-          </Link>
 
           {/* Hamburger (mobile only) */}
           <button
@@ -132,13 +124,6 @@ export function Nav() {
             className="mt-4 inline-flex items-center justify-center gap-1.5 border border-rule text-navy px-4 py-3 text-sm font-semibold rounded-md transition-colors hover:border-teal hover:text-teal"
           >
             Student sign in
-          </Link>
-          <Link
-            href="/admissions"
-            className="mt-2 inline-flex items-center justify-center gap-1.5 bg-teal hover:bg-teal-deep text-white px-4 py-3 text-sm font-semibold rounded-md transition-colors"
-          >
-            Talk to Atticus
-            <span aria-hidden="true">→</span>
           </Link>
         </nav>
       </div>
