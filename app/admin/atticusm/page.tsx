@@ -215,6 +215,12 @@ export default async function AtticusMPage() {
               >
                 Manage QR codes →
               </Link>
+              <Link
+                href="/admin/atticusm/flyer"
+                className="inline-block bg-teal text-white text-sm font-semibold px-4 py-2 rounded-sm hover:bg-teal-deep transition"
+              >
+                Sample the programs →
+              </Link>
             </div>
           </div>
         </div>
