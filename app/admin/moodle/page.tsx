@@ -385,9 +385,9 @@ async function CourseRoster({ course }: { course: Course }) {
         <p className="text-sm text-red-900 bg-red-50 border border-red-200 rounded-sm p-3">
           Failed to load roster: {rosterError}
         </p>
-      ) : users.length === 0 ? (
+      ) : studentRows.length === 0 ? (
         <p className="text-sm text-muted">
-          No users enrolled yet. Enroll a student in Moodle and refresh.
+          No students enrolled yet. Enroll a student in Moodle and refresh.
         </p>
       ) : (
         <div className="overflow-x-auto border border-rule rounded-sm">
@@ -415,7 +415,7 @@ async function CourseRoster({ course }: { course: Course }) {
               </tr>
             </thead>
             <tbody>
-              {rows.map((row) => {
+              {studentRows.map((row) => {
                 const status = statusOf(row);
                 return (
                   <tr key={row.user.id} className="border-t border-rule">
