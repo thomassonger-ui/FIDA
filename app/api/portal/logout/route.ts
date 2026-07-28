@@ -1,6 +1,7 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { siteOrigin } from "@/lib/site-url";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -22,7 +23,5 @@ export async function POST() {
     }
   );
   await supabase.auth.signOut();
-  return NextResponse.redirect(
-    new URL("/portal/login", process.env.NEXT_PUBLIC_SITE_URL || "https://fida-eight.vercel.app")
-  );
+  return NextResponse.redirect(new URL("/portal/login", siteOrigin()));
 }

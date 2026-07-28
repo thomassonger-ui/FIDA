@@ -6,6 +6,7 @@
  */
 
 import { getServerClient } from "./supabase";
+import { siteOrigin } from "./site-url";
 
 export type StudentStatus =
   | "invited"
@@ -341,10 +342,7 @@ export async function sendPortalInvite(input: {
 }): Promise<{ ok: true } | { ok: false; error: string }> {
   try {
     const supabase = getServerClient();
-    const origin =
-      process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
-      "https://fida-eight.vercel.app";
-    const redirect = `${origin}/auth/callback?next=/portal`;
+    const redirect = `${siteOrigin()}/auth/callback?next=/portal`;
     const { error } = await supabase.auth.signInWithOtp({
       email: normalizeEmail(input.email),
       options: {

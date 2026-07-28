@@ -5,6 +5,7 @@ import {
   PORTAL_SESSION_TTL_DAYS,
   createPortalSession,
 } from "@/lib/portal-auth";
+import { siteOrigin } from "@/lib/site-url";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -28,9 +29,7 @@ const EMAIL_RE = /^[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,}$/i;
  * Documented and accepted.
  */
 export async function POST(req: NextRequest) {
-  const origin =
-    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
-    "https://fida-eight.vercel.app";
+  const origin = siteOrigin();
 
   function redirect(path: string) {
     return NextResponse.redirect(new URL(path, origin), { status: 303 });

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStudentById } from "@/lib/students-db";
 import { getServerClient } from "@/lib/supabase";
+import { siteOrigin } from "@/lib/site-url";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -26,10 +27,7 @@ export async function POST(
 
   try {
     const supabase = getServerClient();
-    const origin =
-      process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
-      "https://fida-eight.vercel.app";
-    const redirectTo = `${origin}/auth/callback?next=/portal`;
+    const redirectTo = `${siteOrigin()}/auth/callback?next=/portal`;
 
     const { data, error } = await supabase.auth.admin.generateLink({
       type: "magiclink",
