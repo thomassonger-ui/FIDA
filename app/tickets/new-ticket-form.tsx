@@ -1,25 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useLang } from "@/lib/i18n/LanguageProvider";
+import { ticketForm as f } from "@/lib/i18n/pages";
 
-const CATEGORIES = [
-  { value: "academics", label: "Academics" },
-  { value: "financial_aid", label: "Financial Aid" },
-  { value: "scheduling", label: "Scheduling" },
-  { value: "transcripts", label: "Transcripts" },
-  { value: "tech", label: "Tech / Login" },
-  { value: "other", label: "Other" },
-];
-
-const PROGRAMS = [
-  { value: "radiography", label: "Radiography for Dental Personnel" },
-  { value: "efda", label: "Expanded Functions Dental Auxiliary (EFDA)" },
-  { value: "foundation", label: "Dental Assisting Foundation" },
-  { value: "professional_development", label: "Professional Development course" },
-  { value: "", label: "Not sure / not enrolled yet" },
-];
 
 export function NewTicketForm() {
+  const { t } = useLang();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
@@ -36,13 +23,13 @@ export function NewTicketForm() {
       const res = await fetch("/api/tickets", { method: "POST", body: fd });
       const json = await res.json();
       if (!res.ok || !json.ok) {
-        setError(json.error || "Could not submit. Please try again.");
+        setError(json.error || t(f.errGeneric));
         setSubmitting(false);
         return;
       }
       setDone(true);
     } catch {
-      setError("Network error. Please try again.");
+      setError(t(f.errNetwork));
       setSubmitting(false);
     }
   }
@@ -50,13 +37,12 @@ export function NewTicketForm() {
   if (done) {
     return (
       <div className="card p-6 border-teal/40 bg-teal/5">
-        <div className="eyebrow mb-2">Ticket received</div>
+        <div className="eyebrow mb-2">{t(f.receivedEyebrow)}</div>
         <h3 className="font-display text-xl text-navy mb-2">
-          Thanks &mdash; we&rsquo;ve got it.
+          {t(f.receivedTitle)}
         </h3>
         <p className="text-sm text-muted leading-relaxed">
-          A FIDA staff member will follow up by email within one business day.
-          Keep an eye on your inbox.
+          {t(f.receivedBody)}
         </p>
       </div>
     );
@@ -65,17 +51,17 @@ export function NewTicketForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Field label="Full name" htmlFor="student_name">
+        <Field label={t(f.fullName)} htmlFor="student_name">
           <input
             id="student_name"
             name="student_name"
             type="text"
             autoComplete="name"
             className={INPUT_CLASSES}
-            placeholder="Jane Doe"
+            placeholder={t(f.phName)}
           />
         </Field>
-        <Field label="Email" htmlFor="email" required>
+        <Field label={t(f.email)} htmlFor="email" required>
           <input
             id="email"
             name="email"
@@ -83,36 +69,36 @@ export function NewTicketForm() {
             autoComplete="email"
             required
             className={INPUT_CLASSES}
-            placeholder="jane@example.com"
+            placeholder={t(f.phEmail)}
           />
         </Field>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Field label="Program" htmlFor="program">
+        <Field label={t(f.program)} htmlFor="program">
           <select id="program" name="program" className={INPUT_CLASSES} defaultValue="">
-            {PROGRAMS.map((p) => (
-              <option key={p.label} value={p.value}>
-                {p.label}
+            {f.programs.map((p) => (
+              <option key={p.value} value={p.value}>
+                {t(p.label)}
               </option>
             ))}
           </select>
         </Field>
-        <Field label="Category" htmlFor="category" required>
+        <Field label={t(f.category)} htmlFor="category" required>
           <select id="category" name="category" required className={INPUT_CLASSES} defaultValue="">
             <option value="" disabled>
-              Choose one&hellip;
+              {t(f.chooseOne)}
             </option>
-            {CATEGORIES.map((c) => (
+            {f.categories.map((c) => (
               <option key={c.value} value={c.value}>
-                {c.label}
+                {t(c.label)}
               </option>
             ))}
           </select>
         </Field>
       </div>
 
-      <Field label="Subject" htmlFor="subject" required>
+      <Field label={t(f.subject)} htmlFor="subject" required>
         <input
           id="subject"
           name="subject"
@@ -120,11 +106,11 @@ export function NewTicketForm() {
           required
           maxLength={200}
           className={INPUT_CLASSES}
-          placeholder="Short summary of your question"
+          placeholder={t(f.phSubject)}
         />
       </Field>
 
-      <Field label="Message" htmlFor="body" required>
+      <Field label={t(f.message)} htmlFor="body" required>
         <textarea
           id="body"
           name="body"
@@ -132,7 +118,7 @@ export function NewTicketForm() {
           maxLength={8000}
           rows={6}
           className={`${INPUT_CLASSES} resize-y`}
-          placeholder="Walk us through what's going on. The more detail, the better."
+          placeholder={t(f.phMessage)}
         />
       </Field>
 
@@ -144,10 +130,10 @@ export function NewTicketForm() {
 
       <div className="flex items-center gap-3">
         <button type="submit" disabled={submitting} className="btn-primary disabled:opacity-50">
-          {submitting ? "Submitting…" : "Submit ticket"}
+          {submitting ? t(f.submitting) : t(f.submit)}
         </button>
         <span className="text-xs text-subtle">
-          We&rsquo;ll follow up by email within one business day.
+          {t(f.followUp)}
         </span>
       </div>
     </form>
