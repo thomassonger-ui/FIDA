@@ -55,6 +55,9 @@ export default async function AdmissionsPage({
     <div className="min-h-screen flex flex-col">
       <Nav />
 
+      {/* WCAG 1.3.1 / 2.4.1 — named landmark, and the skip link target. */}
+      <main id="main">
+
       {/* HERO — title block on the left, FIDA admissions explainer video on
           the right (lg+). Mirrors the Bear Team OS explainer-card convention
           used throughout /admin. */}
@@ -154,6 +157,8 @@ export default async function AdmissionsPage({
           </Link>
         </div>
       </section>
+
+      </main>
 
       <Footer />
     </div>

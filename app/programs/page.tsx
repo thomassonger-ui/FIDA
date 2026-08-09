@@ -125,6 +125,9 @@ export default function ProgramsPage() {
       />
       <Nav />
 
+      {/* WCAG 1.3.1 / 2.4.1 — named landmark, and the skip link target. */}
+      <main id="main">
+
       {/* HEADER */}
       <section className="bg-paper-subtle border-b border-rule">
         <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-20 md:py-24">
@@ -154,16 +157,16 @@ export default function ProgramsPage() {
       <section id="compare" className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-16">
         <div className="card bg-white overflow-hidden">
           <div className="grid grid-cols-1 md:grid-cols-4 border-b border-rule bg-paper-subtle">
-            <div className="p-5 md:p-6 text-xs font-semibold tracking-[0.12em] uppercase text-navy/60">
+            <div className="p-5 md:p-6 text-xs font-semibold tracking-[0.12em] uppercase text-navy/70">
               Course
             </div>
-            <div className="p-5 md:p-6 text-xs font-semibold tracking-[0.12em] uppercase text-navy/60 border-l border-rule">
+            <div className="p-5 md:p-6 text-xs font-semibold tracking-[0.12em] uppercase text-navy/70 border-l border-rule">
               Length
             </div>
-            <div className="p-5 md:p-6 text-xs font-semibold tracking-[0.12em] uppercase text-navy/60 border-l border-rule">
+            <div className="p-5 md:p-6 text-xs font-semibold tracking-[0.12em] uppercase text-navy/70 border-l border-rule">
               Credential
             </div>
-            <div className="p-5 md:p-6 text-xs font-semibold tracking-[0.12em] uppercase text-navy/60 border-l border-rule">
+            <div className="p-5 md:p-6 text-xs font-semibold tracking-[0.12em] uppercase text-navy/70 border-l border-rule">
               Tuition
             </div>
           </div>
@@ -351,6 +354,8 @@ export default function ProgramsPage() {
         </div>
       </section>
 
+      </main>
+
       <Footer />
     </div>
   );
@@ -367,7 +372,7 @@ function MetaRow({
 }) {
   return (
     <div className="flex items-start gap-3">
-      <dt className="w-24 text-navy/60 font-semibold tracking-wide uppercase text-xs pt-0.5 flex-shrink-0">
+      <dt className="w-24 text-navy/70 font-semibold tracking-wide uppercase text-xs pt-0.5 flex-shrink-0">
         {label}
       </dt>
       <dd className={emphasis ? "text-navy font-semibold" : "text-navy"}>{value}</dd>

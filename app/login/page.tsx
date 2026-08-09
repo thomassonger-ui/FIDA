@@ -49,7 +49,10 @@ function PasswordSignInForm() {
 
 export default function AdminLoginPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-paper px-6">
+    <main
+      id="main"
+      className="flex min-h-screen items-center justify-center bg-paper px-6"
+    >
       <div className="w-full max-w-sm">
         <div className="mb-10 text-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -58,7 +61,8 @@ export default function AdminLoginPage() {
             alt="FIDA"
             className="mb-4 inline-block h-12 w-12 object-contain"
           />
-          <div className="font-display text-2xl text-navy">FIDA</div>
+          {/* WCAG 1.3.1 / 2.4.6 — page needs a level-one heading. */}
+          <h1 className="font-display text-2xl text-navy">FIDA</h1>
           <div className="eyebrow mt-1">Live platform preview</div>
         </div>
 
@@ -80,6 +84,6 @@ export default function AdminLoginPage() {
           </a>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
+import { LanguageProvider } from "@/lib/i18n/LanguageProvider";
 import "./globals.css";
 
 const display = Cormorant_Garamond({
@@ -113,7 +114,7 @@ export default function RootLayout({
           Fingerprint: WTE-FIDA-ATTICUS-2026-05-15-Ω. Unauthorized reproduction
           is prohibited.
         </div>
-        {children}
+        <LanguageProvider>{children}</LanguageProvider>
       </body>
     </html>
   );

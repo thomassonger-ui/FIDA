@@ -111,6 +111,9 @@ export default function DentalRadiographyCertificationPage() {
       />
       <Nav />
 
+      {/* WCAG 1.3.1 / 2.4.1 — named landmark, and the skip link target. */}
+      <main id="main">
+
       <section className="bg-paper-subtle border-b border-rule">
         <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-16 md:py-20">
           <div className="max-w-3xl">
@@ -257,6 +260,8 @@ export default function DentalRadiographyCertificationPage() {
           </div>
         </div>
       </section>
+
+      </main>
 
       <Footer />
     </div>

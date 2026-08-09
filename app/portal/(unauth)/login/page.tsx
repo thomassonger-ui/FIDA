@@ -15,7 +15,10 @@ function LoginForm() {
   // /auth/callback, where the session lands.
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-paper px-6">
+    <main
+      id="main"
+      className="min-h-screen flex items-center justify-center bg-paper px-6"
+    >
       <div className="w-full max-w-sm">
         <div className="mb-10 text-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -24,7 +27,8 @@ function LoginForm() {
             alt="FIDA"
             className="mb-4 inline-block h-12 w-12 object-contain"
           />
-          <div className="font-display text-2xl text-navy">Student Portal</div>
+          {/* WCAG 1.3.1 / 2.4.6 — page needs a level-one heading. */}
+          <h1 className="font-display text-2xl text-navy">Student Portal</h1>
           <div className="eyebrow mt-1">FIDA</div>
         </div>
 
@@ -113,7 +117,7 @@ function LoginForm() {
           </a>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 
