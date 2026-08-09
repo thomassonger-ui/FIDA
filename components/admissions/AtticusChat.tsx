@@ -1,7 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useLang } from "@/lib/i18n/LanguageProvider";
+import { atticus as A } from "@/lib/i18n/atticus";
 
 type ChatCTA = {
   label: string;
@@ -15,21 +17,27 @@ type ChatMessage = {
   cta?: ChatCTA | null;
 };
 
-const OPENING_MESSAGE: ChatMessage = {
-  role: "assistant",
-  content:
-    "Hi — I'm Atticus, the admissions advisor for Florida Institute of Dental Assisting. I can help you figure out which path fits — the Entry Level Dental Assisting diploma program (for new students) or one of our Professional Development courses (EFDA, Radiography). To start: are you currently working as a dental assistant in a Florida dental office?",
-};
-
-const QUICK_PROMPTS = [
-  "I want to change careers into healthcare.",
-  "I'm not sure which program fits me.",
-  "I need something flexible — I work full-time.",
-  "What's the fastest path to a job?",
-];
 
 export function AtticusChat({ initialProgram }: { initialProgram?: string }) {
-  const [messages, setMessages] = useState<ChatMessage[]>([OPENING_MESSAGE]);
+  const { lang, t } = useLang();
+
+  // The greeting follows the visitor's language, but only while the
+  // conversation is still untouched — switching language mid-chat must never
+  // rewrite what Atticus already said.
+  const openingMessage = useMemo<ChatMessage>(
+    () => ({ role: "assistant", content: A.opening[lang] }),
+    [lang],
+  );
+
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    { role: "assistant", content: A.opening.en },
+  ]);
+
+  useEffect(() => {
+    setMessages((prev) =>
+      prev.length === 1 && prev[0].role === "assistant" ? [openingMessage] : prev,
+    );
+  }, [openingMessage]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -102,7 +110,7 @@ export function AtticusChat({ initialProgram }: { initialProgram?: string }) {
     // only autosend if the preceding message is the opening assistant message
     // (i.e., we just seeded a question)
     const prev = messages[messages.length - 2];
-    if (prev !== OPENING_MESSAGE) return;
+    if (prev.role !== "assistant" || messages.length !== 2) return;
     void send(messages);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);
@@ -117,11 +125,11 @@ export function AtticusChat({ initialProgram }: { initialProgram?: string }) {
           "content-type": "application/json",
           "x-atticus-session": sessionIdRef.current || "",
         },
-        body: JSON.stringify({ messages: currentMessages }),
+        body: JSON.stringify({ messages: currentMessages, lang }),
       });
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "Atticus hit an error. Try again in a moment.");
+        throw new Error(data.error || t(A.errGeneric));
       }
       setMessages((prev) => [
         ...prev,
@@ -132,7 +140,7 @@ export function AtticusChat({ initialProgram }: { initialProgram?: string }) {
         },
       ]);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong.");
+      setError(err instanceof Error ? err.message : t(A.errUnknown));
     } finally {
       setIsLoading(false);
     }
@@ -182,7 +190,7 @@ export function AtticusChat({ initialProgram }: { initialProgram?: string }) {
           <div className="font-display text-lg text-navy leading-tight">Atticus</div>
           <div className="text-xs text-muted flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-teal" />
-            AI Admissions Advisor &middot; online
+            {t(A.advisorRole)}
           </div>
         </div>
       </div>
@@ -250,25 +258,22 @@ export function AtticusChat({ initialProgram }: { initialProgram?: string }) {
         {/* PII / AI disclosure — only on first view */}
         {messages.length === 1 && !isLoading && (
           <div className="rounded-lg border border-rule bg-white px-3 py-2.5 text-[11px] leading-relaxed text-muted">
-            <strong className="text-navy">Heads up:</strong> Atticus is an AI
-            admissions advisor &mdash; not a human and not a medical or legal
-            professional. Please don&rsquo;t share your SSN, insurance info, or
-            medical history in chat. A real FIDA advisor follows up within one
-            business day.
+            <strong className="text-navy">{t(A.disclosureLead)}</strong>{" "}
+            {t(A.disclosure)}
           </div>
         )}
 
         {/* Quick prompts — only show at start */}
         {messages.length === 1 && !isLoading && (
           <div className="flex flex-wrap gap-2 pt-2">
-            {QUICK_PROMPTS.map((q) => (
+            {A.quickPrompts.map((q) => (
               <button
-                key={q}
+                key={q.en}
                 type="button"
-                onClick={() => handleQuickPrompt(q)}
+                onClick={() => handleQuickPrompt(t(q))}
                 className="text-xs text-navy bg-white border border-rule hover:border-teal hover:text-teal px-3 py-1.5 rounded-full transition-colors"
               >
-                {q}
+                {t(q)}
               </button>
             ))}
           </div>
@@ -284,7 +289,7 @@ export function AtticusChat({ initialProgram }: { initialProgram?: string }) {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             rows={1}
-            placeholder="Type your message..."
+            placeholder={t(A.placeholder)}
             disabled={isLoading}
             className="flex-1 resize-none text-sm text-navy placeholder:text-subtle focus:outline-none bg-paper-subtle rounded-lg px-3 py-2.5 border border-rule focus:border-teal focus:bg-white transition-colors disabled:opacity-60"
             style={{ maxHeight: "120px" }}
@@ -294,7 +299,7 @@ export function AtticusChat({ initialProgram }: { initialProgram?: string }) {
             disabled={isLoading || !input.trim()}
             className="bg-teal hover:bg-teal-deep disabled:bg-subtle disabled:cursor-not-allowed text-white font-semibold text-sm px-4 py-2.5 rounded-lg transition-colors flex-shrink-0"
           >
-            Send
+            {t(A.send)}
           </button>
         </div>
         <div className="mt-2 text-[11px] text-subtle px-1">

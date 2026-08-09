@@ -5,8 +5,10 @@ import Image from "next/image";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
 import { RotatingHeadline } from "@/components/landing/RotatingHeadline";
+import { AtticusChat } from "@/components/admissions/AtticusChat";
 import { useLang } from "@/lib/i18n/LanguageProvider";
 import { home } from "@/lib/i18n/home";
+import { atticus as atticusCopy } from "@/lib/i18n/atticus";
 
 /**
  * Homepage body. Split out of app/page.tsx as a client component so the page
@@ -151,6 +153,50 @@ export function HomeContent() {
                 {t(home.audience.card3.cta)} <span aria-hidden="true">→</span>
               </div>
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ATTICUS ADMISSIONS INTAKE — live chat, not a link-out. Restored to
+          the homepage 2026-08-09 at Tom's request; the June aed9007 removal
+          took it off the public site. */}
+      <section className="bg-paper-subtle border-b border-rule">
+        <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-16 md:py-20">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-14 items-start">
+            <div className="lg:col-span-2">
+              <div className="eyebrow">{t(atticusCopy.sectionEyebrow)}</div>
+              <h2 className="mt-3 font-display text-4xl md:text-5xl text-navy tracking-tight leading-tight">
+                {t(atticusCopy.sectionHeadingLead)}
+                <span className="text-teal">
+                  {t(atticusCopy.sectionHeadingAccent)}
+                </span>
+              </h2>
+              <p className="mt-5 text-muted text-lg leading-relaxed">
+                {t(atticusCopy.sectionBody)}
+              </p>
+
+              <div className="mt-8 flex items-center gap-3">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/atticus-logo.png"
+                  alt=""
+                  aria-hidden="true"
+                  className="w-12 h-12 object-contain"
+                />
+                <div>
+                  <div className="font-display text-xl text-navy leading-tight">
+                    Atticus
+                  </div>
+                  <div className="text-[11px] font-semibold tracking-[0.14em] uppercase text-teal">
+                    {t(atticusCopy.logoRole)}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="lg:col-span-3">
+              <AtticusChat />
+            </div>
           </div>
         </div>
       </section>

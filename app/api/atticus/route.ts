@@ -37,7 +37,7 @@ Two distinct courses, both APPROVED BY (not licensed by) the Florida Board of De
 
 Path B is for prospects ALREADY working as a dental assistant in a Florida dental office, advancing their credentials.
 
-The next Summer 2026 cohort starts June 3, 2026. Priority deadline May 15.
+The next cohort is Fall 2026, starting September 14, 2026. Priority deadline August 17. (These dates are pending final confirmation — if a prospect needs certainty on a start date, let the FIDA advisor confirm it.)
 
 # Mandatory qualifying question
 
@@ -103,6 +103,44 @@ Never ask for Social Security numbers, full DOB, insurance numbers, credit cards
 # Handoff signal
 
 When you have enough (name + email + path fit), close with a sentence containing the literal phrase: "A FIDA advisor will follow up within one business day." This tags the lead as ready in the system.`;
+
+/**
+ * Appended to SYSTEM_PROMPT (never replaces it) when the visitor is browsing
+ * the site in Spanish. Every rule above — the two-path routing, the NEVER
+ * list, the CIE-vs-Board-of-Dentistry distinction — still applies verbatim.
+ *
+ * Regulatory terms stay anchored in English on first mention, matching how the
+ * Spanish site renders them, so nothing Dr. Angely approved gets softened in
+ * translation.
+ */
+const SPANISH_DIRECTIVE = `
+
+LANGUAGE
+The visitor is browsing this site in Spanish. Reply in clear, professional
+Latin American Spanish, using "tú" rather than "usted". Match the visitor: if
+they write to you in English, answer in English from that point on.
+
+Every rule above still applies without exception. In addition, when you write
+in Spanish:
+- Give the Spanish term first, then the approved English original in
+  parentheses on FIRST mention of any credential, program name, or regulatory
+  body. For example: "aprobado por la Junta de Odontología de Florida
+  (approved by the Florida Board of Dentistry)"; "Certificado de Desarrollo
+  Profesional (Professional Development Certificate)"; "con licencia de la
+  Comisión de Educación Independiente (licensed by the Commission for
+  Independent Education)".
+- Never translate "licensed" as "aprobado" or "approved" as "con licencia".
+  The Entry Level Dental Assisting diploma program is LICENSED by CIE. The
+  EFDA and Radiography courses are APPROVED by the Florida Board of Dentistry.
+  Keep those two straight in Spanish exactly as you do in English.
+- Do not translate the course codes (EFDA101, RHS101) or the FAC citation
+  (64B5-9.011).
+- The closing hand-off phrase must still appear in English, exactly:
+  "A FIDA advisor will follow up within one business day." You may put the
+  Spanish translation immediately before it.
+- If the visitor asks whether coursework is available in Spanish: the website
+  is, but the coursework and assessments are in English, and working competency
+  in English is a prerequisite. Say so plainly and do not imply otherwise.`;
 
 // --- Injection / jailbreak pattern guards -------------------------------
 
@@ -181,6 +219,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // 2a) Visitor language. Only "es" changes behaviour; anything else is
+    // treated as English. This is appended to the system prompt rather than
+    // replacing it, so every compliance guardrail above still applies.
+    const wantsSpanish = body.lang === "es";
+
     // 2) Session ID (required, from header)
     const sessionHeader = req.headers.get("x-atticus-session");
     const sessionId = isUuid(sessionHeader) ? sessionHeader : null;
@@ -253,7 +296,7 @@ export async function POST(req: NextRequest) {
     const response = await client.messages.create({
       model: "claude-sonnet-4-5",
       max_tokens: 1024,
-      system: SYSTEM_PROMPT,
+      system: wantsSpanish ? SYSTEM_PROMPT + SPANISH_DIRECTIVE : SYSTEM_PROMPT,
       messages,
     });
 
