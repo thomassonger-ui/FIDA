@@ -71,9 +71,17 @@ export function Nav() {
 
           <Link
             href="/portal/login"
-            className="hidden md:inline-flex items-center gap-1.5 text-navy/80 hover:text-teal border border-rule hover:border-teal px-3 py-2 text-sm font-semibold rounded-md transition-colors"
+            className="hidden lg:inline-flex items-center gap-1.5 text-navy/80 hover:text-teal border border-rule hover:border-teal px-3 py-2 text-sm font-semibold rounded-md transition-colors"
           >
             {t(nav.studentSignIn)}
+          </Link>
+
+          {/* Primary intake CTA — one click into registration from any page. */}
+          <Link
+            href="/atticus"
+            className="hidden md:inline-flex items-center gap-1.5 bg-teal hover:bg-teal-deep text-white px-3 py-2 text-sm font-semibold rounded-md transition-colors"
+          >
+            {t(nav.atticusCta)}
           </Link>
 
           {/* Hamburger (mobile only) */}
@@ -124,8 +132,14 @@ export function Nav() {
             );
           })}
           <Link
+            href="/atticus"
+            className="mt-4 inline-flex items-center justify-center gap-1.5 bg-teal hover:bg-teal-deep text-white px-4 py-3 text-sm font-semibold rounded-md transition-colors"
+          >
+            {t(nav.atticusCta)}
+          </Link>
+          <Link
             href="/portal/login"
-            className="mt-4 inline-flex items-center justify-center gap-1.5 border border-rule text-navy px-4 py-3 text-sm font-semibold rounded-md transition-colors hover:border-teal hover:text-teal"
+            className="mt-2 inline-flex items-center justify-center gap-1.5 border border-rule text-navy px-4 py-3 text-sm font-semibold rounded-md transition-colors hover:border-teal hover:text-teal"
           >
             {t(nav.studentSignIn)}
           </Link>

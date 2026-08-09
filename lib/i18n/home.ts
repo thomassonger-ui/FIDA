@@ -25,6 +25,9 @@ export const nav = {
     { href: "/about", label: b("About", "Nosotros") },
     { href: "/tickets", label: b("Tickets", "Soporte") },
   ],
+  // Primary intake CTA — sits in the nav so every page has a one-click path
+  // into registration.
+  atticusCta: b("Talk to Atticus", "Habla con Atticus"),
   studentSignIn: b("Student sign in", "Acceso estudiantes"),
   skipToContent: b("Skip to main content", "Saltar al contenido principal"),
   openMenu: b("Open menu", "Abrir menú"),
@@ -43,6 +46,10 @@ export const footer = {
   programs: b("Programs", "Programas"),
   about: b("About", "Nosotros"),
   submitTicket: b("Submit a Ticket", "Enviar un ticket"),
+  atticus: b("Talk to Atticus", "Habla con Atticus"),
+  admissionsHeading: b("Admissions", "Admisiones"),
+  startRegistration: b("Start your registration", "Comienza tu registro"),
+  bookCall: b("Book a 15-min call", "Reservar una llamada de 15 min"),
   adminDashboard: b("Admin Dashboard", "Panel administrativo"),
   rights: b(
     "Florida Institute of Dental Assisting. All rights reserved.",

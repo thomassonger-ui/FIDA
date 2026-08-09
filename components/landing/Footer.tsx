@@ -11,7 +11,7 @@ export function Footer() {
   return (
     <footer className="bg-navy-deep text-white">
       <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 text-sm">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-10 text-sm">
           <div className="md:col-span-2">
             <div className="flex items-center gap-2.5 mb-4">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -63,6 +63,16 @@ export function Footer() {
             <ul className="space-y-3 text-navy-100">
               <li><Link href="/programs" className="hover:text-teal-soft transition-colors">{t(footer.programs)}</Link></li>
               <li><Link href="/about" className="hover:text-teal-soft transition-colors">{t(footer.about)}</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <div className="text-xs font-semibold tracking-[0.14em] uppercase text-teal-soft mb-4">
+              {t(footer.admissionsHeading)}
+            </div>
+            <ul className="space-y-3 text-navy-100">
+              <li><Link href="/atticus" className="hover:text-teal-soft transition-colors">{t(footer.atticus)}</Link></li>
+              <li><Link href="/atticus" className="hover:text-teal-soft transition-colors">{t(footer.startRegistration)}</Link></li>
             </ul>
           </div>
 

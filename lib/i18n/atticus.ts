@@ -52,4 +52,55 @@ export const atticus = {
     "Atticus tuvo un error. Inténtalo de nuevo en un momento.",
   ),
   errUnknown: b("Something went wrong.", "Algo salió mal."),
+
+  // /atticus registration-intake page
+  page: {
+    eyebrow: b("Atticus™ · FIDA admissions", "Atticus™ · Admisiones FIDA"),
+    h1: b("Hi — I’m Atticus.", "Hola, soy Atticus."),
+    lede: b(
+      "FIDA’s AI admissions advisor. Ask me anything about our dental assisting courses — tuition, schedules, prerequisites, whether your work experience counts.",
+      "El asesor de admisiones con inteligencia artificial de FIDA. Pregúntame lo que quieras sobre nuestros cursos de asistencia dental: matrícula, horarios, requisitos o si tu experiencia laboral cuenta.",
+    ),
+    startEyebrow: b("Start your registration", "Comienza tu registro"),
+    startHeading: b(
+      "Answer a few questions and we’ll route you to the right course.",
+      "Responde unas preguntas y te dirigiremos al curso adecuado.",
+    ),
+    orDivider: b("or talk to a person", "o habla con una persona"),
+    calendlyEyebrow: b("Talk to Debbie or Ashley", "Habla con Debbie o Ashley"),
+    calendlyHeading: b(
+      "Lock in a 15-minute call. Real conversation, no pressure.",
+      "Reserva una llamada de 15 minutos. Una conversación real, sin presión.",
+    ),
+    calendlyBody: b(
+      "Pick a slot that works — evenings and weekends included. They’ll answer every question about courses, schedules, and prerequisites directly.",
+      "Elige el horario que te convenga, incluidas tardes y fines de semana. Te responderán directamente cualquier pregunta sobre cursos, horarios y requisitos.",
+    ),
+    calendlyCta: b("Book a 15-min call", "Reservar una llamada de 15 min"),
+    tiles: [
+      {
+        title: b("Courses", "Cursos"),
+        body: b(
+          "Radiography for Dental Personnel and Expanded Functions for the Dental Assistant (EFDA).",
+          "Radiografía para Personal Dental y Funciones Ampliadas para el Asistente Dental (EFDA).",
+        ),
+      },
+      {
+        title: b("Schedule", "Horario"),
+        body: b(
+          "Built for working adults. Next cohort: September 14, 2026.",
+          "Diseñado para adultos que trabajan. Próxima cohorte: 14 de septiembre de 2026.",
+        ),
+      },
+      {
+        title: b("Instructors", "Instructoras"),
+        body: b(
+          "Debbie & Ashley Sanders — co-founders and instructors, 13+ years teaching.",
+          "Debbie y Ashley Sanders, cofundadoras e instructoras, con más de 13 años enseñando.",
+        ),
+      },
+    ],
+    referredFrom: b("Referred from", "Referido desde"),
+    backToFida: b("Back to FIDA", "Volver a FIDA"),
+  },
 };

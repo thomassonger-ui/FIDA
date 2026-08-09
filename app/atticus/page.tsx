@@ -1,20 +1,24 @@
-import Link from "next/link";
-import { getServerClient } from "@/lib/supabase";
 import { headers } from "next/headers";
+import { getServerClient } from "@/lib/supabase";
+import { AtticusPageContent } from "@/components/landing/AtticusPageContent";
 
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Atticus™M · FIDA",
-  description: "Talk to Atticus, FIDA's AI admissions advisor.",
+  title: "Atticus — Start Your Registration",
+  description:
+    "Start your FIDA registration with Atticus, our AI admissions advisor. Get matched to the Entry Level Dental Assisting diploma program or an EFDA or Radiography course.",
+  alternates: { canonical: "/atticus" },
 };
 
 /**
- * Public Atticus™M landing.
+ * Public Atticus registration-intake page.
  *
- * On every visit with a ?src= param, logs a session row so the admin dashboard
- * can count attributed visitors. The chat experience itself is the next phase —
- * for now this captures attribution and surfaces an inquiry CTA.
+ * Any visit carrying a ?src= param (QR codes, flyers, campaigns) still logs an
+ * attribution row so the admin dashboard can count referred visitors — that
+ * behaviour predates the 2026-08-09 rebuild and is unchanged. What changed is
+ * the page itself: the live chat is now the intake, rather than a CTA that
+ * bounced the visitor to /admissions.
  */
 export default async function AtticusPage({
   searchParams,
@@ -22,9 +26,10 @@ export default async function AtticusPage({
   searchParams: Promise<{ src?: string }>;
 }) {
   const { src } = await searchParams;
-  const cleanSrc = (src || "").toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 80) || null;
+  const cleanSrc =
+    (src || "").toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 80) || null;
 
-  // Log a session ping (best-effort)
+  // Log a session ping (best-effort — never block the page on this)
   if (cleanSrc) {
     try {
       const sb = getServerClient();
@@ -39,106 +44,5 @@ export default async function AtticusPage({
     }
   }
 
-  return (
-    <main className="min-h-screen bg-paper">
-      <div className="max-w-2xl mx-auto px-6 py-16 md:py-24">
-        <div className="eyebrow text-teal-deep">Atticus™M · FIDA admissions</div>
-        <h1 className="font-display text-5xl md:text-6xl text-ink mt-3 tracking-tight leading-tight">
-          Hi — I&rsquo;m Atticus.
-        </h1>
-        <p className="font-display text-xl md:text-2xl text-muted mt-4 leading-snug">
-          FIDA&rsquo;s AI admissions advisor. Ask me anything about our dental assisting
-          courses — tuition, schedules, prerequisites, whether your work experience counts.
-        </p>
-
-        {/* CALENDLY HANDOFF — primary path */}
-        <div className="mt-10 border-2 border-teal bg-paper rounded-sm p-6">
-          <div className="flex items-start justify-between gap-4 flex-wrap">
-            <div className="flex-1 min-w-[220px]">
-              <div className="eyebrow text-teal-deep">Talk to Debbie or Ashley</div>
-              <p className="font-display text-xl text-ink mt-2 leading-snug">
-                Lock in a 15-minute call. Real conversation, no pressure.
-              </p>
-              <p className="text-sm text-muted mt-2">
-                Pick a slot that works — evenings and weekends included. They&rsquo;ll answer
-                every question about courses, schedules, and prerequisites directly.
-              </p>
-            </div>
-            <a
-              href={`https://calendly.com/fldentalassisting/appointment${
-                cleanSrc
-                  ? `?utm_source=${encodeURIComponent(cleanSrc)}&utm_campaign=atticusm`
-                  : "?utm_campaign=atticusm"
-              }`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block bg-teal text-white text-sm font-semibold px-5 py-3 rounded-sm hover:bg-teal-deep transition whitespace-nowrap"
-            >
-              Book a 15-min call →
-            </a>
-          </div>
-        </div>
-
-        {/* OR DIVIDER */}
-        <div className="mt-6 flex items-center gap-3 text-xs text-subtle uppercase tracking-eyebrow">
-          <div className="flex-1 h-px bg-rule"></div>
-          <span>or chat with Atticus</span>
-          <div className="flex-1 h-px bg-rule"></div>
-        </div>
-
-        {/* TALK WITH ATTICUS — replaces the older SMS callback form so every
-            inbound channel runs through the portal (compliance). */}
-        <div className="mt-6 border-2 border-teal/30 bg-teal/5 rounded-sm p-6">
-          <div className="flex items-start justify-between gap-4 flex-wrap">
-            <div className="flex-1 min-w-[220px]">
-              <div className="eyebrow text-teal-deep">Talk With Atticus</div>
-              <p className="font-display text-xl text-ink mt-2 leading-snug">
-                Get answers right now — Atticus is online.
-              </p>
-              <p className="text-sm text-muted mt-2">
-                Available 24/7. Ask about tuition, schedules, prerequisites, or
-                whether your background fits. No forms, no waiting — just a
-                conversation.
-              </p>
-            </div>
-            <Link
-              href={`/admissions${
-                cleanSrc ? `?src=${encodeURIComponent(cleanSrc)}` : ""
-              }`}
-              className="inline-block bg-navy text-white text-sm font-semibold px-5 py-3 rounded-sm hover:bg-navy-deep transition whitespace-nowrap"
-            >
-              Open Atticus →
-            </Link>
-          </div>
-        </div>
-
-        <div className="mt-10 grid sm:grid-cols-3 gap-4 text-sm">
-          <div className="border border-rule bg-paper rounded-sm p-4">
-            <div className="font-display text-lg text-ink">Programs</div>
-            <p className="text-xs text-muted mt-1">Radiography (RDP-CE) and Expanded Functions Dental Assisting (EFDA).</p>
-          </div>
-          <div className="border border-rule bg-paper rounded-sm p-4">
-            <div className="font-display text-lg text-ink">Schedule</div>
-            <p className="text-xs text-muted mt-1">Evening cohorts built for working adults. Next cohort: July 6, 2026.</p>
-          </div>
-          <div className="border border-rule bg-paper rounded-sm p-4">
-            <div className="font-display text-lg text-ink">Instructors</div>
-            <p className="text-xs text-muted mt-1">Debbie & Ashley Sanders — co-founders & instructors, 13+ years teaching.</p>
-          </div>
-        </div>
-
-        {cleanSrc && (
-          <p className="text-[11px] text-subtle mt-10 italic">
-            Referred from <code className="font-mono">{cleanSrc}</code>. Thanks for checking us out.
-          </p>
-        )}
-
-        <div className="mt-12 pt-6 border-t border-rule">
-          <Link href="/" className="text-sm text-subtle hover:text-ink">
-            &larr; Back to FIDA
-          </Link>
-        </div>
-      </div>
-    </main>
-  );
+  return <AtticusPageContent src={cleanSrc} />;
 }
