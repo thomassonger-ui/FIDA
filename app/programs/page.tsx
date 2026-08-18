@@ -24,7 +24,7 @@ const courseJsonLd = {
       provider: {
         "@type": "EducationalOrganization",
         name: "Florida Institute of Dental Assisting",
-        sameAs: "https://fldentalassisting.online",
+        sameAs: "https://fldentalassisting.com",
       },
     },
   })),

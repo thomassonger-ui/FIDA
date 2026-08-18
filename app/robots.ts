@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 // Public production URL. Falls back to the live domain if the env var is unset,
 // so robots.txt always resolves to an absolute sitemap URL.
 // Branded production domain — the canonical site we want indexed.
-const SITE_URL = "https://fldentalassisting.online";
+const SITE_URL = "https://fldentalassisting.com";
 
 export default function robots(): MetadataRoute.Robots {
   return {

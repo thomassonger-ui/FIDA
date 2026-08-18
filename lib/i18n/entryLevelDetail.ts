@@ -22,7 +22,7 @@ const b = (en: string, es: string): Bilingual => ({ en, es });
 export const entryLevelDetail: CourseDetail = {
   slug: "entry-level-dental-assisting",
   pageUrl:
-    "https://fldentalassisting.online/programs/entry-level-dental-assisting",
+    "https://fldentalassisting.com/programs/entry-level-dental-assisting",
   // Apply Now = the Atticus intake, not Moodle.
   applyHref: "/atticus",
   eyebrow: b(

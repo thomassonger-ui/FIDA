@@ -15,7 +15,7 @@ const orgJsonLd = {
   "@type": "EducationalOrganization",
   name: "Florida Institute of Dental Assisting",
   alternateName: "FIDA",
-  url: "https://fldentalassisting.online",
+  url: "https://fldentalassisting.com",
   description:
     "Dental assisting school in Jacksonville, Florida offering an Entry Level Dental Assisting diploma and EFDA and Radiography courses approved by the Florida Board of Dentistry.",
   telephone: "+1-904-674-3131",

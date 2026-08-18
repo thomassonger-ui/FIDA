@@ -1,7 +1,7 @@
 /**
  * Canonical site origin, safe against a mis-set NEXT_PUBLIC_SITE_URL.
  *
- * Vercel env vars are easy to fumble — e.g. "fldentalassisting.online"
+ * Vercel env vars are easy to fumble — e.g. "fldentalassisting.com"
  * without a scheme. `new URL(path, origin)` throws ERR_INVALID_URL on a
  * scheme-less base, which took down /api/portal/login (500 on every
  * sign-in, 2026-07-28). This helper normalizes:

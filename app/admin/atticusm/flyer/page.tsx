@@ -99,9 +99,9 @@ export default function FlyerBuilderPage() {
   const [subhead, setSubhead] = useState(preset.subhead);
   const [cohort, setCohort] = useState("Summer 2026 · Starts July 6, 2026");
   const [cta, setCta] = useState(preset.cta);
-  const [url, setUrl] = useState("fldentalassisting.online");
-  const [contact, setContact] = useState("Jacksonville, FL · fldentalassisting.online");
-  const [qrUrl, setQrUrl] = useState("https://fldentalassisting.online");
+  const [url, setUrl] = useState("fldentalassisting.com");
+  const [contact, setContact] = useState("Jacksonville, FL · fldentalassisting.com");
+  const [qrUrl, setQrUrl] = useState("https://fldentalassisting.com");
   const [selected, setSelected] = useState<ProgramKey[]>(["efda", "radiography"]);
 
   function applyPreset(id: string) {

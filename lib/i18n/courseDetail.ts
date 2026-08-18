@@ -104,7 +104,7 @@ const textbook = b(
 export const efdaDetail: CourseDetail = {
   slug: "efda-certification-florida",
   pageUrl:
-    "https://fldentalassisting.online/programs/efda-certification-florida",
+    "https://fldentalassisting.com/programs/efda-certification-florida",
   eyebrow: shared.eyebrow,
   h1: b(
     "EFDA Certification in Florida — Requirements & Cost",
@@ -260,7 +260,7 @@ export const efdaDetail: CourseDetail = {
 export const radiographyDetail: CourseDetail = {
   slug: "dental-radiography-certification",
   pageUrl:
-    "https://fldentalassisting.online/programs/dental-radiography-certification",
+    "https://fldentalassisting.com/programs/dental-radiography-certification",
   eyebrow: shared.eyebrow,
   h1: b(
     "Florida Dental Radiography Certification",

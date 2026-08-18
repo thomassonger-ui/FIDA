@@ -24,7 +24,7 @@ const jsonLd = {
       provider: {
         "@type": "EducationalOrganization",
         name: "Florida Institute of Dental Assisting",
-        sameAs: "https://fldentalassisting.online",
+        sameAs: "https://fldentalassisting.com",
       },
       url: d.pageUrl,
       offers: {
@@ -32,7 +32,7 @@ const jsonLd = {
         category: "Tuition",
         price: "9850.00",
         priceCurrency: "USD",
-        url: "https://fldentalassisting.online/atticus",
+        url: "https://fldentalassisting.com/atticus",
         availability: "https://schema.org/InStock",
       },
       educationalCredentialAwarded: "Diploma — Entry Level Dental Assisting",

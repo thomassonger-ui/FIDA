@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 // Branded production domain — the canonical site we want indexed.
-const SITE_URL = "https://fldentalassisting.online";
+const SITE_URL = "https://fldentalassisting.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();

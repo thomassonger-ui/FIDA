@@ -18,7 +18,7 @@ const body = Inter({
 });
 
 // Branded production domain — the canonical site we want indexed.
-const SITE_URL = "https://fldentalassisting.online";
+const SITE_URL = "https://fldentalassisting.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
