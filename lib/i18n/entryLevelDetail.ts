@@ -1,4 +1,9 @@
-import { COHORT_DATE, COHORT_DATE_EN, COHORT_DATE_ES } from "@/lib/cohort";
+import {
+  COHORT_DATE,
+  COHORT_DATE_EN,
+  COHORT_DATE_ES,
+  COHORT_SCHEDULE,
+} from "@/lib/cohort";
 import type { Bilingual } from "./LanguageProvider";
 import { detailUi, type CourseDetail } from "./courseDetail";
 
@@ -78,6 +83,10 @@ export const entryLevelDetail: CourseDetail = {
     {
       label: b("Next cohort", "Próxima cohorte"),
       value: COHORT_DATE,
+    },
+    {
+      label: b("Class schedule", "Horario de clases"),
+      value: COHORT_SCHEDULE,
     },
   ],
   testimonial: {

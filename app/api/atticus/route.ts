@@ -45,7 +45,7 @@ Two distinct courses, both APPROVED BY (not licensed by) the Florida Board of De
 Path B is for prospects ALREADY working as a dental assistant in a Florida dental office, advancing their credentials.
 
 START DATES — keep these straight:
-- PATH A (diploma): next cohort is Fall 2026, starting ${COHORT_DATE_EN}. (Pending final confirmation — if a prospect needs certainty on a start date, let the FIDA advisor confirm it.)
+- PATH A (diploma): next cohort is Fall 2026, starting ${COHORT_DATE_EN} (confirmed). Classes meet Tuesdays and Thursdays, 9:00 AM–1:30 PM, in Jacksonville.
 - PATH B (EFDA + Radiography courses): OPEN ENROLLMENT — start anytime. Never quote a fixed start date for Path B.
 
 # Mandatory qualifying question
