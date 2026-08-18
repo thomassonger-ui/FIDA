@@ -258,8 +258,16 @@ export function HomeContent() {
             <blockquote className="font-display text-2xl md:text-3xl text-navy leading-snug">
               “{t(home.testimonial.quote)}”
             </blockquote>
-            <figcaption className="mt-6 text-sm font-semibold text-teal">
-              — {home.testimonial.name}
+            <figcaption className="mt-6 text-sm font-semibold text-navy">
+              — {home.testimonial.name},{" "}
+              <a
+                href={home.testimonial.orgUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-teal hover:underline underline-offset-4"
+              >
+                {home.testimonial.org}
+              </a>
             </figcaption>
           </figure>
         </div>
