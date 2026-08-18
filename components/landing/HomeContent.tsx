@@ -250,6 +250,21 @@ export function HomeContent() {
         </div>
       </section>
 
+      {/* TESTIMONIAL */}
+      <section className="bg-white border-b border-rule">
+        <div className="max-w-4xl mx-auto px-6 md:px-10 lg:px-12 py-16 md:py-20">
+          <div className="eyebrow text-center">{t(home.testimonial.eyebrow)}</div>
+          <figure className="mt-6 text-center">
+            <blockquote className="font-display text-2xl md:text-3xl text-navy leading-snug">
+              “{t(home.testimonial.quote)}”
+            </blockquote>
+            <figcaption className="mt-6 text-sm font-semibold text-teal">
+              — {home.testimonial.name}
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
       {/* WHY FIDA */}
       <section className="bg-paper-subtle">
         <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-20 md:py-28">

@@ -187,6 +187,18 @@ export const home = {
     ],
   },
 
+  /* Homepage testimonial — Dr. Joseph Angley, added per Tom 2026-08-18.
+   * Wording pre-cleared for compliance: "courses" (not "programs"),
+   * "Radiography" (not "Radiology"). */
+  testimonial: {
+    eyebrow: b("What dentists say", "Lo que dicen los dentistas"),
+    quote: b(
+      "FIDA's online EFDA and Radiography CE courses are the most innovative I've seen in Florida. Debbie and Ashley Sanders are friendly, knowledgeable instructors who genuinely invest in every student.",
+      "Los cursos de educación continua en línea de EFDA y Radiografía de FIDA son los más innovadores que he visto en Florida. Debbie y Ashley Sanders son instructoras amables y conocedoras que se dedican de verdad a cada estudiante.",
+    ),
+    name: "Dr. Joseph Angley",
+  },
+
   why: {
     eyebrow: b("Why FIDA", "Por qué FIDA"),
     heading: b(
