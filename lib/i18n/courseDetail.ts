@@ -23,6 +23,14 @@ export type DetailFaq = { q: Bilingual; a: Bilingual };
 export type CourseDetail = {
   slug: string;
   pageUrl: string;
+  /**
+   * Where the Apply CTA points. Defaults to APPLY_URL (Moodle, new tab).
+   * The Entry Level diploma page overrides this to the Atticus intake
+   * (internal route, same tab) — Apply Now = /atticus per Tom 2026-08-18.
+   */
+  applyHref?: string;
+  /** Optional social proof block rendered between Facts and Requirements. */
+  testimonial?: { quote: Bilingual; name: Bilingual };
   eyebrow: Bilingual;
   h1: Bilingual;
   intro: Bilingual;

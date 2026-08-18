@@ -155,7 +155,7 @@ export const home = {
     details: b("Program details", "Detalles del programa"),
     cards: [
       {
-        href: "/programs#entry-level-dental-assisting",
+        href: "/programs/entry-level-dental-assisting",
         title: b("Entry Level Dental Assisting", "Asistencia Dental de Nivel Inicial"),
         length: b("Diploma program", "Programa de diploma"),
         outcome: b(

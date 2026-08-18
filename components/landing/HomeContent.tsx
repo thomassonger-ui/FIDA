@@ -95,7 +95,7 @@ export function HomeContent() {
         <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-10 md:py-14">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Link
-              href="/programs#entry-level-dental-assisting"
+              href="/programs/entry-level-dental-assisting"
               className="card card-hover block p-6"
             >
               <div className="flex items-center gap-3 mb-3">

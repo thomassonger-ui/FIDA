@@ -13,6 +13,27 @@ import { APPLY_URL, type CourseDetail } from "@/lib/i18n/courseDetail";
 export function CourseDetailContent({ d }: { d: CourseDetail }) {
   const { t } = useLang();
 
+  // Apply CTA: Moodle (external, new tab) by default; the diploma page
+  // overrides to the Atticus intake (internal, same tab).
+  const applyHref = d.applyHref ?? APPLY_URL;
+  const applyInternal = applyHref.startsWith("/");
+
+  const ApplyCta = ({ className }: { className: string }) =>
+    applyInternal ? (
+      <Link href={applyHref} className={className}>
+        {t(d.applyNow)} <span aria-hidden="true">→</span>
+      </Link>
+    ) : (
+      <a
+        href={applyHref}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={className}
+      >
+        {t(d.applyNow)} <span aria-hidden="true">→</span>
+      </a>
+    );
+
   return (
     <div className="min-h-screen flex flex-col">
       <Nav />
@@ -28,14 +49,7 @@ export function CourseDetailContent({ d }: { d: CourseDetail }) {
               </h1>
               <p className="mt-6 text-muted text-lg leading-relaxed">{t(d.intro)}</p>
               <div className="mt-8 flex flex-col sm:flex-row gap-3">
-                <a
-                  href={APPLY_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-primary"
-                >
-                  {t(d.applyNow)} <span aria-hidden="true">→</span>
-                </a>
+                <ApplyCta className="btn-primary" />
                 <Link href="/tickets" className="btn-ghost">
                   {t(d.getStarted)}
                 </Link>
@@ -57,6 +71,20 @@ export function CourseDetailContent({ d }: { d: CourseDetail }) {
             ))}
           </div>
         </section>
+
+        {/* TESTIMONIAL (optional) */}
+        {d.testimonial && (
+          <section className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 pb-14 md:pb-16">
+            <figure className="card bg-white p-8 md:p-10 max-w-3xl">
+              <blockquote className="font-display text-xl md:text-2xl text-navy leading-snug">
+                “{t(d.testimonial.quote)}”
+              </blockquote>
+              <figcaption className="mt-4 text-sm text-muted">
+                — {t(d.testimonial.name)}
+              </figcaption>
+            </figure>
+          </section>
+        )}
 
         {/* REQUIREMENTS */}
         <section className="bg-paper-subtle border-y border-rule">
@@ -115,14 +143,7 @@ export function CourseDetailContent({ d }: { d: CourseDetail }) {
                   {d.priceDisplay}
                 </div>
                 <div className="mt-1 text-sm text-muted">{t(d.priceNote)}</div>
-                <a
-                  href={APPLY_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-primary w-full mt-6"
-                >
-                  {t(d.applyNow)} <span aria-hidden="true">→</span>
-                </a>
+                <ApplyCta className="btn-primary w-full mt-6" />
               </div>
             </div>
           </div>
@@ -156,14 +177,7 @@ export function CourseDetailContent({ d }: { d: CourseDetail }) {
               {t(d.ctaBody)}
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <a
-                href={APPLY_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-primary"
-              >
-                {t(d.applyNow)} <span aria-hidden="true">→</span>
-              </a>
+              <ApplyCta className="btn-primary" />
               <Link
                 href="/programs"
                 className="text-teal-soft hover:text-teal underline underline-offset-4 text-sm"
