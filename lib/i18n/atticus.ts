@@ -1,4 +1,5 @@
 import type { Bilingual } from "./LanguageProvider";
+import { COHORT_DATE_EN, COHORT_DATE_ES } from "@/lib/cohort";
 
 /**
  * EN/ES copy for the Atticus admissions intake widget.
@@ -42,8 +43,8 @@ export const atticus = {
   ],
   disclosureLead: b("Heads up:", "Aviso:"),
   disclosure: b(
-    "Atticus is an AI admissions advisor — not a human and not a medical or legal professional. Please don’t share your SSN, insurance info, or medical history in chat. A real FIDA advisor follows up within one business day.",
-    "Atticus es un asesor de admisiones con inteligencia artificial: no es una persona ni un profesional médico o legal. Por favor no compartas tu número de Seguro Social, información de seguro ni historial médico en el chat. Un asesor real de FIDA te dará seguimiento en un día hábil.",
+    "Atticus is an AI admissions advisor — not a human and not a medical or legal professional. Please don’t share your SSN, insurance info, or medical history in chat. By sharing your contact info you agree FIDA may contact you about admissions by email or phone — never marketing texts. A real FIDA advisor follows up within one business day.",
+    "Atticus es un asesor de admisiones con inteligencia artificial: no es una persona ni un profesional médico o legal. Por favor no compartas tu número de Seguro Social, información de seguro ni historial médico en el chat. Al compartir tus datos de contacto aceptas que FIDA se comunique contigo sobre admisiones por correo o teléfono — nunca mensajes de texto publicitarios. Un asesor real de FIDA te dará seguimiento en un día hábil.",
   ),
   placeholder: b("Type your message...", "Escribe tu mensaje..."),
   send: b("Send", "Enviar"),
@@ -79,17 +80,17 @@ export const atticus = {
     calendlyCta: b("Book a 15-min call", "Reservar una llamada de 15 min"),
     tiles: [
       {
-        title: b("Courses", "Cursos"),
+        title: b("Programs & courses", "Programas y cursos"),
         body: b(
-          "Radiography for Dental Personnel and Expanded Functions for the Dental Assistant (EFDA).",
-          "Radiografía para Personal Dental y Funciones Ampliadas para el Asistente Dental (EFDA).",
+          "Entry Level Dental Assisting diploma program, plus Radiography for Dental Personnel and Expanded Functions for the Dental Assistant (EFDA) courses.",
+          "Programa de diploma de Asistencia Dental de Nivel Inicial, más los cursos de Radiografía para Personal Dental y Funciones Ampliadas para el Asistente Dental (EFDA).",
         ),
       },
       {
         title: b("Schedule", "Horario"),
         body: b(
-          "Built for working adults. Next cohort: September 14, 2026.",
-          "Diseñado para adultos que trabajan. Próxima cohorte: 14 de septiembre de 2026.",
+          `Built for working adults. CE courses: open enrollment. Next diploma cohort: ${COHORT_DATE_EN}.`,
+          `Diseñado para adultos que trabajan. Cursos de educación continua: inscripción abierta. Próxima cohorte del diploma: ${COHORT_DATE_ES}.`,
         ),
       },
       {

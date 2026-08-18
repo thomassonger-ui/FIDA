@@ -1,4 +1,5 @@
 import type { Bilingual } from "./LanguageProvider";
+import { COHORT_DATE } from "@/lib/cohort";
 
 /**
  * EN/ES copy for /about and /tickets.
@@ -71,10 +72,10 @@ export const about = {
   ),
 
   cohortEyebrow: b("Next cohort", "Próxima cohorte"),
-  cohortDate: b("September 14, 2026", "14 de septiembre de 2026"),
+  cohortDate: COHORT_DATE,
   cohortBody: b(
-    "Fall 2026 intake. Priority deadline: August 17.",
-    "Ingreso de otoño 2026. Fecha límite prioritaria: 17 de agosto.",
+    "Fall 2026 intake. Seats are limited — applications reviewed as received.",
+    "Ingreso de otoño 2026. Los cupos son limitados: las solicitudes se revisan al recibirse.",
   ),
 
   ctaHeading: b("See if FIDA is a fit.", "Descubre si FIDA es para ti."),

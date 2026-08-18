@@ -1,4 +1,5 @@
 import type { Bilingual } from "./LanguageProvider";
+import { COHORT_DATE } from "@/lib/cohort";
 
 /**
  * EN/ES copy for the landing chrome (Nav + Footer) and the homepage.
@@ -218,13 +219,15 @@ export const home = {
 
   cohort: {
     eyebrow: b("Next cohort", "Próxima cohorte"),
-    date: b("September 14, 2026", "14 de septiembre de 2026"),
+    date: COHORT_DATE,
     note: b(
-      "Jacksonville-based. Online and hybrid CE schedules. Seats fill 6–8 weeks before start date.",
-      "Con sede en Jacksonville. Horarios en línea e híbridos para educación continua. Los cupos se llenan de 6 a 8 semanas antes de la fecha de inicio.",
+      "Jacksonville-based. EFDA and Radiography CE courses are open enrollment — start anytime. Diploma seats fill 6–8 weeks before start date.",
+      "Con sede en Jacksonville. Los cursos de educación continua de EFDA y Radiografía tienen inscripción abierta: comienza cuando quieras. Los cupos del diploma se llenan de 6 a 8 semanas antes de la fecha de inicio.",
     ),
-    priorityLabel: b("Priority deadline", "Fecha límite prioritaria"),
-    priorityValue: b("August 17", "17 de agosto"),
+    // "Priority deadline: August 17" went stale the day it passed — replaced
+    // with an evergreen status. (Same card slot, same component.)
+    priorityLabel: b("Applications", "Solicitudes"),
+    priorityValue: b("Reviewed as received", "Se revisan al recibirse"),
     seatsLabel: b("Enrollment status", "Estado de inscripción"),
     // Was a hard-coded "24 / 60". Unverifiable seat counts are a marketing
     // claim; replaced with a status that is true without a live seat feed.
