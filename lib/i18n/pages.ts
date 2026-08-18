@@ -57,6 +57,50 @@ export const about = {
     },
   ],
 
+  /* Team bios — carried from the legacy .com /about page (archived
+   * 2026-08-18). Credentials verbatim; no photos yet (add when provided). */
+  teamEyebrow: b("Meet your instructors", "Conoce a tus instructoras"),
+  teamHeading: b(
+    "Taught by the people who built it.",
+    "Enseñado por quienes lo construyeron.",
+  ),
+  teamIntro: b(
+    "With over 30 years of combined experience in every corner of dentistry — chairside, front desk, and administration — FIDA's co-founders teach every cohort themselves.",
+    "Con más de 30 años de experiencia combinada en todos los rincones de la odontología — junto al sillón, en recepción y en administración — las cofundadoras de FIDA imparten cada cohorte personalmente.",
+  ),
+  team: [
+    {
+      name: "Debbie Sanders",
+      role: b(
+        "Co-Founder · Executive Administrator · Instructor",
+        "Cofundadora · Administradora Ejecutiva · Instructora",
+      ),
+      credentials: b(
+        "CDA · EFDA · Registered Dental Radiographer",
+        "CDA · EFDA · Radiógrafa Dental Registrada (Registered Dental Radiographer)",
+      ),
+      bio: b(
+        "A graduate of Camden County College with 13+ years as an instructor, Debbie prides herself on being a mentor inside the classroom — and long after graduation.",
+        "Egresada de Camden County College con más de 13 años como instructora, Debbie se enorgullece de ser mentora dentro del aula — y mucho después de la graduación.",
+      ),
+    },
+    {
+      name: "Ashley Sanders",
+      role: b(
+        "Co-Founder · Executive Administrator · Instructor",
+        "Cofundadora · Administradora Ejecutiva · Instructora",
+      ),
+      credentials: b(
+        "Practical Dental Assisting of Virginia Beach graduate",
+        "Egresada de Practical Dental Assisting of Virginia Beach",
+      ),
+      bio: b(
+        "Six years of dental practice administration — patient coordination, treatment planning, and student relations. Ashley goes the extra mile to know every student by name.",
+        "Seis años en administración de consultorios dentales — coordinación de pacientes, planes de tratamiento y relaciones estudiantiles. Ashley hace un esfuerzo adicional por conocer a cada estudiante por su nombre.",
+      ),
+    },
+  ],
+
   locationEyebrowCampus: b("Campus", "Sede"),
   campusTitle: b("Jacksonville, Florida", "Jacksonville, Florida"),
   campusBody: b(

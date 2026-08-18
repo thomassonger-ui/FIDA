@@ -23,8 +23,9 @@ const b = (en: string, es: string): Bilingual => ({ en, es });
 export const nav = {
   links: [
     { href: "/programs", label: b("Programs", "Programas") },
+    { href: "/tuition", label: b("Tuition", "Matrícula") },
     { href: "/about", label: b("About", "Nosotros") },
-    { href: "/tickets", label: b("Tickets", "Soporte") },
+    { href: "/contact", label: b("Contact", "Contacto") },
   ],
   // Primary intake CTA — sits in the nav so every page has a one-click path
   // into registration.
@@ -45,6 +46,9 @@ export const footer = {
   navigate: b("Navigate", "Navegación"),
   support: b("Support", "Soporte"),
   programs: b("Programs", "Programas"),
+  tuition: b("Tuition", "Matrícula"),
+  contact: b("Contact", "Contacto"),
+  tour: b("Schedule a tour", "Agenda una visita"),
   about: b("About", "Nosotros"),
   submitTicket: b("Submit a Ticket", "Enviar un ticket"),
   atticus: b("Talk to Atticus", "Habla con Atticus"),

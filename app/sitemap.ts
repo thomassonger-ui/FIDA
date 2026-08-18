@@ -13,10 +13,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }[] = [
     { path: "/", priority: 1.0, changeFrequency: "weekly" },
     { path: "/programs", priority: 0.9, changeFrequency: "weekly" },
+    { path: "/programs/entry-level-dental-assisting", priority: 0.9, changeFrequency: "monthly" },
     { path: "/programs/efda-certification-florida", priority: 0.8, changeFrequency: "monthly" },
     { path: "/programs/dental-radiography-certification", priority: 0.8, changeFrequency: "monthly" },
+    { path: "/tuition", priority: 0.8, changeFrequency: "monthly" },
     { path: "/admissions", priority: 0.9, changeFrequency: "weekly" },
     { path: "/about", priority: 0.7, changeFrequency: "monthly" },
+    { path: "/tour", priority: 0.6, changeFrequency: "monthly" },
+    { path: "/contact", priority: 0.6, changeFrequency: "monthly" },
     { path: "/tickets", priority: 0.4, changeFrequency: "monthly" },
   ];
 

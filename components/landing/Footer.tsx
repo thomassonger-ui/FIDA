@@ -62,7 +62,9 @@ export function Footer() {
             </div>
             <ul className="space-y-3 text-navy-100">
               <li><Link href="/programs" className="hover:text-teal-soft transition-colors">{t(footer.programs)}</Link></li>
+              <li><Link href="/tuition" className="hover:text-teal-soft transition-colors">{t(footer.tuition)}</Link></li>
               <li><Link href="/about" className="hover:text-teal-soft transition-colors">{t(footer.about)}</Link></li>
+              <li><Link href="/contact" className="hover:text-teal-soft transition-colors">{t(footer.contact)}</Link></li>
             </ul>
           </div>
 
@@ -73,6 +75,7 @@ export function Footer() {
             <ul className="space-y-3 text-navy-100">
               <li><Link href="/atticus" className="hover:text-teal-soft transition-colors">{t(footer.atticus)}</Link></li>
               <li><Link href="/atticus" className="hover:text-teal-soft transition-colors">{t(footer.startRegistration)}</Link></li>
+              <li><Link href="/tour" className="hover:text-teal-soft transition-colors">{t(footer.tour)}</Link></li>
             </ul>
           </div>
 

@@ -48,6 +48,35 @@ export function AboutContent() {
           </div>
         </section>
 
+        {/* TEAM */}
+        <section className="bg-paper-subtle border-t border-rule">
+          <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-20">
+            <div className="max-w-2xl mb-12">
+              <div className="eyebrow">{t(a.teamEyebrow)}</div>
+              <h2 className="mt-3 font-display text-4xl text-navy tracking-tight">
+                {t(a.teamHeading)}
+              </h2>
+              <p className="mt-4 text-muted leading-relaxed">{t(a.teamIntro)}</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {a.team.map((m) => (
+                <div key={m.name} className="card p-8 bg-white">
+                  <h3 className="font-display text-2xl text-navy leading-tight">
+                    {m.name}
+                  </h3>
+                  <div className="mt-1 text-sm font-semibold text-teal">
+                    {t(m.role)}
+                  </div>
+                  <div className="mt-1 text-xs text-muted">
+                    {t(m.credentials)}
+                  </div>
+                  <p className="mt-4 text-muted leading-relaxed">{t(m.bio)}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* LOCATION / LICENSURE / COHORT */}
         <section className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-20 border-t border-rule">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
