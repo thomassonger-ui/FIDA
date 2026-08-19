@@ -54,6 +54,12 @@ export async function GET(
   }
 
   const target = new URL(destination, req.url);
-  if (safeSlug) target.searchParams.set("src", safeSlug);
+  // Attribution: internal destinations get ?src=<slug> so Atticus and the
+  // leads dashboard can attribute the visit. External destinations (e.g. the
+  // Google review link) are left untouched — the qr_scans row above already
+  // carries the slug, so scan tracking is preserved without polluting a
+  // third party's URL.
+  const isExternal = /^https?:\/\//i.test(destination);
+  if (safeSlug && !isExternal) target.searchParams.set("src", safeSlug);
   return NextResponse.redirect(target, 302);
 }
