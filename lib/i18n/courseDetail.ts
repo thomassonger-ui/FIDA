@@ -30,7 +30,13 @@ export type CourseDetail = {
    */
   applyHref?: string;
   /** Optional social proof block rendered between Facts and Requirements. */
-  testimonial?: { quote: Bilingual; name: Bilingual };
+  testimonial?: {
+    quote: Bilingual;
+    name: Bilingual;
+    /** Optional affiliation, rendered as a link when orgUrl is present. */
+    org?: string;
+    orgUrl?: string;
+  };
   eyebrow: Bilingual;
   h1: Bilingual;
   intro: Bilingual;
@@ -116,6 +122,15 @@ export const efdaDetail: CourseDetail = {
   ),
   applyNow: shared.applyNow,
   getStarted: shared.getStarted,
+  testimonial: {
+    quote: b(
+      "FIDA's online EFDA and Radiography CE courses are the most innovative I've seen in Florida. Debbie and Ashley Sanders are friendly, knowledgeable instructors who genuinely invest in every student.",
+      "Los cursos de educación continua en línea de EFDA y Radiografía de FIDA son los más innovadores que he visto en Florida. Debbie y Ashley Sanders son instructoras amables y conocedoras que se dedican de verdad a cada estudiante.",
+    ),
+    name: b("Dr. Joseph Angley", "Dr. Joseph Angley"),
+    org: "Cole Middleton Group",
+    orgUrl: "https://www.colemiddleton.com/",
+  },
   facts: [
     {
       label: shared.factLabels.length,
@@ -272,6 +287,15 @@ export const radiographyDetail: CourseDetail = {
   ),
   applyNow: shared.applyNow,
   getStarted: shared.getStarted,
+  testimonial: {
+    quote: b(
+      "FIDA's online EFDA and Radiography CE courses are the most innovative I've seen in Florida. Debbie and Ashley Sanders are friendly, knowledgeable instructors who genuinely invest in every student.",
+      "Los cursos de educación continua en línea de EFDA y Radiografía de FIDA son los más innovadores que he visto en Florida. Debbie y Ashley Sanders son instructoras amables y conocedoras que se dedican de verdad a cada estudiante.",
+    ),
+    name: b("Dr. Joseph Angley", "Dr. Joseph Angley"),
+    org: "Cole Middleton Group",
+    orgUrl: "https://www.colemiddleton.com/",
+  },
   facts: [
     {
       label: shared.factLabels.length,

@@ -79,8 +79,25 @@ export function CourseDetailContent({ d }: { d: CourseDetail }) {
               <blockquote className="font-display text-xl md:text-2xl text-navy leading-snug">
                 “{t(d.testimonial.quote)}”
               </blockquote>
-              <figcaption className="mt-4 text-sm text-muted">
+              <figcaption className="mt-4 text-sm text-navy font-semibold">
                 — {t(d.testimonial.name)}
+                {d.testimonial.org && (
+                  <>
+                    ,{" "}
+                    {d.testimonial.orgUrl ? (
+                      <a
+                        href={d.testimonial.orgUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-teal hover:underline underline-offset-4"
+                      >
+                        {d.testimonial.org}
+                      </a>
+                    ) : (
+                      d.testimonial.org
+                    )}
+                  </>
+                )}
               </figcaption>
             </figure>
           </section>
