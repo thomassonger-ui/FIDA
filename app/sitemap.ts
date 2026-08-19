@@ -22,6 +22,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/tour", priority: 0.6, changeFrequency: "monthly" },
     { path: "/contact", priority: 0.6, changeFrequency: "monthly" },
     { path: "/tickets", priority: 0.4, changeFrequency: "monthly" },
+    { path: "/privacy", priority: 0.3, changeFrequency: "yearly" },
+    { path: "/terms", priority: 0.3, changeFrequency: "yearly" },
+    { path: "/accessibility", priority: 0.3, changeFrequency: "yearly" },
+    { path: "/non-discrimination", priority: 0.3, changeFrequency: "yearly" },
+    { path: "/refund-policy", priority: 0.3, changeFrequency: "yearly" },
   ];
 
   return routes.map((r) => ({

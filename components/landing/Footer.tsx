@@ -11,7 +11,7 @@ export function Footer() {
   return (
     <footer className="bg-navy-deep text-white">
       <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-10 text-sm">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-10 text-sm">
           <div className="md:col-span-2">
             <div className="flex items-center gap-2.5 mb-4">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -86,6 +86,19 @@ export function Footer() {
             <ul className="space-y-3 text-navy-100">
               <li><Link href="/tickets" className="hover:text-teal-soft transition-colors">{t(footer.submitTicket)}</Link></li>
               <li><Link href="/admin" className="hover:text-teal-soft transition-colors">{t(footer.adminDashboard)}</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <div className="text-xs font-semibold tracking-[0.14em] uppercase text-teal-soft mb-4">
+              {t(footer.policiesHeading)}
+            </div>
+            <ul className="space-y-3 text-navy-100">
+              <li><Link href="/privacy" className="hover:text-teal-soft transition-colors">{t(footer.privacy)}</Link></li>
+              <li><Link href="/terms" className="hover:text-teal-soft transition-colors">{t(footer.terms)}</Link></li>
+              <li><Link href="/accessibility" className="hover:text-teal-soft transition-colors">{t(footer.accessibility)}</Link></li>
+              <li><Link href="/non-discrimination" className="hover:text-teal-soft transition-colors">{t(footer.nonDiscrimination)}</Link></li>
+              <li><Link href="/refund-policy" className="hover:text-teal-soft transition-colors">{t(footer.refunds)}</Link></li>
             </ul>
           </div>
         </div>
