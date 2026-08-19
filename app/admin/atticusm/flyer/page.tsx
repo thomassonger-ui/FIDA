@@ -97,11 +97,13 @@ export default function FlyerBuilderPage() {
   const [eyebrow, setEyebrow] = useState(preset.eyebrow);
   const [headline, setHeadline] = useState(preset.headline);
   const [subhead, setSubhead] = useState(preset.subhead);
-  const [cohort, setCohort] = useState("Summer 2026 · Starts July 6, 2026");
+  const [cohort, setCohort] = useState("Fall 2026 · Starts September 15, 2026");
   const [cta, setCta] = useState(preset.cta);
   const [url, setUrl] = useState("fldentalassisting.com");
   const [contact, setContact] = useState("Jacksonville, FL · fldentalassisting.com");
-  const [qrUrl, setQrUrl] = useState("https://fldentalassisting.com");
+  // QR goes DIRECT to the Google review page (per Tom 2026-08-18) — no
+  // redirect hop, no database dependency. Editable per-flyer in the form.
+  const [qrUrl, setQrUrl] = useState("https://g.page/r/CR2PNAbFB2UqEAI/review");
   const [selected, setSelected] = useState<ProgramKey[]>(["efda", "radiography"]);
 
   function applyPreset(id: string) {
