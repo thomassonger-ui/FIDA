@@ -27,11 +27,25 @@ async function createCode(formData: FormData) {
   const label = String(formData.get("label") || "").trim();
   const channel = String(formData.get("channel") || "").trim() || null;
 
+  // Optional custom destination. Internal paths ("/tour") and full external
+  // URLs (the Google review link) are both allowed; anything else is ignored
+  // and the code falls back to the default /atticus.
+  const rawDest = String(formData.get("destination") || "").trim();
+  const destination =
+    rawDest && (/^https?:\/\//i.test(rawDest) || rawDest.startsWith("/"))
+      ? rawDest.slice(0, 500)
+      : null;
+
   if (!slug || !label) return;
 
   try {
     const sb = getServerClient();
-    await sb.from("qr_codes").insert({ slug, label, channel });
+    await sb.from("qr_codes").insert({
+      slug,
+      label,
+      channel,
+      ...(destination ? { destination_path: destination } : {}),
+    });
   } catch (err) {
     console.error("[qr admin] create failed:", err);
   }
@@ -99,7 +113,9 @@ function getCycleStart(): Date {
 }
 
 function buildQRImageUrl(slug: string): string {
-  const target = `https://fida-eight.vercel.app/qr/${slug}`;
+  // Brand domain — was fida-eight.vercel.app before the 2026-08-18 domain
+  // merge, which would have printed QR codes pointing at the wrong host.
+  const target = `https://fldentalassisting.com/qr/${slug}`;
   return `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=12&data=${encodeURIComponent(
     target
   )}`;
@@ -169,6 +185,21 @@ export default async function QRAdminPage() {
           >
             Mint code
           </button>
+        </div>
+        <div className="md:col-span-12">
+          <label className="eyebrow text-muted">
+            Destination (optional — defaults to /atticus)
+          </label>
+          <input
+            name="destination"
+            placeholder="https://g.page/r/…/review or /tour"
+            className="mt-1 w-full border border-rule rounded-sm px-3 py-2 text-sm font-mono"
+          />
+          <p className="text-[10px] text-subtle mt-1">
+            Where scanners land. Internal paths get ?src= attribution; external
+            URLs (like the Google review link) redirect clean — the scan is
+            still logged either way.
+          </p>
         </div>
       </form>
 
