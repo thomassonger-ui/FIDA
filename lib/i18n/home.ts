@@ -22,7 +22,7 @@ const b = (en: string, es: string): Bilingual => ({ en, es });
 
 export const nav = {
   links: [
-    { href: "/programs", label: b("Programs", "Programas") },
+    { href: "/programs", label: b("Programs & Courses", "Programas y Cursos") },
     { href: "/tuition", label: b("Tuition", "Matrícula") },
     { href: "/about", label: b("About", "Nosotros") },
     { href: "/contact", label: b("Contact", "Contacto") },
@@ -45,7 +45,7 @@ export const footer = {
   hours: b("Open 9 a.m.–3 p.m.", "Abierto de 9 a.m. a 3 p.m."),
   navigate: b("Navigate", "Navegación"),
   support: b("Support", "Soporte"),
-  programs: b("Programs", "Programas"),
+  programs: b("Programs & Courses", "Programas y Cursos"),
   tuition: b("Tuition", "Matrícula"),
   contact: b("Contact", "Contacto"),
   tour: b("Schedule a tour", "Agenda una visita"),
@@ -81,10 +81,10 @@ export const home = {
       "odontología — y los cursos que la hacen crecer.",
     ),
     subhead: b(
-      "Florida Institute of Dental Assisting trains the next generation of dental assistants — radiography-certified, EFDA-credentialed, and clinic-ready. Explore our programs and figure out your next step.",
-      "El Florida Institute of Dental Assisting forma a la próxima generación de asistentes dentales: certificados en radiografía, acreditados como EFDA y listos para la clínica. Explora nuestros programas y decide tu próximo paso.",
+      "Florida Institute of Dental Assisting trains the next generation of dental assistants — radiography-certified, EFDA-credentialed, and clinic-ready. One licensed diploma program for new dental assistants. Two Board-approved CE courses for working ones. Find your next step.",
+      "El Florida Institute of Dental Assisting forma a la próxima generación de asistentes dentales: certificados en radiografía, acreditados como EFDA y listos para la clínica. Un programa de diploma con licencia para nuevos asistentes dentales. Dos cursos de educación continua aprobados por la Junta para quienes ya trabajan. Decide tu próximo paso.",
     ),
-    ctaPrimary: b("Explore programs", "Ver programas"),
+    ctaPrimary: b("See the diploma program & CE courses", "Ver el programa de diploma y los cursos de EC"),
     ctaSecondary: b("I’m already a student", "Ya soy estudiante"),
     // LOCKED — English strings are Dr. Angely's exact wording.
     trust1: b(
@@ -158,11 +158,12 @@ export const home = {
   },
 
   programsSection: {
-    eyebrow: b("Programs", "Programas"),
+    eyebrow: b("What we offer", "Lo que ofrecemos"),
     headingLead: b("Two paths. One destination: ", "Dos caminos. Un mismo destino: "),
     headingAccent: b("a real career.", "una carrera de verdad."),
-    seeAll: b("See all courses and programs", "Ver todos los cursos y programas"),
+    seeAll: b("Diploma program · CE courses", "Programa de diploma · Cursos de EC"),
     details: b("Program details", "Detalles del programa"),
+    courseDetails: b("Course details", "Detalles del curso"),
     cards: [
       {
         href: "/programs/entry-level-dental-assisting",
@@ -179,8 +180,9 @@ export const home = {
       },
       {
         href: "/programs#professional-development",
-        title: b("Professional Development Courses", "Cursos de Desarrollo Profesional"),
-        length: b("EFDA + Radiography", "EFDA + Radiografía"),
+        title: b("EFDA & Radiography CE Courses", "Cursos de EC de EFDA y Radiografía"),
+        length: b("Professional development · Certificate on completion", "Desarrollo profesional · Certificado al completar"),
+        isCourse: true,
         outcome: b(
           "Approved by the Florida Board of Dentistry",
           "Aprobados por la Florida Board of Dentistry",

@@ -237,7 +237,7 @@ export function HomeContent() {
                 {t(p.blurb)}
               </p>
               <div className="mt-6 pt-6 border-t border-rule flex items-center justify-between text-sm font-semibold text-navy group-hover:text-teal transition-colors">
-                {t(home.programsSection.details)}
+                {t("isCourse" in p && p.isCourse ? home.programsSection.courseDetails : home.programsSection.details)}
                 <span
                   aria-hidden="true"
                   className="transition-transform group-hover:translate-x-0.5"

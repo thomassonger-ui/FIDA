@@ -32,7 +32,7 @@ export type BiProgram = {
 };
 
 export const programsCopy = {
-  eyebrow: b("Programs", "Programas"),
+  eyebrow: b("Diploma program & CE courses", "Programa de diploma y cursos de EC"),
   heading: b(
     "Florida-credentialed dental training, done right.",
     "Formación dental acreditada en Florida, bien hecha.",
