@@ -5,6 +5,8 @@ import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
 import { useLang, type Bilingual } from "@/lib/i18n/LanguageProvider";
 import { programs, programsCopy as c } from "@/lib/i18n/programs";
+import { entryLevelDetail as d } from "@/lib/i18n/entryLevelDetail";
+import { COHORT_DATE, COHORT_SCHEDULE } from "@/lib/cohort";
 
 /**
  * /programs body. Client component so the route can stay a server component
@@ -42,11 +44,89 @@ export function ProgramsContent() {
           </div>
         </section>
 
-        {/* COMPARISON TABLE */}
+        {/* DIPLOMA PROGRAM — Entry Level Dental Assisting */}
+        <section
+          id="diploma"
+          className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 pt-16 scroll-mt-24"
+        >
+          <div className="card bg-white overflow-hidden">
+            <div className="grid grid-cols-1 lg:grid-cols-2">
+              <div className="p-8 md:p-10">
+                <div className="eyebrow">{t(c.diploma.eyebrow)}</div>
+                <h2 className="mt-3 font-display text-3xl md:text-4xl text-navy tracking-tight">
+                  {t(c.diploma.title)}
+                </h2>
+                <p className="mt-2 text-teal font-semibold">{t(c.diploma.tagline)}</p>
+
+                <p className="mt-6 text-navy leading-relaxed">{t(d.intro)}</p>
+
+                <div className="mt-6 font-display text-5xl text-teal">
+                  {c.diploma.price}
+                </div>
+                <div className="mt-1 text-sm text-muted">
+                  {t(c.diploma.priceBreakdown)}
+                </div>
+
+                <div className="mt-4 text-sm text-navy space-y-1">
+                  <div>
+                    <span className="font-semibold">{t(c.diploma.nextCohortLabel)}:</span>{" "}
+                    {t(COHORT_DATE)}
+                  </div>
+                  <div>
+                    <span className="font-semibold">{t(c.diploma.scheduleLabel)}:</span>{" "}
+                    {t(COHORT_SCHEDULE)}
+                  </div>
+                </div>
+
+                <div className="mt-7 flex flex-col sm:flex-row gap-3">
+                  <Link href={d.applyHref ?? "/atticus"} className="btn-primary">
+                    {t(c.diploma.apply)} <span aria-hidden="true">→</span>
+                  </Link>
+                  <Link
+                    href="/programs/entry-level-dental-assisting"
+                    className="btn-ghost"
+                  >
+                    {t(c.diploma.details)}
+                  </Link>
+                </div>
+              </div>
+
+              <div className="p-8 md:p-10 bg-paper-subtle border-t lg:border-t-0 lg:border-l border-rule">
+                <div className="text-xs font-semibold tracking-[0.12em] uppercase text-teal">
+                  {t(c.diploma.factsHeading)}
+                </div>
+                <dl className="mt-5 space-y-4 text-sm">
+                  {d.facts
+                    .filter(
+                      (f) =>
+                        f.label.en !== "Next cohort" && f.label.en !== "Class schedule",
+                    )
+                    .map((f) => (
+                    <div key={f.label.en} className="flex flex-col gap-0.5">
+                      <dt className="text-navy/70 font-semibold tracking-wide uppercase text-xs">
+                        {t(f.label)}
+                      </dt>
+                      <dd className="text-navy leading-relaxed">{t(f.value)}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* COMPARISON TABLE — CE courses */}
         <section
           id="compare"
-          className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-16"
+          className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-16 scroll-mt-24"
         >
+          <div className="max-w-3xl mb-8">
+            <div className="eyebrow">{t(c.ce.eyebrow)}</div>
+            <h2 className="mt-3 font-display text-3xl md:text-4xl text-navy tracking-tight">
+              {t(c.compareHeading)}
+            </h2>
+            <p className="mt-4 text-muted leading-relaxed">{t(c.compareBody)}</p>
+          </div>
           <div className="card bg-white overflow-hidden">
             <div className="grid grid-cols-1 md:grid-cols-4 border-b border-rule bg-paper-subtle">
               {[c.table.course, c.table.length, c.table.credential, c.table.tuition].map(

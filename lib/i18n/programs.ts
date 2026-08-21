@@ -45,6 +45,36 @@ export const programsCopy = {
   ctaAdmissions: b("Get started", "Comenzar"),
   ctaCompare: b("Compare programs", "Comparar programas"),
 
+  /* --- Entry Level diploma feature (facts come from entryLevelDetail) --- */
+  diploma: {
+    eyebrow: b("Diploma Program", "Programa de Diploma"),
+    title: b("Entry Level Dental Assisting", "Asistencia Dental de Nivel Inicial"),
+    tagline: b(
+      "6 months · In person · Jacksonville, FL",
+      "6 meses · Presencial · Jacksonville, FL",
+    ),
+    price: "$9,850",
+    priceBreakdown: b(
+      "$9,700 tuition + $150 registration fee",
+      "$9,700 de matrícula + $150 de cuota de inscripción",
+    ),
+    nextCohortLabel: b("Next cohort", "Próxima cohorte"),
+    scheduleLabel: b("Class schedule", "Horario de clases"),
+    apply: b("Apply through Atticus", "Inscribirse a través de Atticus"),
+    details: b("Full program details", "Detalles completos del programa"),
+    factsHeading: b("At a glance", "De un vistazo"),
+  },
+
+  /* Heading for the CE comparison table, now that the diploma sits above it. */
+  compareHeading: b(
+    "Professional development courses",
+    "Cursos de desarrollo profesional",
+  ),
+  compareBody: b(
+    "For working dental assistants advancing their credentials. Both courses are open enrollment — start anytime.",
+    "Para asistentes dentales en ejercicio que avanzan sus credenciales. Ambos cursos son de inscripción abierta: comienza en cualquier momento.",
+  ),
+
   table: {
     course: b("Course", "Curso"),
     length: b("Length", "Duración"),
