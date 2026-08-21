@@ -61,6 +61,17 @@ export function AboutContent() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {a.team.map((m) => (
                 <div key={m.name} className="card p-8 bg-white">
+                  {m.photo && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={m.photo}
+                      alt={m.name}
+                      width={160}
+                      height={160}
+                      loading="lazy"
+                      className="w-40 h-40 rounded-full object-cover object-top border-4 border-teal/30 mb-6"
+                    />
+                  )}
                   <h3 className="font-display text-2xl text-navy leading-tight">
                     {m.name}
                   </h3>

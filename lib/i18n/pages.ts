@@ -58,7 +58,8 @@ export const about = {
   ],
 
   /* Team bios — carried from the legacy .com /about page (archived
-   * 2026-08-18). Credentials verbatim; no photos yet (add when provided). */
+   * 2026-08-18). Credentials verbatim. Titles/years updated per Ashley
+   * Sanders 2026-08-20. Photos recovered from the legacy WP media library. */
   teamEyebrow: b("Meet your instructors", "Conoce a tus instructoras"),
   teamHeading: b(
     "Taught by the people who built it.",
@@ -71,6 +72,7 @@ export const about = {
   team: [
     {
       name: "Debbie Sanders",
+      photo: "/team/debbie-sanders.jpg",
       role: b(
         "Co-Founder · Executive Administrator · Instructor",
         "Cofundadora · Administradora Ejecutiva · Instructora",
@@ -80,23 +82,24 @@ export const about = {
         "CDA · EFDA · Radiógrafa Dental Registrada (Registered Dental Radiographer)",
       ),
       bio: b(
-        "A graduate of Camden County College with 13+ years as an instructor, Debbie prides herself on being a mentor inside the classroom — and long after graduation.",
-        "Egresada de Camden County College con más de 13 años como instructora, Debbie se enorgullece de ser mentora dentro del aula — y mucho después de la graduación.",
+        "A graduate of Camden County College with 16+ years as an instructor, Debbie prides herself on being a mentor inside the classroom — and long after graduation.",
+        "Egresada de Camden County College con más de 16 años como instructora, Debbie se enorgullece de ser mentora dentro del aula — y mucho después de la graduación.",
       ),
     },
     {
       name: "Ashley Sanders",
+      photo: "/team/ashley-sanders.jpg",
       role: b(
-        "Co-Founder · Executive Administrator · Instructor",
-        "Cofundadora · Administradora Ejecutiva · Instructora",
+        "Co-Founder · Director of Financial Affairs · Instructor",
+        "Cofundadora · Directora de Asuntos Financieros · Instructora",
       ),
       credentials: b(
         "Practical Dental Assisting of Virginia Beach graduate",
         "Egresada de Practical Dental Assisting of Virginia Beach",
       ),
       bio: b(
-        "Six years of dental practice administration — patient coordination, treatment planning, and student relations. Ashley goes the extra mile to know every student by name.",
-        "Seis años en administración de consultorios dentales — coordinación de pacientes, planes de tratamiento y relaciones estudiantiles. Ashley hace un esfuerzo adicional por conocer a cada estudiante por su nombre.",
+        "Twelve-plus years of dental practice administration — patient coordination, treatment planning, and student relations. Ashley goes the extra mile to know every student by name.",
+        "Más de doce años en administración de consultorios dentales — coordinación de pacientes, planes de tratamiento y relaciones estudiantiles. Ashley hace un esfuerzo adicional por conocer a cada estudiante por su nombre.",
       ),
     },
   ],
