@@ -6,6 +6,23 @@ import { createBrowserClient } from "@supabase/ssr";
 
 type OtpType = "magiclink" | "signup" | "email" | "recovery" | "invite";
 
+/**
+ * Bridge the freshly-verified Supabase session into the portal's DB-backed
+ * session (sets fida_portal_session). Returns where to send the user next:
+ * the requested page on success, or /portal/login with a reason on failure.
+ */
+async function finalize(next: string): Promise<string> {
+  try {
+    const res = await fetch("/api/auth/finalize", { method: "POST" });
+    const body = (await res.json().catch(() => ({}))) as { ok?: boolean; reason?: string };
+    if (res.ok && body.ok) return next;
+    const reason = body.reason === "not-active" ? "not-active" : "auth-failed";
+    return `/portal/login?error=${reason}`;
+  } catch {
+    return "/portal/login?error=auth-failed";
+  }
+}
+
 function isOtpType(v: string | null): v is OtpType {
   return (
     v === "magiclink" ||
@@ -52,8 +69,7 @@ function AuthCallbackContent() {
             refresh_token,
           });
           if (!error) {
-            await fetch("/api/auth/finalize", { method: "POST" }).catch(() => {});
-            router.replace(next);
+            router.replace(await finalize(next));
             return;
           }
         }
@@ -66,8 +82,7 @@ function AuthCallbackContent() {
       if (code) {
         const { error } = await supabase.auth.exchangeCodeForSession(code);
         if (!error) {
-          await fetch("/api/auth/finalize", { method: "POST" }).catch(() => {});
-          router.replace(next);
+          router.replace(await finalize(next));
           return;
         }
       }
@@ -83,8 +98,7 @@ function AuthCallbackContent() {
           type,
         });
         if (!error) {
-          await fetch("/api/auth/finalize", { method: "POST" }).catch(() => {});
-          router.replace(next);
+          router.replace(await finalize(next));
           return;
         }
       }

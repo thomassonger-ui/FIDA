@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { ADMIN_COOKIE, isAllowedAdminEmail } from "@/lib/admin-auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -64,35 +65,40 @@ export async function POST(req: NextRequest) {
     return badPassword(req, next);
   }
 
-  // ── Mode A: email + password → Supabase auth.users ───────────────────────
+  // ── Mode A: email + password → Supabase auth.users (allowlisted only) ────
+  // Student portal invites create auth.users rows for students, so a valid
+  // Supabase login is NOT sufficient on its own — the email must also be on
+  // the ADMIN_EMAILS allowlist. If the allowlist is empty, Mode A is off.
   if (email && supabaseUrl && anonKey) {
-    try {
-      const sb = createClient(supabaseUrl, anonKey, {
-        auth: { persistSession: false, autoRefreshToken: false },
-      });
-      const { data, error } = await sb.auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (!error && data?.user) {
-        console.log("[admin/login] supabase signin ok for", email);
-        return grantAdmin(req, next, sessionSecret);
+    if (!isAllowedAdminEmail(email)) {
+      console.warn("[admin/login] email not on ADMIN_EMAILS allowlist");
+    } else {
+      try {
+        const sb = createClient(supabaseUrl, anonKey, {
+          auth: { persistSession: false, autoRefreshToken: false },
+        });
+        const { data, error } = await sb.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (!error && data?.user) {
+          console.log("[admin/login] supabase signin ok");
+          return grantAdmin(req, next, sessionSecret);
+        }
+        console.warn(
+          "[admin/login] supabase signin failed",
+          error?.status,
+          error?.code
+        );
+      } catch (err) {
+        console.error(
+          "[admin/login] supabase signin threw:",
+          err instanceof Error ? err.message : err
+        );
       }
-      console.warn(
-        "[admin/login] supabase signin failed for",
-        email,
-        error?.status,
-        error?.code,
-        error?.message
-      );
-      // Fall through — maybe they typed the shared admin password into the
-      // password field instead and didn't realize email is optional.
-    } catch (err) {
-      console.error(
-        "[admin/login] supabase signin threw:",
-        err instanceof Error ? err.message : err
-      );
     }
+    // Fall through — maybe they typed the shared admin password into the
+    // password field instead and didn't realize email is optional.
   }
 
   // ── Mode B: shared admin password ────────────────────────────────────────
@@ -109,7 +115,7 @@ function grantAdmin(req: NextRequest, next: string, sessionSecret: string) {
   const redirect = NextResponse.redirect(new URL(safeNext, req.url), {
     status: 303,
   });
-  redirect.cookies.set("fida_admin", sessionSecret, {
+  redirect.cookies.set(ADMIN_COOKIE, sessionSecret, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",

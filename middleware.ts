@@ -1,5 +1,10 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextRequest, NextResponse } from "next/server";
+import {
+  ADMIN_COOKIE,
+  adminCookieIsValid,
+  isAllowedAdminEmail,
+} from "@/lib/admin-auth";
 
 const SITE_COOKIE = "fida_site_auth";
 const PORTAL_SESSION_COOKIE = "fida_portal_session";
@@ -20,7 +25,8 @@ export async function middleware(req: NextRequest) {
     pathname.startsWith("/tickets/") ||
     pathname.startsWith("/api/tickets") ||
     pathname === "/portal/login" ||
-    pathname.startsWith("/api/admin/login") ||
+    pathname === "/api/admin/login" ||
+    pathname === "/api/admin/logout" ||
     pathname.startsWith("/api/portal/login") ||
     pathname.startsWith("/api/portal/logout") ||
     pathname === "/atticus" ||
@@ -53,18 +59,24 @@ export async function middleware(req: NextRequest) {
 
   // ── Site-wide password gate — REMOVED ─────────────────────────────────────
   // Public pages (homepage, /admissions, /programs, /atticus, /tickets) are
-  // now open. Only /admin/* (gated below) and /portal/* (gated above) require
-  // auth. The /gate page itself still resolves for anyone who bookmarked it,
-  // and the SITE_COOKIE is still set by the portal login route so password-
-  // reset / portal flows that depend on it continue to work.
+  // now open. Only /admin/* and /api/admin/* (gated below) and /portal/*
+  // (gated above) require auth. The /gate page itself still resolves for
+  // anyone who bookmarked it.
   void SITE_COOKIE;
 
-  // ── Admin guard — accept EITHER Supabase user OR admin cookie ─────────────
-  if (pathname.startsWith("/admin")) {
+  // ── Admin guard — pages AND API routes ────────────────────────────────────
+  // Accept EITHER the admin cookie OR a Supabase session whose email is on
+  // the ADMIN_EMAILS allowlist. /api/admin/* previously fell outside this
+  // guard entirely (it doesn't start with "/admin"), leaving every admin
+  // endpoint — document vault downloads, student import/export, magic-link
+  // minting — open to unauthenticated callers.
+  const isAdminPage = pathname === "/admin" || pathname.startsWith("/admin/");
+  const isAdminApi = pathname.startsWith("/api/admin/");
+
+  if (isAdminPage || isAdminApi) {
     const response = NextResponse.next({ request: req });
 
-    const adminCookie = req.cookies.get("fida_admin")?.value;
-    if (adminCookie && adminCookie === process.env.ADMIN_SESSION_SECRET) {
+    if (adminCookieIsValid(req.cookies.get(ADMIN_COOKIE)?.value)) {
       return response;
     }
 
@@ -99,12 +111,16 @@ export async function middleware(req: NextRequest) {
           data: { user },
         } = await supabase.auth.getUser();
 
-        if (user) {
+        if (user && isAllowedAdminEmail(user.email)) {
           return response;
         }
       } catch {
-        // Fall through to login redirect.
+        // Fall through to 401 / login redirect.
       }
+    }
+
+    if (isAdminApi) {
+      return NextResponse.json({ ok: false, error: "Not authorized" }, { status: 401 });
     }
 
     const url = req.nextUrl.clone();
@@ -119,4 +135,3 @@ export async function middleware(req: NextRequest) {
 export const config = {
   matcher: ["/((?!_next/static|_next/image).*)"],
 };
-
