@@ -13,19 +13,24 @@ import type { Bilingual } from "./LanguageProvider";
  * - PRIVACY / TERMS / ACCESSIBILITY: written from what the app actually does
  *   (see app/api/atticus/route.ts, app/api/tickets/route.ts, lib/atticus-db.ts).
  *   If data handling changes, update these.
- * - NON-DISCRIMINATION: standard-form statement. Needs confirmation against
- *   FIDA's CIE-filed catalog language (Debbie/Ashley/Dr. Angely) — the legacy
- *   site's exact wording could not be recovered after DNS cutover.
- * - REFUND: deliberately does NOT state a refund schedule. Florida CIE-licensed
- *   institutions file a specific refund policy in their catalog and enrollment
- *   agreement; publishing an invented schedule would create a consumer-facing
- *   promise that conflicts with the signed agreement. Replace the placeholder
- *   section with the filed policy once obtained.
+ * - NON-DISCRIMINATION and REFUND SCHEDULE: QUOTED VERBATIM from the school
+ *   catalog filed with the Florida Commission for Independent Education
+ *   (supplied by Tom Songer, 2026-08-21). Do not reword, reorder, or "improve"
+ *   these strings. If the catalog changes, change the strings to match — never
+ *   the reverse. (Catalog item 4 reads "though 40%"; published here as
+ *   "through 40%" — flagged for the next catalog revision.)
  */
 
 const b = (en: string, es: string): Bilingual => ({ en, es });
 
-export type LegalSection = { heading: Bilingual; body: Bilingual[] };
+export type LegalSection = {
+  heading: Bilingual;
+  body: Bilingual[];
+  /** Optional numbered list rendered after `body` (used for the refund schedule). */
+  orderedList?: Bilingual[];
+  /** Optional paragraphs rendered after `orderedList`. */
+  afterList?: Bilingual[];
+};
 
 export type LegalPage = {
   eyebrow: Bilingual;
@@ -35,7 +40,7 @@ export type LegalPage = {
   sections: LegalSection[];
 };
 
-const UPDATED = b("Last updated: August 18, 2026", "Última actualización: 18 de agosto de 2026");
+const UPDATED = b("Last updated: August 21, 2026", "Última actualización: 21 de agosto de 2026");
 
 const contactBlock: LegalSection = {
   heading: b("Contact us", "Contáctanos"),
@@ -344,29 +349,16 @@ export const nonDiscriminationPage: LegalPage = {
   title: b("Non-Discrimination Policy", "Política de No Discriminación"),
   updated: UPDATED,
   intro: b(
-    "Florida Institute of Dental Assisting is committed to providing an educational environment free from discrimination and harassment.",
-    "El Florida Institute of Dental Assisting se compromete a ofrecer un entorno educativo libre de discriminación y acoso.",
+    "Florida Institute of Dental Assisting is committed to providing an educational environment free from discrimination.",
+    "El Florida Institute of Dental Assisting se compromete a ofrecer un entorno educativo libre de discriminación.",
   ),
   sections: [
     {
       heading: b("Our policy", "Nuestra política"),
       body: [
         b(
-          "FIDA admits students of any race, color, national or ethnic origin, ancestry, religion, sex, sexual orientation, gender identity, age, marital status, veteran status, or disability to all the rights, privileges, programs, and activities generally made available to students at the school.",
-          "FIDA admite estudiantes de cualquier raza, color, origen nacional o étnico, ascendencia, religión, sexo, orientación sexual, identidad de género, edad, estado civil, condición de veterano o discapacidad, otorgándoles todos los derechos, privilegios, programas y actividades que generalmente se ponen a disposición de los estudiantes de la escuela.",
-        ),
-        b(
-          "The school does not discriminate on these bases in the administration of its admissions policies, educational policies, or any other school-administered program.",
-          "La escuela no discrimina por estos motivos en la administración de sus políticas de admisión, políticas educativas ni en ningún otro programa administrado por la escuela.",
-        ),
-      ],
-    },
-    {
-      heading: b("Admission requirements are applied equally", "Los requisitos de admisión se aplican por igual"),
-      body: [
-        b(
-          "FIDA's published admission requirements — including age, education, health documentation, and background screening requirements described on our program pages — apply to all applicants equally and are based on the requirements of clinical training placements and the dental assisting profession in Florida.",
-          "Los requisitos de admisión publicados por FIDA —incluidos los requisitos de edad, educación, documentación de salud y verificación de antecedentes descritos en nuestras páginas de programas— se aplican por igual a todos los solicitantes y se basan en los requisitos de las prácticas clínicas y de la profesión de asistencia dental en Florida.",
+          "Florida Institute of Dental Assisting does not and shall not discriminate on the basis of race, color, religion, gender, gender expression, age, national origin, disability, marital status, sexual orientation, or military status, in any of its activities or operations.",
+          "El Florida Institute of Dental Assisting no discrimina ni discriminará por motivos de raza, color, religión, género, expresión de género, edad, origen nacional, discapacidad, estado civil, orientación sexual o condición militar en ninguna de sus actividades u operaciones.",
         ),
       ],
     },
@@ -383,8 +375,8 @@ export const nonDiscriminationPage: LegalPage = {
       heading: b("Concerns and complaints", "Inquietudes y quejas"),
       body: [
         b(
-          "If you believe you have experienced discrimination or harassment in connection with the school, please contact the school administration directly using the information below so the concern can be reviewed.",
-          "Si consideras que has sufrido discriminación u hostigamiento en relación con la escuela, comunícate directamente con la administración escolar mediante la información que aparece a continuación para que se revise tu inquietud.",
+          "If you believe you have experienced discrimination in connection with the school, please contact the school administration directly using the information below so the concern can be reviewed.",
+          "Si consideras que has sufrido discriminación en relación con la escuela, comunícate directamente con la administración escolar mediante la información que aparece a continuación para que se revise tu inquietud.",
         ),
         b(
           "Students may also contact the Florida Commission for Independent Education, the state agency that licenses the school's Entry Level Dental Assisting diploma program, regarding unresolved concerns.",
@@ -403,29 +395,50 @@ export const refundPage: LegalPage = {
   title: b("Tuition, Cancellation & Refunds", "Matrícula, Cancelación y Reembolsos"),
   updated: UPDATED,
   intro: b(
-    "This page explains where to find FIDA's cancellation and refund terms and how to request a cancellation.",
-    "Esta página explica dónde encontrar los términos de cancelación y reembolso de FIDA y cómo solicitar una cancelación.",
+    "FIDA's cancellation and refund policy, as published in the school catalog and the enrollment agreement you sign at registration.",
+    "La política de cancelación y reembolso de FIDA, tal como se publica en el catálogo escolar y en el acuerdo de inscripción que firmas al registrarte.",
   ),
   sections: [
     {
-      heading: b("Registration fee", "Cuota de inscripción"),
+      heading: b("Refund schedule", "Calendario de reembolsos"),
       body: [
         b(
-          "The $150 registration fee for the Entry Level Dental Assisting diploma program is non-refundable. Published tuition for each program and course is listed on our Tuition page.",
-          "La cuota de inscripción de $150 para el programa de diploma de Asistencia Dental de Nivel Inicial no es reembolsable. La matrícula publicada de cada programa y curso aparece en nuestra página de Matrícula.",
+          "Should a student's enrollment be terminated or cancelled for any reason, all refunds will be made according to the following refund schedule:",
+          "Si la inscripción de un estudiante se cancela o se da por terminada por cualquier motivo, todos los reembolsos se realizarán de acuerdo con el siguiente calendario de reembolsos:",
         ),
       ],
-    },
-    {
-      heading: b("Where the refund policy lives", "Dónde se encuentra la política de reembolso"),
-      body: [
+      orderedList: [
         b(
-          "FIDA's cancellation and refund policy — including the refund schedule that applies if you withdraw after classes begin — is set out in the school catalog and in the enrollment agreement you receive and sign at registration. As an institution licensed by the Florida Commission for Independent Education, FIDA maintains this policy on file with the Commission.",
-          "La política de cancelación y reembolso de FIDA —incluido el calendario de reembolsos aplicable si te retiras después del inicio de clases— se establece en el catálogo escolar y en el acuerdo de inscripción que recibes y firmas al registrarte. Como institución con licencia de la Comisión de Educación Independiente de Florida, FIDA mantiene esta política registrada ante la Comisión.",
+          "Cancellation can be made in person, by electronic mail, by Certified Mail or by termination.",
+          "La cancelación puede realizarse en persona, por correo electrónico, por correo certificado o por terminación.",
         ),
         b(
-          "Please review the enrollment agreement carefully before you sign it, and ask us about anything that is unclear. We would rather answer the question up front than have you discover it later.",
-          "Revisa cuidadosamente el acuerdo de inscripción antes de firmarlo y pregúntanos sobre cualquier punto que no esté claro. Preferimos responder la pregunta desde el principio a que la descubras después.",
+          "All monies will be refunded if the school does not accept the applicant or if the student cancels within three (3) business days after signing the enrollment agreement and making initial payment.",
+          "Se reembolsará la totalidad del dinero si la escuela no acepta al solicitante o si el estudiante cancela dentro de los tres (3) días hábiles posteriores a la firma del acuerdo de inscripción y al pago inicial.",
+        ),
+        b(
+          "Cancellation after the third (3rd) Business Day, but before the first class, results in a refund of all monies paid, with the exception of the registration fee (not to exceed $150.00).",
+          "La cancelación después del tercer (3.er) día hábil, pero antes de la primera clase, da lugar al reembolso de todo el dinero pagado, con excepción de la cuota de inscripción (que no excederá $150.00).",
+        ),
+        b(
+          "Cancellation after attendance has begun, through 40% completion of the program, will result in a pro-rated refund computed on the number of hours completed to the total program hours.",
+          "La cancelación después de iniciada la asistencia, hasta completar el 40% del programa, dará lugar a un reembolso prorrateado calculado según el número de horas completadas en relación con el total de horas del programa.",
+        ),
+        b(
+          "Cancellation after completing more than 40% of the program will result in no refund.",
+          "La cancelación después de completar más del 40% del programa no dará lugar a ningún reembolso.",
+        ),
+        b(
+          "Termination date: In calculating the refund due to a student, the last date of actual attendance by the student is used in the calculation unless earlier written notice is received.",
+          "Fecha de terminación: para calcular el reembolso que corresponde a un estudiante, se utiliza la última fecha de asistencia real del estudiante, a menos que se reciba un aviso por escrito con anterioridad.",
+        ),
+        b(
+          "Refunds will be made within 30 days of termination of students' enrollment or receipt of cancellation notice from the student.",
+          "Los reembolsos se realizarán dentro de los 30 días posteriores a la terminación de la inscripción del estudiante o a la recepción del aviso de cancelación por parte del estudiante.",
+        ),
+        b(
+          "Textbooks are to be returned upon signing withdrawal form.",
+          "Los libros de texto deben devolverse al firmar el formulario de retiro.",
         ),
       ],
     },

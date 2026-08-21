@@ -46,6 +46,18 @@ export function LegalContent({ page }: { page: LegalPage }) {
                     {t(p)}
                   </p>
                 ))}
+                {s.orderedList && (
+                  <ol className="mt-4 list-decimal pl-6 space-y-3 text-navy/90 leading-relaxed">
+                    {s.orderedList.map((item, i) => (
+                      <li key={i}>{t(item)}</li>
+                    ))}
+                  </ol>
+                )}
+                {s.afterList?.map((p, i) => (
+                  <p key={`after-${i}`} className="mt-4 text-navy/90 leading-relaxed">
+                    {t(p)}
+                  </p>
+                ))}
               </div>
             ))}
           </div>

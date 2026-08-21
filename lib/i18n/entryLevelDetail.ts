@@ -155,8 +155,8 @@ export const entryLevelDetail: CourseDetail = {
     "¿Cuánto cuesta el programa de diploma?",
   ),
   costBody: b(
-    "Tuition is $9,700 plus a $150 non-refundable registration fee — $9,850 total. That includes your two textbooks, a set of personalized scrubs, CPR/BLS/AED certification through the AHA, your student clinical kit, a personalized notebook binder, the resume workshop, membership to the American Dental Assistants Association, and all material and lab fees. Financing options are available — ask an advisor.",
-    "La matrícula es de $9,700 más una cuota de inscripción no reembolsable de $150 — $9,850 en total. Incluye tus dos libros de texto, un juego de uniformes (scrubs) personalizados, la certificación CPR/BLS/AED a través de la AHA, tu kit clínico de estudiante, una carpeta personalizada, el taller de currículum, la membresía en la American Dental Assistants Association y todas las cuotas de materiales y laboratorio. Hay opciones de financiamiento disponibles: pregunta a un asesor.",
+    "Tuition is $9,700 plus a $150 registration fee — $9,850 total. That includes your two textbooks, a set of personalized scrubs, CPR/BLS/AED certification through the AHA, your student clinical kit, a personalized notebook binder, the resume workshop, membership to the American Dental Assistants Association, and all material and lab fees. Financing options are available — ask an advisor.",
+    "La matrícula es de $9,700 más una cuota de inscripción de $150 — $9,850 en total. Incluye tus dos libros de texto, un juego de uniformes (scrubs) personalizados, la certificación CPR/BLS/AED a través de la AHA, tu kit clínico de estudiante, una carpeta personalizada, el taller de currículum, la membresía en la American Dental Assistants Association y todas las cuotas de materiales y laboratorio. Hay opciones de financiamiento disponibles: pregunta a un asesor.",
   ),
   priceDisplay: "$9,850",
   priceNote: b(

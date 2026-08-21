@@ -33,8 +33,8 @@ export const tuition = {
     title: b("Entry Level Dental Assisting", "Asistencia Dental de Nivel Inicial"),
     price: "$9,850",
     priceBreakdown: b(
-      "$9,700 tuition + $150 non-refundable registration fee",
-      "$9,700 de matrícula + $150 de cuota de inscripción no reembolsable",
+      "$9,700 tuition + $150 registration fee",
+      "$9,700 de matrícula + $150 de cuota de inscripción",
     ),
     length: b("6 months · Jacksonville, FL", "6 meses · Jacksonville, FL"),
     nextCohortLabel: b("Next cohort", "Próxima cohorte"),
