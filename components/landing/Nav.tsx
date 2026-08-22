@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useLang } from "@/lib/i18n/LanguageProvider";
-import { nav } from "@/lib/i18n/home";
+import { nav, credentials } from "@/lib/i18n/home";
 import { LanguageToggle } from "./LanguageToggle";
 
 export function Nav() {
@@ -30,6 +30,16 @@ export function Nav() {
   }, [open]);
 
   return (
+    <>
+      {/* Institutional standing — a quiet line above the nav, not a promo.
+          Sits outside the sticky header so it scrolls away with the page. */}
+      <div className="bg-navy-deep text-navy-100">
+        <p className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-2.5 md:py-0 md:h-8 flex flex-col md:flex-row items-center md:justify-start gap-y-1 gap-x-3 text-[10px] md:text-[11px] font-medium tracking-[0.1em] md:tracking-[0.14em] uppercase leading-none text-center md:text-left">
+          <span>{t(credentials.barLicensed)}</span>
+          <span aria-hidden="true" className="hidden md:inline text-teal-soft">&bull;</span>
+          <span>{t(credentials.barApproved)}</span>
+        </p>
+      </div>
     <header className="border-b border-rule bg-white/95 backdrop-blur-md sticky top-0 z-40">
       {/* WCAG 2.4.1 Bypass Blocks — invisible until keyboard-focused. */}
       <a href="#main" className="skip-link">
@@ -146,5 +156,6 @@ export function Nav() {
         </nav>
       </div>
     </header>
+    </>
   );
 }

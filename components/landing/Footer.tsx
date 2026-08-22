@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { AtticusCopyrightBar } from "@/components/AtticusCopyrightBar";
 import { useLang } from "@/lib/i18n/LanguageProvider";
-import { footer } from "@/lib/i18n/home";
+import { footer, credentials } from "@/lib/i18n/home";
 
 export function Footer() {
   const { t } = useLang();
@@ -103,7 +103,14 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-14 pt-8 border-t border-white/10 flex flex-col gap-3 md:flex-row md:items-center md:justify-between text-xs text-navy-200">
+        {/* Verification statement — legible, understated, above the legal line. */}
+        <div className="mt-14 pt-8 border-t border-white/10">
+          <p className="max-w-3xl text-xs leading-relaxed text-navy-100">
+            {t(credentials.footerStatement)}
+          </p>
+        </div>
+
+        <div className="mt-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between text-xs text-navy-200">
           <div>
             &copy; {new Date().getFullYear()} {t(footer.rights)}
           </div>

@@ -7,7 +7,7 @@ import { Footer } from "@/components/landing/Footer";
 import { RotatingHeadline } from "@/components/landing/RotatingHeadline";
 import { AtticusChat } from "@/components/admissions/AtticusChat";
 import { useLang } from "@/lib/i18n/LanguageProvider";
-import { home } from "@/lib/i18n/home";
+import { home, credentials } from "@/lib/i18n/home";
 import { atticus as atticusCopy } from "@/lib/i18n/atticus";
 
 /**
@@ -70,6 +70,32 @@ export function HomeContent() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* CREDENTIALS — institutional standing, stated once, beneath the hero.
+          Editorial strip: small-caps label over a serif line, hairline dividers,
+          no badges or seals. */}
+      <section
+        aria-label="Institutional credentials"
+        className="bg-white border-b border-rule"
+      >
+        <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12">
+          <dl className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-rule">
+            {credentials.items.map((c) => (
+              <div
+                key={c.label.en}
+                className="py-7 md:py-9 md:px-8 first:md:pl-0 last:md:pr-0"
+              >
+                <dt className="text-[11px] font-semibold tracking-[0.16em] uppercase text-teal">
+                  {t(c.label)}
+                </dt>
+                <dd className="mt-2 font-display text-xl md:text-[1.35rem] text-navy leading-snug">
+                  {t(c.body)}
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </section>
 

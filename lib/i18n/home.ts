@@ -39,6 +39,39 @@ export const nav = {
   switchAria: b("Ver este sitio en español", "View this site in English"),
 };
 
+/* -------------------------------------------------------- CREDENTIALS --- */
+/* Institutional standing, stated plainly. Three surfaces share this copy:
+   the announcement bar above the nav, the strip beneath the homepage hero,
+   and the footer verification line. "Licensed" = CIE (the diploma program);
+   "approved" = Board of Dentistry (the CE courses). Never say "accredited". */
+
+export const credentials = {
+  barLicensed: b("Florida-Licensed Institution", "Institución con licencia de Florida"),
+  barApproved: b(
+    "Florida Board of Dentistry–Approved Program",
+    "Programa aprobado por la Junta de Odontología de Florida",
+  ),
+  items: [
+    {
+      label: b("State Licensed", "Licencia estatal"),
+      body: b("Commission for Independent Education", "Commission for Independent Education"),
+    },
+    {
+      label: b("Education Oversight", "Supervisión educativa"),
+      body: b("Florida Department of Education", "Departamento de Educación de Florida"),
+    },
+    {
+      label: b("Program Approved", "Programa aprobado"),
+      body: b("Florida Board of Dentistry", "Junta de Odontología de Florida"),
+    },
+  ],
+  licenseNo: "6501",
+  footerStatement: b(
+    "Licensed by the Commission for Independent Education, Florida Department of Education. License No. 6501. Program approved by the Florida Board of Dentistry.",
+    "Con licencia de la Commission for Independent Education, Departamento de Educación de Florida. Licencia n.º 6501. Programa aprobado por la Junta de Odontología de Florida (Florida Board of Dentistry).",
+  ),
+};
+
 /* ------------------------------------------------------------- FOOTER --- */
 
 export const footer = {
