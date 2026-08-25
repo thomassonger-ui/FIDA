@@ -84,10 +84,10 @@ export const entryLevelDetail: CourseDetail = {
       ),
     },
   ],
-  // Professionally produced program video (WorldTeachPathways channel).
-  // Supplied by Ashley via Tom 2026-08-25.
+  // Professionally produced program video, on FIDA's own YouTube channel
+  // (@fldentalassisting). Supplied by Tom 2026-08-25.
   video: {
-    youtubeId: "oSi7xOCnV2w",
+    youtubeId: "mPyxc7PWOvY",
     eyebrow: b("Inside the program", "Dentro del programa"),
     heading: b(
       "See the classroom, the lab, and the people who teach here.",
