@@ -84,6 +84,24 @@ export const entryLevelDetail: CourseDetail = {
       ),
     },
   ],
+  // Professionally produced program video (WorldTeachPathways channel).
+  // Supplied by Ashley via Tom 2026-08-25.
+  video: {
+    youtubeId: "oSi7xOCnV2w",
+    eyebrow: b("Inside the program", "Dentro del programa"),
+    heading: b(
+      "See the classroom, the lab, and the people who teach here.",
+      "Conoce el aula, el laboratorio y a quienes enseñan aquí.",
+    ),
+    body: b(
+      "A short look at how the Entry Level Dental Assisting program actually runs in Jacksonville — hands-on lab work, small classes, and instructors with 30+ years in dentistry.",
+      "Un vistazo breve a cómo funciona realmente el programa de Asistencia Dental de Nivel Inicial en Jacksonville: práctica en laboratorio, grupos pequeños e instructoras con más de 30 años en odontología.",
+    ),
+    label: b(
+      "FIDA Entry Level Dental Assisting Program",
+      "Programa de Asistencia Dental de Nivel Inicial de FIDA",
+    ),
+  },
   testimonial: {
     quote: b(
       "I have had the pleasure of three assistants coming out of this program. And I can say I couldn't be happier with the amount of skills they have accumulated during the program but also in office.",

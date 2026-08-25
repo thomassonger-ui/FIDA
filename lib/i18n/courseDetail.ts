@@ -29,6 +29,18 @@ export type CourseDetail = {
    * (internal route, same tab) — Apply Now = /atticus per Tom 2026-08-18.
    */
   applyHref?: string;
+  /**
+   * Optional program video, rendered between Facts and Testimonial.
+   * `youtubeId` only — embeds via youtube-nocookie. Diploma page only so far.
+   */
+  video?: {
+    youtubeId: string;
+    eyebrow: Bilingual;
+    heading: Bilingual;
+    body: Bilingual;
+    /** iframe title + caption — describes the video for screen readers. */
+    label: Bilingual;
+  };
   /** Optional social proof block rendered between Facts and Requirements. */
   testimonial?: {
     quote: Bilingual;

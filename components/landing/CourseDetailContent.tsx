@@ -73,6 +73,48 @@ export function CourseDetailContent({ d }: { d: CourseDetail }) {
           </div>
         </section>
 
+        {/* PROGRAM VIDEO (optional) — youtube-nocookie, lazy, 16/9.
+            Markup follows the ExplainerVideo convention used in /admin. */}
+        {d.video && (
+          <section className="bg-paper-subtle border-y border-rule">
+            <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-14 md:py-20">
+              <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-14 items-center">
+                <div className="lg:col-span-2">
+                  <div className="eyebrow">{t(d.video.eyebrow)}</div>
+                  <h2 className="mt-3 font-display text-3xl md:text-4xl text-navy tracking-tight leading-tight">
+                    {t(d.video.heading)}
+                  </h2>
+                  <p className="mt-4 text-muted leading-relaxed">{t(d.video.body)}</p>
+                  <a
+                    href={`https://www.youtube.com/watch?v=${d.video.youtubeId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-5 inline-block text-teal font-semibold hover:underline underline-offset-4"
+                  >
+                    {t({ en: "Watch on YouTube", es: "Ver en YouTube" })}{" "}
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+                <div className="lg:col-span-3">
+                  <div className="card bg-white overflow-hidden">
+                    <div className="relative w-full" style={{ aspectRatio: "16 / 9" }}>
+                      <iframe
+                        src={`https://www.youtube-nocookie.com/embed/${d.video.youtubeId}?rel=0&modestbranding=1`}
+                        title={t(d.video.label)}
+                        loading="lazy"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerPolicy="strict-origin-when-cross-origin"
+                        allowFullScreen
+                        className="absolute inset-0 w-full h-full"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* TESTIMONIAL (optional) */}
         {d.testimonial && (
           <section className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 pb-14 md:pb-16">
