@@ -49,6 +49,10 @@ export const PLAN_8_MONTHLY = "$1,137.50";
 export const MILITARY_DISCOUNT = "$1,500";
 export const MILITARY_TUITION = "$8,350";
 export const MILITARY_BALANCE_AFTER_DEPOSIT = "$7,600";
+// Ashley: "Payment options are still the same" on the reduced balance.
+// $7,600 / 6 = $1,266.67 · $7,600 / 8 = $950.00
+export const MILITARY_PLAN_6_MONTHLY = "$1,266.67";
+export const MILITARY_PLAN_8_MONTHLY = "$950";
 
 /* ---- Copy blocks shared by /tuition and the ELDA program page ---- */
 
@@ -128,13 +132,17 @@ export const paymentCopy = {
       ),
       plans: [
         b(
-          "Same 6- or 8-month interest-free plans, on the reduced balance",
-          "Los mismos planes sin intereses de 6 u 8 meses, sobre el saldo reducido",
+          `6 months · ${MILITARY_PLAN_6_MONTHLY}/month`,
+          `6 meses · ${MILITARY_PLAN_6_MONTHLY}/mes`,
+        ),
+        b(
+          `8 months · ${MILITARY_PLAN_8_MONTHLY}/month`,
+          `8 meses · ${MILITARY_PLAN_8_MONTHLY}/mes`,
         ),
       ],
       plansNote: b(
-        "Eligibility is verified with a valid military ID or DD214 before the incentive is applied.",
-        "La elegibilidad se verifica con una identificación militar vigente o el formulario DD214 antes de aplicar el incentivo.",
+        "Same interest-free in-house plans. Eligibility is verified with a valid military ID or DD214 before the incentive is applied.",
+        "Los mismos planes internos sin intereses. La elegibilidad se verifica con una identificación militar vigente o el formulario DD214 antes de aplicar el incentivo.",
       ),
     },
   },

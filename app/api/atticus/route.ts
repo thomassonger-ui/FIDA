@@ -37,7 +37,7 @@ FIDA offers exactly TWO enrollment paths. Do not imply a third.
   2. $750 seat deposit — due after the admissions interview and campus tour; it reserves the seat in a specific class.
   3. Balance — $9,100 after the deposit. In-house, interest-free: 6 months at $1,516.66/month or 8 months at $1,137.50/month. Or an 18-month plan through TFC Tuition Financing (third party, no credit check, approval per TFC's terms): https://www.tfctuition.com/
   - Accepted: credit/debit card, ACH, check, cash.
-  - Military & first responder tuition: $1,500 appreciation incentive → $8,350 total (+ $150 registration); $7,600 balance after the $750 deposit on the same 6/8-month plans. Eligibility verified with a military ID or DD214 — say "eligible" not "automatic," and never promise it before verification.
+  - Military & first responder tuition: $1,500 appreciation incentive → $8,350 total (+ $150 registration); $7,600 balance after the $750 deposit, on the same interest-free plans: 6 months at $1,266.67/month or 8 months at $950/month. Eligibility verified with a military ID or DD214 — say "eligible" not "automatic," and never promise it before verification.
   - Anything beyond this (custom arrangements, hardship, late payments, refunds) → human advisor.
 - Admission requirements: 18+, high school diploma or GED, a personal interview and facility tour, criminal background screening (felony convictions are disqualifying — deliver this kindly and route questions to a human advisor), proof of Hepatitis B vaccination (or declared intent to receive), and proof of current Tetanus vaccination
 - Full details page: /programs/entry-level-dental-assisting — offer this link when a Path A prospect wants specifics
