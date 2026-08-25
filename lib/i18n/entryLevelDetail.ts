@@ -1,9 +1,4 @@
-import {
-  COHORT_DATE,
-  COHORT_DATE_EN,
-  COHORT_DATE_ES,
-  COHORT_SCHEDULE,
-} from "@/lib/cohort";
+import { COHORTS, COHORT_DATE_EN, COHORT_DATE_ES } from "@/lib/cohort";
 import type { Bilingual } from "./LanguageProvider";
 import { detailUi, type CourseDetail } from "./courseDetail";
 
@@ -28,8 +23,9 @@ export const entryLevelDetail: CourseDetail = {
   slug: "entry-level-dental-assisting",
   pageUrl:
     "https://fldentalassisting.com/programs/entry-level-dental-assisting",
-  // Apply Now = the Atticus intake, not Moodle.
-  applyHref: "/atticus",
+  // Apply Now = /register — the enrollment hub (Atticus application → $150
+  // registration fee via QuickBooks → confirmation). Per Tom/Ashley 2026-08-25.
+  applyHref: "/register",
   eyebrow: b(
     "Diploma Program · Jacksonville, Florida",
     "Programa de Diploma · Jacksonville, Florida",
@@ -62,15 +58,15 @@ export const entryLevelDetail: CourseDetail = {
     {
       label: detailUi.factLabels.credential,
       value: b(
-        "Diploma — Entry Level Dental Assisting",
-        "Diploma — Asistencia Dental de Nivel Inicial (Entry Level Dental Assisting)",
+        "Diploma — Entry Level Dental Assisting, with Expanded Functions Dental Assistant and Dental Radiographer certifications",
+        "Diploma — Asistencia Dental de Nivel Inicial (Entry Level Dental Assisting), con certificaciones de Expanded Functions Dental Assistant y Dental Radiographer",
       ),
     },
     {
       label: detailUi.factLabels.tuition,
       value: b(
-        "$9,850 total — $9,700 tuition + $150 registration",
-        "$9,850 en total — $9,700 de matrícula + $150 de inscripción",
+        "$9,850 total — $9,700 tuition + $150 registration. $750 seat deposit; interest-free 6- or 8-month plans",
+        "$9,850 en total — $9,700 de matrícula + $150 de inscripción. Depósito de cupo de $750; planes sin intereses de 6 u 8 meses",
       ),
     },
     {
@@ -81,12 +77,11 @@ export const entryLevelDetail: CourseDetail = {
       ),
     },
     {
-      label: b("Next cohort", "Próxima cohorte"),
-      value: COHORT_DATE,
-    },
-    {
-      label: b("Class schedule", "Horario de clases"),
-      value: COHORT_SCHEDULE,
+      label: b("Upcoming classes", "Próximas clases"),
+      value: b(
+        COHORTS.map((c) => `${c.date.en} — ${c.schedule.en}`).join("\n"),
+        COHORTS.map((c) => `${c.date.es} — ${c.schedule.es}`).join("\n"),
+      ),
     },
   ],
   testimonial: {
@@ -131,8 +126,8 @@ export const entryLevelDetail: CourseDetail = {
   curriculumEyebrow: detailUi.curriculumEyebrow,
   curriculumHeading: detailUi.curriculumHeading,
   curriculumBody: b(
-    "Thirteen units take you from dental anatomy through chairside assisting, radiology, and front-office skills — a mix of classroom theory, hands-on lab work, and a real-office externship. You'll finish with BLS/CPR/AED certification (through AHA), be prepared to sit for the Florida Dental Radiography certificate, and graduate eligible for the Dental Assisting National Board (DANB) exam.",
-    "Trece unidades te llevan desde la anatomía dental hasta la asistencia junto al sillón, la radiología y las destrezas administrativas — una combinación de teoría en el aula, práctica en laboratorio y una pasantía externa en un consultorio real. Terminarás con la certificación BLS/CPR/AED (a través de la AHA), preparado para presentar el certificado de Radiografía Dental de Florida, y egresarás elegible para el examen del Dental Assisting National Board (DANB).",
+    "Thirteen units take you from dental anatomy through chairside assisting, radiology, and front-office skills — a mix of classroom theory, hands-on lab work, and a real-office externship. You'll finish with Expanded Functions Dental Assistant and Dental Radiographer certifications, BLS/CPR/AED certification (through AHA), and graduate eligible for the Dental Assisting National Board (DANB) exam.",
+    "Trece unidades te llevan desde la anatomía dental hasta la asistencia junto al sillón, la radiología y las destrezas administrativas — una combinación de teoría en el aula, práctica en laboratorio y una pasantía externa en un consultorio real. Terminarás con las certificaciones de Expanded Functions Dental Assistant y Dental Radiographer, la certificación BLS/CPR/AED (a través de la AHA), y egresarás elegible para el examen del Dental Assisting National Board (DANB).",
   ),
   courses: [
     { code: "ELDA01", title: b("Introduction to Dentistry", "Introducción a la odontología") },
@@ -155,9 +150,11 @@ export const entryLevelDetail: CourseDetail = {
     "¿Cuánto cuesta el programa de diploma?",
   ),
   costBody: b(
-    "Tuition is $9,700 plus a $150 registration fee — $9,850 total. That includes your two textbooks, a set of personalized scrubs, CPR/BLS/AED certification through the AHA, your student clinical kit, a personalized notebook binder, the resume workshop, membership to the American Dental Assistants Association, and all material and lab fees. Financing options are available — ask an advisor.",
-    "La matrícula es de $9,700 más una cuota de inscripción de $150 — $9,850 en total. Incluye tus dos libros de texto, un juego de uniformes (scrubs) personalizados, la certificación CPR/BLS/AED a través de la AHA, tu kit clínico de estudiante, una carpeta personalizada, el taller de currículum, la membresía en la American Dental Assistants Association y todas las cuotas de materiales y laboratorio. Hay opciones de financiamiento disponibles: pregunta a un asesor.",
+    "Tuition is $9,700 plus a $150 registration fee — $9,850 total. That includes your two textbooks, a set of personalized scrubs, CPR/BLS/AED certification through the AHA, your student clinical kit, a personalized notebook binder, the resume workshop, membership to the American Dental Assistants Association, and all material and lab fees. You pay in three stages — the $150 registration fee online, a $750 seat deposit after admissions, and the balance on an interest-free 6- or 8-month in-house plan or an 18-month plan through TFC.",
+    "La matrícula es de $9,700 más una cuota de inscripción de $150 — $9,850 en total. Incluye tus dos libros de texto, un juego de uniformes (scrubs) personalizados, la certificación CPR/BLS/AED a través de la AHA, tu kit clínico de estudiante, una carpeta personalizada, el taller de currículum, la membresía en la American Dental Assistants Association y todas las cuotas de materiales y laboratorio. Pagas en tres etapas: la cuota de inscripción de $150 en línea, un depósito de cupo de $750 después de la admisión, y el saldo en un plan interno sin intereses de 6 u 8 meses o en un plan de 18 meses a través de TFC.",
   ),
+  // Renders <PaymentStructure/> under the cost grid (lib/payment.ts).
+  showPaymentStructure: true,
   priceDisplay: "$9,850",
   priceNote: b(
     "Total · $9,700 tuition + $150 registration · 6 months",
@@ -185,18 +182,28 @@ export const entryLevelDetail: CourseDetail = {
         "¿Con qué certificaciones me gradúo?",
       ),
       a: b(
-        "You earn the FIDA Entry Level Dental Assisting diploma and BLS/CPR/AED certification through the AHA, you're prepared to sit for the Florida Dental Radiography certificate, and you graduate eligible for the Dental Assisting National Board (DANB) exam.",
-        "Obtienes el diploma de Asistencia Dental de Nivel Inicial de FIDA y la certificación BLS/CPR/AED a través de la AHA, sales preparado para presentar el certificado de Radiografía Dental de Florida, y egresas elegible para el examen del Dental Assisting National Board (DANB).",
+        "You graduate with the FIDA Entry Level Dental Assisting diploma, Expanded Functions Dental Assistant and Dental Radiographer certifications, and BLS/CPR/AED certification through the AHA — eligible to sit for the Dental Assisting National Board (DANB) exam.",
+        "Te gradúas con el diploma de Asistencia Dental de Nivel Inicial de FIDA, las certificaciones de Expanded Functions Dental Assistant y Dental Radiographer, y la certificación BLS/CPR/AED a través de la AHA — elegible para presentar el examen del Dental Assisting National Board (DANB).",
       ),
     },
     {
       q: b(
-        "When does the next cohort start?",
-        "¿Cuándo comienza la próxima cohorte?",
+        "When do classes start, and what's the schedule?",
+        "¿Cuándo comienzan las clases y cuál es el horario?",
       ),
       a: b(
-        `The next cohort begins ${COHORT_DATE_EN} in Jacksonville. Seats are limited and applications are reviewed as received — start yours through Atticus, our admissions intake.`,
-        `La próxima cohorte comienza el ${COHORT_DATE_ES} en Jacksonville. Los cupos son limitados y las solicitudes se revisan al recibirse: inicia la tuya con Atticus, nuestro sistema de admisiones.`,
+        `Three upcoming classes in Jacksonville: ${COHORTS.map((c) => `${c.label.en} starting ${c.date.en} (${c.schedule.en})`).join("; ")}. Seats are limited and applications are reviewed as received — the next start is ${COHORT_DATE_EN}.`,
+        `Tres próximas clases en Jacksonville: ${COHORTS.map((c) => `${c.label.es} a partir del ${c.date.es} (${c.schedule.es})`).join("; ")}. Los cupos son limitados y las solicitudes se revisan al recibirse — el próximo inicio es el ${COHORT_DATE_ES}.`,
+      ),
+    },
+    {
+      q: b(
+        "How do I pay, and what's due when?",
+        "¿Cómo pago y qué se debe en cada momento?",
+      ),
+      a: b(
+        "Three stages. First, a $150 registration fee paid online when you register. Second, a $750 seat deposit after your admissions interview and tour — that's what holds your seat. Third, the $9,100 balance on an interest-free in-house plan ($1,516.66/month over 6 months or $1,137.50/month over 8 months) or an 18-month plan through TFC Tuition Financing. We accept card, ACH, check, and cash. Eligible military members and first responders receive a $1,500 tuition incentive ($8,350 total; verified with a military ID or DD214).",
+        "Tres etapas. Primero, una cuota de inscripción de $150 que se paga en línea al inscribirte. Segundo, un depósito de cupo de $750 después de tu entrevista de admisión y recorrido — eso es lo que reserva tu cupo. Tercero, el saldo de $9,100 en un plan interno sin intereses ($1,516.66 al mes por 6 meses o $1,137.50 al mes por 8 meses) o un plan de 18 meses a través de TFC Tuition Financing. Aceptamos tarjeta, ACH, cheque y efectivo. Los militares y primeros respondientes elegibles reciben un incentivo de matrícula de $1,500 ($8,350 en total; se verifica con identificación militar o DD214).",
       ),
     },
     {
@@ -235,8 +242,8 @@ export const entryLevelDetail: CourseDetail = {
     "¿Listo para comenzar tu carrera en asistencia dental?",
   ),
   ctaBody: b(
-    "Apply through Atticus, our admissions intake — takes about five minutes, and a FIDA advisor follows up within one business day.",
-    "Postúlate con Atticus, nuestro sistema de admisiones: toma unos cinco minutos, y un asesor de FIDA te dará seguimiento en un día hábil.",
+    "Apply through Atticus, our admissions intake — about five minutes — then pay the $150 registration fee online to secure your place. A FIDA advisor follows up within one business day.",
+    "Postúlate con Atticus, nuestro sistema de admisiones — unos cinco minutos — y luego paga la cuota de inscripción de $150 en línea para asegurar tu lugar. Un asesor de FIDA te dará seguimiento en un día hábil.",
   ),
   ctaSeeAll: detailUi.ctaSeeAll,
 };

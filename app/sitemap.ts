@@ -18,6 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/programs/dental-radiography-certification", priority: 0.8, changeFrequency: "monthly" },
     { path: "/tuition", priority: 0.8, changeFrequency: "monthly" },
     { path: "/admissions", priority: 0.9, changeFrequency: "weekly" },
+    { path: "/register", priority: 0.9, changeFrequency: "monthly" },
     { path: "/about", priority: 0.7, changeFrequency: "monthly" },
     { path: "/tour", priority: 0.6, changeFrequency: "monthly" },
     { path: "/contact", priority: 0.6, changeFrequency: "monthly" },

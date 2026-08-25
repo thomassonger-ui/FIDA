@@ -1,5 +1,5 @@
 import { CourseDetailContent } from "@/components/landing/CourseDetailContent";
-import { COHORT_DATE_EN } from "@/lib/cohort";
+import { COHORT_DATE_EN, COHORTS } from "@/lib/cohort";
 import { entryLevelDetail as d } from "@/lib/i18n/entryLevelDetail";
 
 export const metadata = {
@@ -32,14 +32,25 @@ const jsonLd = {
         category: "Tuition",
         price: "9850.00",
         priceCurrency: "USD",
-        url: "https://fldentalassisting.com/atticus",
+        url: "https://fldentalassisting.com/register",
         availability: "https://schema.org/InStock",
       },
-      educationalCredentialAwarded: "Diploma — Entry Level Dental Assisting",
-      hasCourseInstance: {
+      educationalCredentialAwarded: [
+        "Diploma — Entry Level Dental Assisting",
+        "Expanded Functions Dental Assistant certification",
+        "Dental Radiographer certification",
+        "BLS/CPR/AED certification (AHA)",
+      ],
+      hasCourseInstance: COHORTS.map((c) => ({
         "@type": "CourseInstance",
         courseMode: "onsite",
         courseWorkload: "P6M",
+        courseSchedule: {
+          "@type": "Schedule",
+          repeatFrequency: "Weekly",
+          scheduleTimezone: "America/New_York",
+          description: `${c.label.en} — ${c.schedule.en}, starting ${c.date.en}`,
+        },
         location: {
           "@type": "Place",
           name: "Florida Institute of Dental Assisting",
@@ -52,7 +63,7 @@ const jsonLd = {
             addressCountry: "US",
           },
         },
-      },
+      })),
     },
     {
       "@type": "FAQPage",

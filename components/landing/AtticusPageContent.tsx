@@ -64,6 +64,23 @@ export function AtticusPageContent({ src }: { src: string | null }) {
                   </div>
                 ))}
               </div>
+
+              {/* NEXT STEP — $150 registration fee (diploma program).
+                  Atticus is step 1 of enrollment; the QBO payment is step 2. */}
+              <div className="mt-6 card bg-navy text-white p-5">
+                <div className="text-xs font-semibold tracking-[0.12em] uppercase text-teal-soft">
+                  {t(p.nextStepEyebrow)}
+                </div>
+                <div className="mt-2 font-display text-lg leading-tight">
+                  {t(p.nextStepHeading)}
+                </div>
+                <p className="mt-2 text-sm text-white/80 leading-relaxed">
+                  {t(p.nextStepBody)}
+                </p>
+                <Link href="/register" className="btn-primary mt-4 inline-flex">
+                  {t(p.nextStepCta)} <span aria-hidden="true">→</span>
+                </Link>
+              </div>
             </div>
 
             <div className="lg:col-span-3">

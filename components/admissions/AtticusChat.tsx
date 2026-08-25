@@ -15,6 +15,8 @@ type ChatMessage = {
   role: "user" | "assistant";
   content: string;
   cta?: ChatCTA | null;
+  /** All CTAs for the turn (register + Calendly). `cta` stays for compat. */
+  ctas?: ChatCTA[];
 };
 
 
@@ -137,6 +139,7 @@ export function AtticusChat({ initialProgram }: { initialProgram?: string }) {
           role: "assistant",
           content: data.reply ?? "(no response)",
           cta: data.cta ?? null,
+          ctas: Array.isArray(data.ctas) ? data.ctas : undefined,
         },
       ]);
     } catch (err) {
@@ -216,21 +219,26 @@ export function AtticusChat({ initialProgram }: { initialProgram?: string }) {
                   </p>
                 ))}
               </div>
-              {m.role === "assistant" && m.cta && (
-                <a
-                  href={m.cta.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-teal hover:bg-teal-deep text-white text-sm font-semibold px-4 py-2.5 rounded-md shadow-sm transition-colors"
-                >
-                  <span>{m.cta.label} →</span>
-                  {m.cta.urgency && (
-                    <span className="text-[11px] font-normal uppercase tracking-wider bg-white/20 px-1.5 py-0.5 rounded">
-                      {m.cta.urgency}
-                    </span>
-                  )}
-                </a>
-              )}
+              {m.role === "assistant" &&
+                (m.ctas ?? (m.cta ? [m.cta] : [])).map((c) => {
+                  const internal = c.url.startsWith("/");
+                  return (
+                    <a
+                      key={c.url}
+                      href={c.url}
+                      target={internal ? undefined : "_blank"}
+                      rel={internal ? undefined : "noopener noreferrer"}
+                      className="inline-flex items-center gap-2 bg-teal hover:bg-teal-deep text-white text-sm font-semibold px-4 py-2.5 rounded-md shadow-sm transition-colors"
+                    >
+                      <span>{c.label} →</span>
+                      {c.urgency && (
+                        <span className="text-[11px] font-normal uppercase tracking-wider bg-white/20 px-1.5 py-0.5 rounded">
+                          {c.urgency}
+                        </span>
+                      )}
+                    </a>
+                  );
+                })}
             </div>
           </div>
         ))}

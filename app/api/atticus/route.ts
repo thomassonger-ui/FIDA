@@ -1,6 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextRequest } from "next/server";
-import { COHORT_DATE_EN } from "@/lib/cohort";
+import { COHORT_DATE_EN, COHORTS_SUMMARY_EN } from "@/lib/cohort";
 import { checkRateLimit, rateLimitKey } from "@/lib/rate-limit";
 import {
   extractLeadFields,
@@ -30,8 +30,15 @@ FIDA offers exactly TWO enrollment paths. Do not imply a third.
 - This is the path for someone entering the field
 - Six months · 378 clock hours: 142 theory + 76 lab + 160 externship hours under a licensed dentist's supervision
 - Curriculum spans dental theory & terminology, four-handed dentistry, sterilization & infection control (CDC/OSHA/OSAP), radiology with state/national exam prep, dental materials, digital scanning, anatomy & physiology, anesthesia & pain control, office management, and a resume workshop with interview coaching
-- Graduates earn BLS/CPR/AED certification (through AHA) during the program, sit for the Florida Dental Radiography certificate, and finish DANB-exam eligible
-- Published tuition: $9,700 plus a $150 non-refundable registration fee — $9,850 total. Includes textbooks, scrubs, student clinical kit, ADAA membership, and all material/lab fees. Financing specifics → human advisor.
+- Graduates earn the Entry Level Dental Assisting diploma plus Expanded Functions Dental Assistant and Dental Radiographer certifications, BLS/CPR/AED certification (through AHA) during the program, and finish DANB-exam eligible
+- Published tuition: $9,700 plus a $150 registration fee — $9,850 total. Includes textbooks, scrubs, student clinical kit, ADAA membership, and all material/lab fees.
+- HOW PAYMENT WORKS (confirmed 2026-08-25 — you may state all of this plainly):
+  1. $150 registration fee — paid ONLINE at /register through QuickBooks (card, ACH, PayPal, or Venmo). This is step 2 of applying, right after this conversation.
+  2. $750 seat deposit — due after the admissions interview and campus tour; it reserves the seat in a specific class.
+  3. Balance — $9,100 after the deposit. In-house, interest-free: 6 months at $1,516.66/month or 8 months at $1,137.50/month. Or an 18-month plan through TFC Tuition Financing (third party, no credit check, approval per TFC's terms): https://www.tfctuition.com/
+  - Accepted: credit/debit card, ACH, check, cash.
+  - Military & first responder tuition: $1,500 appreciation incentive → $8,350 total (+ $150 registration); $7,600 balance after the $750 deposit on the same 6/8-month plans. Eligibility verified with a military ID or DD214 — say "eligible" not "automatic," and never promise it before verification.
+  - Anything beyond this (custom arrangements, hardship, late payments, refunds) → human advisor.
 - Admission requirements: 18+, high school diploma or GED, a personal interview and facility tour, criminal background screening (felony convictions are disqualifying — deliver this kindly and route questions to a human advisor), proof of Hepatitis B vaccination (or declared intent to receive), and proof of current Tetanus vaccination
 - Full details page: /programs/entry-level-dental-assisting — offer this link when a Path A prospect wants specifics
 
@@ -45,7 +52,7 @@ Two distinct courses, both APPROVED BY (not licensed by) the Florida Board of De
 Path B is for prospects ALREADY working as a dental assistant in a Florida dental office, advancing their credentials.
 
 START DATES — keep these straight:
-- PATH A (diploma): next cohort is Fall 2026, starting ${COHORT_DATE_EN} (confirmed). Classes meet Tuesdays and Thursdays, 9:00 AM–1:30 PM, in Jacksonville.
+- PATH A (diploma): three upcoming classes in Jacksonville (confirmed): ${COHORTS_SUMMARY_EN}. The next start is ${COHORT_DATE_EN}. Ask which format fits the prospect — day, evening, or Friday.
 - PATH B (EFDA + Radiography courses): OPEN ENROLLMENT — start anytime. Never quote a fixed start date for Path B.
 
 # Mandatory qualifying question
@@ -65,18 +72,19 @@ EARLY in every new conversation, ask exactly: "Are you currently working as a de
 1. When you ask for their email, include this consent line in the same message: "By sharing your contact info, you're okay with FIDA reaching out about your enrollment by email or phone — no marketing texts, ever."
 2. Ask for a good phone number — framed optional: "What's a good phone number in case the advisor wants to call? Totally optional — we can do everything over email if you'd rather."
 3. In the same message or the next, ask casually: "Did a friend, coworker, or dental office point you to FIDA? We like to thank people who send folks our way." (Log whatever they say; don't push if they skip it.)
-4. For PATH A prospects only, confirm timing: "Are you aiming for the ${COHORT_DATE_EN} cohort, or thinking about a later start?"
+4. For PATH A prospects only, confirm timing: "Which class are you aiming for — the ${COHORT_DATE_EN} day class, the evening class, or the Friday class?"
 5. Offer Calendly in the SAME message: "If you'd rather just pick a time now, here's my advisor's calendar: ${CALENDLY_URL}"
-6. Close with the literal sentinel: "A FIDA advisor will follow up within one business day."
+6. For PATH A prospects only, give the next step in the closing message: "Your next step is the $150 registration fee — you can pay it online here: /register. That secures your place in the admissions process."
+7. Close with the literal sentinel: "A FIDA advisor will follow up within one business day."
 
 If the prospect skips the phone, referral, cohort, or Calendly step, don't nag — just close out.
 
 # What you WILL NOT do — redirect to a human advisor
 
-You MAY state published tuition exactly as listed: Entry Level Dental Assisting $9,700 + $150 registration ($9,850 total); EFDA $1,049; Radiography $499. The /tuition page has the full breakdown.
+You MAY state published tuition exactly as listed: Entry Level Dental Assisting $9,700 + $150 registration ($9,850 total); EFDA $1,049; Radiography $499. You MAY also state the diploma payment structure exactly as written in the HOW PAYMENT WORKS block above. The /tuition page has the full breakdown.
 
 If asked about any of the following, do NOT speculate. Tell them a FIDA advisor will follow up:
-- Payment plan terms, deposits, or discounts beyond the published tuition above (FIDA currently offers no discounts — say so plainly if asked)
+- Payment arrangements beyond the published structure above (custom plans, hardship, late payments, refunds, whether a specific person qualifies for the military/first-responder rate)
 - Individual financial aid eligibility, Pell Grant estimates, loan amounts
 - Transfer credit decisions
 - Immigration, visa, I-20, F-1 status
@@ -92,7 +100,7 @@ If asked about any of the following, do NOT speculate. Tell them a FIDA advisor 
 - NEVER call EFDA or Radiography credentials "diplomas" — they are "Professional Development Certificates"
 - NEVER use the phrase "Dental Assisting Foundations" — always "Entry Level Dental Assisting"
 - NEVER claim "nationally recognized certifications" — FIDA does not offer these
-- NEVER claim general "financial aid available" — financial aid (if any) applies only to the Entry Level Dental Assisting diploma program; redirect specifics to a human advisor
+- NEVER claim general "financial aid available" — FIDA's plans are payment plans, not financial aid; the military/first-responder rate is an eligibility-based tuition incentive, not aid
 - NEVER imply three enrollment paths — there are exactly two
 - NEVER mention CCMA, CPC, CCA, or CPCT/A — those are medical-coding credentials, not dental
 - NEVER describe the EFDA clinical work as happening on a FIDA campus lab — it happens at the student's OWN dentist's office, signed off by their supervising dentist
@@ -327,25 +335,53 @@ export async function POST(req: NextRequest) {
     const calendlyMatch = rawText.match(
       /https?:\/\/calendly\.com\/[^\s)>\]]+/i
     );
-    const cta = calendlyMatch
+    const calendlyCta = calendlyMatch
       ? {
           label: CTA_LABEL,
           url: calendlyMatch[0],
           urgency: CTA_URGENCY,
         }
       : null;
-    // Strip the inline link + any nearby "here's my advisor's calendar:" lead-in
-    // so the bubble reads cleanly above the button.
-    const text = calendlyMatch
-      ? rawText
-          .replace(
-            /(?:[Hh]ere(?:'|’)s (?:my|the) advisor(?:'|’)?s? calendar:?\s*)?https?:\/\/calendly\.com\/[^\s)>\]]+\.?/i,
-            ""
-          )
-          .replace(/[ \t]+\n/g, "\n")
-          .replace(/\n{3,}/g, "\n\n")
-          .trim()
-      : rawText;
+
+    // 6c) Registration-fee CTA (diploma path). When the model points a Path A
+    // prospect at /register (handoff step 6), render it as the PRIMARY button
+    // so the $150 QuickBooks payment is one tap away — this is the step that
+    // used to dead-end after Atticus. Added 2026-08-25 per Tom/Ashley.
+    const registerMatch = /(?:https?:\/\/[^\s/]+)?\/register\b/i.test(rawText);
+    const registerCta = registerMatch
+      ? {
+          label: "Secure my seat – pay the $150 registration fee",
+          url: "/register",
+        }
+      : null;
+
+    const ctas = [registerCta, calendlyCta].filter(
+      (c): c is NonNullable<typeof c> => c !== null
+    );
+    const cta = ctas[0] ?? null;
+
+    // Strip the inline links + any nearby "here's my advisor's calendar:" /
+    // "pay it online here:" lead-ins so the bubble reads cleanly above the
+    // buttons.
+    let text = rawText;
+    if (calendlyMatch) {
+      text = text.replace(
+        /(?:[Hh]ere(?:'|’)s (?:my|the) advisor(?:'|’)?s? calendar:?\s*)?https?:\/\/calendly\.com\/[^\s)>\]]+\.?/i,
+        ""
+      );
+    }
+    if (registerMatch) {
+      text = text.replace(
+        /(?:(?:you can )?pay it online here:?\s*)?(?:https?:\/\/[^\s/]+)?\/register\b\.?/i,
+        ""
+      );
+    }
+    if (calendlyMatch || registerMatch) {
+      text = text
+        .replace(/[ \t]+\n/g, "\n")
+        .replace(/\n{3,}/g, "\n\n")
+        .trim();
+    }
 
     // 7) Persist assistant message + detect handoff phrase.
     // Broadened regex so the model has multiple ways to signal "I'm done":
@@ -372,6 +408,7 @@ export async function POST(req: NextRequest) {
       JSON.stringify({
         reply: text,
         cta,
+        ctas,
         stopReason: response.stop_reason,
       }),
       { status: 200, headers: { "content-type": "application/json" } }

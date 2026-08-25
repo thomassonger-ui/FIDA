@@ -7,6 +7,7 @@ import { Footer } from "@/components/landing/Footer";
 import { RotatingHeadline } from "@/components/landing/RotatingHeadline";
 import { AtticusChat } from "@/components/admissions/AtticusChat";
 import { useLang } from "@/lib/i18n/LanguageProvider";
+import { COHORTS } from "@/lib/cohort";
 import { home, credentials } from "@/lib/i18n/home";
 import { atticus as atticusCopy } from "@/lib/i18n/atticus";
 
@@ -330,6 +331,17 @@ export function HomeContent() {
               <div className="mt-2 font-display text-4xl text-navy">
                 {t(home.cohort.date)}
               </div>
+              <div className="mt-1 text-sm text-muted">{t(COHORTS[0].schedule)}</div>
+              {COHORTS.length > 1 && (
+                <ul className="mt-4 space-y-1.5 text-sm">
+                  {COHORTS.slice(1).map((c) => (
+                    <li key={c.date.en} className="text-navy">
+                      <span className="font-semibold">{t(c.date)}</span>
+                      <span className="text-muted"> · {t(c.schedule)}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
               <p className="mt-3 text-muted text-sm leading-relaxed">
                 {t(home.cohort.note)}
               </p>

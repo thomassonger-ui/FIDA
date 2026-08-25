@@ -53,6 +53,12 @@ export type CourseDetail = {
   costEyebrow: Bilingual;
   costHeading: Bilingual;
   costBody: Bilingual;
+  /**
+   * When true the cost section also renders <PaymentStructure/> — the
+   * registration-fee → deposit → balance breakdown from lib/payment.ts.
+   * Diploma program only; CE courses are a single flat price.
+   */
+  showPaymentStructure?: boolean;
   priceDisplay: string;
   priceNote: Bilingual;
   faqEyebrow: Bilingual;

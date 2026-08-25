@@ -121,8 +121,8 @@ export const about = {
   cohortEyebrow: b("Next cohort", "Próxima cohorte"),
   cohortDate: COHORT_DATE,
   cohortBody: b(
-    "Fall 2026 intake. Seats are limited — applications reviewed as received.",
-    "Ingreso de otoño 2026. Los cupos son limitados: las solicitudes se revisan al recibirse.",
+    "Next start. Day, evening, and all-day Friday classes are scheduled — seats are limited and applications are reviewed as received.",
+    "Próximo inicio. Hay clases de día, vespertinas y de viernes (día completo) programadas: los cupos son limitados y las solicitudes se revisan al recibirse.",
   ),
 
   ctaHeading: b("See if FIDA is a fit.", "Descubre si FIDA es para ti."),

@@ -6,7 +6,7 @@ import { Footer } from "@/components/landing/Footer";
 import { useLang, type Bilingual } from "@/lib/i18n/LanguageProvider";
 import { programs, programsCopy as c } from "@/lib/i18n/programs";
 import { entryLevelDetail as d } from "@/lib/i18n/entryLevelDetail";
-import { COHORT_DATE, COHORT_SCHEDULE } from "@/lib/cohort";
+import { COHORTS } from "@/lib/cohort";
 
 /**
  * /programs body. Client component so the route can stay a server component
@@ -67,15 +67,16 @@ export function ProgramsContent() {
                   {t(c.diploma.priceBreakdown)}
                 </div>
 
-                <div className="mt-4 text-sm text-navy space-y-1">
-                  <div>
-                    <span className="font-semibold">{t(c.diploma.nextCohortLabel)}:</span>{" "}
-                    {t(COHORT_DATE)}
-                  </div>
-                  <div>
-                    <span className="font-semibold">{t(c.diploma.scheduleLabel)}:</span>{" "}
-                    {t(COHORT_SCHEDULE)}
-                  </div>
+                <div className="mt-4 text-sm text-navy">
+                  <div className="font-semibold">{t(c.diploma.nextCohortLabel)}</div>
+                  <ul className="mt-1.5 space-y-1">
+                    {COHORTS.map((co) => (
+                      <li key={co.date.en}>
+                        <span className="font-semibold">{t(co.date)}</span>
+                        <span className="text-muted"> · {t(co.schedule)}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
 
                 <div className="mt-7 flex flex-col sm:flex-row gap-3">

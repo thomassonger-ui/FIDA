@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       { source: "/our-program", destination: "/programs/entry-level-dental-assisting", permanent: true },
-      { source: "/apply-now", destination: "/atticus", permanent: true },
+      { source: "/apply-now", destination: "/register", permanent: true },
       { source: "/schedule-a-tour", destination: "/tour", permanent: true },
       { source: "/expanded-functions-dental-assisting", destination: "/programs/efda-certification-florida", permanent: true },
       { source: "/radiography-for-dental-personnel", destination: "/programs/dental-radiography-certification", permanent: true },

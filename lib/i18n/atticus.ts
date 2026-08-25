@@ -1,5 +1,5 @@
 import type { Bilingual } from "./LanguageProvider";
-import { COHORT_DATE_EN, COHORT_DATE_ES } from "@/lib/cohort";
+import { COHORTS_SUMMARY_EN, COHORTS_SUMMARY_ES } from "@/lib/cohort";
 
 /**
  * EN/ES copy for the Atticus admissions intake widget.
@@ -89,8 +89,8 @@ export const atticus = {
       {
         title: b("Schedule", "Horario"),
         body: b(
-          `Built for working adults. CE courses: open enrollment. Next diploma cohort: ${COHORT_DATE_EN}.`,
-          `Diseñado para adultos que trabajan. Cursos de educación continua: inscripción abierta. Próxima cohorte del diploma: ${COHORT_DATE_ES}.`,
+          `Built for working adults. CE courses: open enrollment. Diploma classes: ${COHORTS_SUMMARY_EN}.`,
+          `Diseñado para adultos que trabajan. Cursos de educación continua: inscripción abierta. Clases del diploma: ${COHORTS_SUMMARY_ES}.`,
         ),
       },
       {
@@ -101,6 +101,17 @@ export const atticus = {
         ),
       },
     ],
+    // Enrollment step 2 card (diploma program) — links to /register.
+    nextStepEyebrow: b("Applying to the diploma program?", "¿Postulando al programa de diploma?"),
+    nextStepHeading: b(
+      "Step 2: pay your $150 registration fee.",
+      "Paso 2: paga tu cuota de inscripción de $150.",
+    ),
+    nextStepBody: b(
+      "Once Atticus has your application, secure your place in the admissions process. Paid online through QuickBooks — card, ACH, PayPal, or Venmo.",
+      "Cuando Atticus tenga tu solicitud, asegura tu lugar en el proceso de admisión. Se paga en línea a través de QuickBooks: tarjeta, ACH, PayPal o Venmo.",
+    ),
+    nextStepCta: b("Secure my seat", "Asegurar mi cupo"),
     referredFrom: b("Referred from", "Referido desde"),
     backToFida: b("Back to FIDA", "Volver a FIDA"),
   },

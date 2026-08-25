@@ -6,6 +6,8 @@ import { Footer } from "@/components/landing/Footer";
 import { useLang } from "@/lib/i18n/LanguageProvider";
 import { APPLY_URL } from "@/lib/i18n/courseDetail";
 import { tuition as tu } from "@/lib/i18n/tuition";
+import { COHORTS } from "@/lib/cohort";
+import { PaymentStructure } from "@/components/landing/PaymentStructure";
 
 /**
  * /tuition body. Client component so the route stays a server component and
@@ -56,10 +58,15 @@ export function TuitionContent() {
                 </div>
 
                 <div className="mt-4 text-sm text-navy">
-                  <span className="font-semibold">
-                    {t(tu.diploma.nextCohortLabel)}:
-                  </span>{" "}
-                  {t(tu.diploma.nextCohort)}
+                  <div className="font-semibold">{t(tu.diploma.nextCohortLabel)}</div>
+                  <ul className="mt-1.5 space-y-1">
+                    {COHORTS.map((c) => (
+                      <li key={c.date.en}>
+                        <span className="font-semibold">{t(c.date)}</span>
+                        <span className="text-muted"> · {t(c.schedule)}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
 
                 <p className="mt-5 text-sm text-muted leading-relaxed">
@@ -67,7 +74,7 @@ export function TuitionContent() {
                 </p>
 
                 <div className="mt-7 flex flex-col sm:flex-row gap-3">
-                  <Link href="/atticus" className="btn-primary">
+                  <Link href="/register" className="btn-primary">
                     {t(tu.diploma.cta)} <span aria-hidden="true">→</span>
                   </Link>
                   <Link
@@ -95,6 +102,11 @@ export function TuitionContent() {
                 </ul>
               </div>
             </div>
+          </div>
+
+          {/* PAYMENT STRUCTURE — registration fee → deposit → balance, tiers, TFC */}
+          <div id="payment" className="mt-14 md:mt-16 scroll-mt-24">
+            <PaymentStructure />
           </div>
         </section>
 

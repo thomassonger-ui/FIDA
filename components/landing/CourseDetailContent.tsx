@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
 import { useLang } from "@/lib/i18n/LanguageProvider";
+import { PaymentStructure } from "@/components/landing/PaymentStructure";
 import { APPLY_URL, type CourseDetail } from "@/lib/i18n/courseDetail";
 
 /**
@@ -66,7 +67,7 @@ export function CourseDetailContent({ d }: { d: CourseDetail }) {
                 <div className="text-xs font-semibold tracking-[0.12em] uppercase text-teal">
                   {t(f.label)}
                 </div>
-                <div className="mt-2 text-navy">{t(f.value)}</div>
+                <div className="mt-2 text-navy whitespace-pre-line">{t(f.value)}</div>
               </div>
             ))}
           </div>
@@ -163,6 +164,12 @@ export function CourseDetailContent({ d }: { d: CourseDetail }) {
                 <ApplyCta className="btn-primary w-full mt-6" />
               </div>
             </div>
+
+            {d.showPaymentStructure && (
+              <div className="mt-14 md:mt-16">
+                <PaymentStructure />
+              </div>
+            )}
           </div>
         </section>
 
