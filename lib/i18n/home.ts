@@ -132,11 +132,19 @@ export const home = {
 
   pillars: [
     {
-      stat: b("94%", "94 %"),
-      label: b("Graduate placement rate", "Tasa de colocación laboral"),
+      // Replaced the unsourced "94% graduate placement rate" (2026-08-25).
+      // It was a claim about FIDA's OWN graduates with no methodology, and it
+      // contradicted /terms, which states outcome figures come from published
+      // government labor statistics and are cited where they appear. This
+      // figure is cited and matches the ELDA program page FAQ.
+      stat: b("14%", "14 %"),
+      label: b(
+        "Projected job growth in Florida",
+        "Crecimiento laboral proyectado en Florida",
+      ),
       note: b(
-        "Within 6 months of completion",
-        "Dentro de los 6 meses posteriores a la graduación",
+        "Dental assistants, 2024–2034 (Projections Central)",
+        "Asistentes dentales, 2024–2034 (Projections Central)",
       ),
     },
     {

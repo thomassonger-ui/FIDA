@@ -6,7 +6,7 @@ import { AtticusChat } from "@/components/admissions/AtticusChat";
 export const metadata = {
   title: "Admissions",
   description:
-    "Talk to Atticus, our AI admissions advisor. No forms, no pressure — just a conversation about where you want to go.",
+    "Start your FIDA application in Jacksonville, FL. Talk to Atticus, our AI admissions advisor, about the Entry Level Dental Assisting diploma or the EFDA and Radiography courses — no forms, no pressure, and a real advisor follows up within one business day.",
   alternates: { canonical: "/admissions" },
 };
 
