@@ -31,6 +31,8 @@ const nav: NavItem[] = [
   { href: "/admin", label: "Overview" },
   { href: "/admin/tickets", label: "Messages", tag: "ENROLL" },
   { href: "/admin/leads", label: "Leads", tag: "ENROLL" },
+  { href: "/admin/prospects", label: "Prospects", tag: "ENROLL" },
+  { href: "/admin/prospects/pipeline", label: "Pipeline", tag: "ENROLL" },
   { href: "/admin/students", label: "Students", tag: "OS" },
   { href: "/admin/cohorts", label: "Cohorts", tag: "OS" },
   { href: "/admin/attendance", label: "Attendance", tag: "OS" },
