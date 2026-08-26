@@ -34,7 +34,7 @@ export function Nav() {
       {/* Institutional standing — a quiet line above the nav, not a promo.
           Sits outside the sticky header so it scrolls away with the page. */}
       <div className="bg-navy-deep text-navy-100">
-        <p className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-2.5 md:py-0 md:h-8 flex flex-col md:flex-row items-center md:justify-start gap-y-1 gap-x-3 text-[10px] md:text-[11px] font-medium tracking-[0.1em] md:tracking-[0.14em] uppercase leading-none text-center md:text-left">
+        <p className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-2.5 md:py-0 md:h-8 flex flex-col md:flex-row items-center md:justify-center gap-y-1 gap-x-3 text-[10px] md:text-[11px] font-medium tracking-[0.1em] md:tracking-[0.14em] uppercase leading-none text-center md:text-center">
           <span>{t(credentials.barLicensed)}</span>
           <span aria-hidden="true" className="hidden md:inline text-teal-soft">&bull;</span>
           <span>{t(credentials.barApproved)}</span>
