@@ -13,82 +13,30 @@
 
 import { getServerClient } from "./supabase";
 import { upsertStudent } from "./students-db";
+import {
+  STAGES,
+  STAGE_LABELS,
+  displayName,
+  type Prospect,
+  type Stage,
+} from "./prospects-shared";
 
 // ------------------------------------------------------------
-// Types
+// Types and constants live in ./prospects-shared so client components can
+// import them without dragging the service-role client into the bundle.
+// Re-exported here so existing server imports keep working.
 // ------------------------------------------------------------
 
-export const STAGES = [
-  "identified",
-  "nurture",
-  "applied",
-  "registered",
-  "enrolled",
-  "graduated",
-] as const;
+export * from "./prospects-shared";
 
-export type Stage = (typeof STAGES)[number] | "lost";
+function normalizeEmail(email: string | null | undefined): string | null {
+  const v = (email ?? "").trim().toLowerCase();
+  return v || null;
+}
 
-export const STAGE_LABELS: Record<string, string> = {
-  identified: "Identified",
-  nurture: "Nurture",
-  applied: "Applied",
-  registered: "Registered",
-  enrolled: "Enrolled",
-  graduated: "Graduated",
-  lost: "Lost",
-};
-
-/** One line of plain-English help per stage, shown on the board. */
-export const STAGE_HELP: Record<string, string> = {
-  identified: "On the list. Nobody has reached out yet.",
-  nurture: "Drip is running or a call has gone out. No application yet.",
-  applied: "Finished the Atticus application. Advisor follow-up due.",
-  registered: "Paid the $150 registration fee. Seat is held.",
-  enrolled: "In a Moodle course. Also lives in Students.",
-  graduated: "Completed the program.",
-  lost: "Not moving forward. Kept for the record.",
-};
-
-export type DripStatus = "not_started" | "active" | "paused" | "finished";
-
-export type Prospect = {
-  id: string;
-  first_name: string | null;
-  last_name: string | null;
-  full_name: string | null;
-  email: string | null;
-  phone: string | null;
-  city: string | null;
-  state: string | null;
-  zip: string | null;
-  county: string | null;
-  program_interest: string | null;
-  segment: string | null;
-  current_employer: string | null;
-  score: number;
-  notes: string | null;
-  stage: Stage;
-  next_followup_at: string | null;
-  last_touch_at: string | null;
-  touch_count: number;
-  drip_status: DripStatus;
-  drip_step: number;
-  drip_last_sent_at: string | null;
-  consent_source: string | null;
-  consent_at: string | null;
-  unsubscribed_at: string | null;
-  dnc: boolean;
-  email_ok: boolean;
-  sms_ok: boolean;
-  source: string | null;
-  source_batch: string | null;
-  skip_traced_at: string | null;
-  removed_at: string | null;
-  student_id: string | null;
-  created_at: string;
-  updated_at: string;
-};
+// ------------------------------------------------------------
+// Reads
+// ------------------------------------------------------------
 
 export type ProspectFilters = {
   search?: string;
@@ -101,44 +49,6 @@ export type ProspectFilters = {
   hasEmail?: boolean;
   showRemoved?: boolean;
 };
-
-// ------------------------------------------------------------
-// Daily safety limits — the guardrail that keeps the sending
-// domain healthy and every contact reviewed before it goes out.
-// ------------------------------------------------------------
-
-export const DAILY_SKIP_TRACE_LIMIT = 10;
-export const DAILY_DRIP_EMAIL_LIMIT = 10;
-export const SKIP_TRACE_COST_PER_HIT = 0.1;
-
-/** CAN-SPAM requires a real postal address in every commercial email. */
-export const MAILING_ADDRESS =
-  "Florida Institute of Dental Assisting · 8761 Perimeter Park Blvd, Ste. 107, Jacksonville, FL 32216";
-
-export function displayName(p: Prospect): string {
-  if (p.full_name && p.full_name.trim()) return p.full_name.trim();
-  const joined = [p.first_name, p.last_name].filter(Boolean).join(" ").trim();
-  return joined || p.email || "—";
-}
-
-/** True when this prospect must not receive a marketing email. */
-export function emailBlocked(p: Prospect): boolean {
-  return Boolean(!p.email || !p.email_ok || p.unsubscribed_at);
-}
-
-/** True when this prospect must not be called. */
-export function callBlocked(p: Prospect): boolean {
-  return Boolean(!p.phone || p.dnc);
-}
-
-function normalizeEmail(email: string | null | undefined): string | null {
-  const v = (email ?? "").trim().toLowerCase();
-  return v || null;
-}
-
-// ------------------------------------------------------------
-// Reads
-// ------------------------------------------------------------
 
 export async function listProspects(
   filters: ProspectFilters = {},
@@ -235,7 +145,7 @@ export function summarize(prospects: Prospect[]): PipelineStats {
   };
 }
 
-/** Emails dispatched since local midnight — enforces DAILY_DRIP_EMAIL_LIMIT. */
+/** Emails dispatched since local midnight — checked against currentLimits().email. */
 export async function sentToday(): Promise<number> {
   try {
     const supabase = getServerClient();
@@ -253,7 +163,7 @@ export async function sentToday(): Promise<number> {
   }
 }
 
-/** Skip traces run since local midnight — enforces DAILY_SKIP_TRACE_LIMIT. */
+/** Skip traces run since local midnight — checked against currentLimits().skipTrace. */
 export async function skipTracedToday(): Promise<number> {
   try {
     const supabase = getServerClient();

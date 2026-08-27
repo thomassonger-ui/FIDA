@@ -4,10 +4,8 @@ import {
   skipTracedToday,
   sentToday,
   summarize,
-  DAILY_SKIP_TRACE_LIMIT,
-  DAILY_DRIP_EMAIL_LIMIT,
-  MAILING_ADDRESS,
 } from "@/lib/prospects-db";
+import { currentLimits, RAMP, MAILING_ADDRESS } from "@/lib/prospects-shared";
 import { ProspectsTable } from "./prospects-table";
 
 export const dynamic = "force-dynamic";
@@ -18,22 +16,53 @@ export default async function ProspectsPage() {
   const prospects = await listProspects({ showRemoved: true }, 1000);
   const [traced, sent] = await Promise.all([skipTracedToday(), sentToday()]);
   const stats = summarize(prospects);
+  const limits = currentLimits();
 
   return (
     <div>
-      {/* DAILY SAFETY LIMITS — kept deliberately loud. FIDA is a
-          CIE-licensed institution; cold outreach here carries advertising
-          exposure a brokerage doesn't have. Small, reviewed batches. */}
+      {/* TODAY'S SENDING LIMIT — a warm-up setting, not a permanent rule.
+          Raise it in Vercel (PROSPECT_DAILY_EMAIL_LIMIT /
+          PROSPECT_DAILY_SKIP_TRACE_LIMIT), never by editing this file. */}
       <div className="border-l-4 border-amber-700 bg-amber-50 text-amber-900 px-4 py-3 text-sm mb-6">
-        <strong>Daily safety limits:</strong> hold outreach to{" "}
-        <strong>{DAILY_SKIP_TRACE_LIMIT} skip traces</strong> and{" "}
-        <strong>{DAILY_DRIP_EMAIL_LIMIT} drip emails</strong> per day. Small,
-        steady batches protect the FIDA sending domain and keep every contact
-        reviewed before a call or an email goes out.{" "}
-        <span className="tabular-nums">
-          Today: {traced}/{DAILY_SKIP_TRACE_LIMIT} traced ·{" "}
-          {sent}/{DAILY_DRIP_EMAIL_LIMIT} sent.
-        </span>
+        <div>
+          <strong>Today&rsquo;s limit:</strong>{" "}
+          <span className="tabular-nums">
+            {sent} of {limits.email} drip emails
+          </span>{" "}
+          and{" "}
+          <span className="tabular-nums">
+            {traced} of {limits.skipTrace} skip traces
+          </span>{" "}
+          used. This is a <strong>warm-up setting, not a ceiling</strong> — a
+          new sending domain has no reputation yet, so the first weeks are
+          about proving FIDA sends mail people want.
+        </div>
+        <details className="mt-2">
+          <summary className="cursor-pointer font-semibold select-none">
+            The ramp — when this goes up
+          </summary>
+          <table className="mt-2 text-xs">
+            <tbody>
+              {RAMP.map((r) => (
+                <tr key={r.week}>
+                  <td className="pr-4 py-0.5 font-semibold whitespace-nowrap">
+                    {r.week}
+                  </td>
+                  <td className="pr-4 py-0.5 tabular-nums whitespace-nowrap">
+                    {r.perDay}/day
+                  </td>
+                  <td className="py-0.5">{r.note}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p className="mt-2 text-xs">
+            Hold at the current step — or drop back one — if bounces pass 2% or
+            complaints pass 0.1% in any week. Raise the limit by changing{" "}
+            <code className="text-[11px]">PROSPECT_DAILY_EMAIL_LIMIT</code> in
+            Vercel; no code change and no deploy from a laptop needed.
+          </p>
+        </details>
       </div>
 
       <div className="flex items-start justify-between gap-6 flex-wrap">
@@ -101,7 +130,11 @@ export default async function ProspectsPage() {
         </div>
       </div>
 
-      <ProspectsTable initial={prospects} skipTracedToday={traced} />
+      <ProspectsTable
+        initial={prospects}
+        skipTracedToday={traced}
+        limits={limits}
+      />
 
       {/* HOW THIS WORKS — written for Debbie & Ashley. */}
       <details className="mt-8 border border-rule bg-paper-subtle rounded-sm">
@@ -143,8 +176,10 @@ export default async function ProspectsPage() {
           <p>
             <strong className="text-ink">Why the daily cap?</strong> A new
             sending domain that suddenly emails hundreds of strangers gets
-            filtered as spam, and the damage is hard to undo. Ten a day, every
-            day, is slower on paper and far faster in practice.
+            filtered as spam, and that reputation follows every message the
+            school sends — acceptance letters and tuition receipts included.
+            The cap starts low on purpose and climbs on the schedule in the
+            amber box above as the domain earns its reputation.
           </p>
         </div>
       </details>
@@ -155,13 +190,13 @@ export default async function ProspectsPage() {
         <ul className="text-muted space-y-1.5 list-disc pl-5">
           <li>
             <strong className="text-ink">Skip trace account</strong> — the
-            button is in place and capped at {DAILY_SKIP_TRACE_LIMIT}/day; it
-            turns on once the vendor account and API key are set.
+            button is in place and capped at {limits.skipTrace}/day; it turns
+            on once the vendor account and API key are set.
           </li>
           <li>
             <strong className="text-ink">Resend sending domain</strong> — drip
-            sends are logged and capped at {DAILY_DRIP_EMAIL_LIMIT}/day, and go
-            live once the FIDA domain is verified in Resend.
+            sends are logged and capped at {limits.email}/day, and go live once
+            the FIDA domain is verified in Resend.
           </li>
         </ul>
       </div>

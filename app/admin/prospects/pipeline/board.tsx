@@ -8,7 +8,7 @@ import {
   STAGE_HELP,
   type Prospect,
   type Stage,
-} from "@/lib/prospects-db";
+} from "@/lib/prospects-shared";
 
 function name(p: Prospect) {
   if (p.full_name?.trim()) return p.full_name.trim();

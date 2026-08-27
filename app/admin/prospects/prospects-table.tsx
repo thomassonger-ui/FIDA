@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import {
   STAGES,
   STAGE_LABELS,
-  DAILY_SKIP_TRACE_LIMIT,
   SKIP_TRACE_COST_PER_HIT,
+  type Limits,
   type Prospect,
-} from "@/lib/prospects-db";
+} from "@/lib/prospects-shared";
 
 const COUNTIES = ["Duval", "Clay", "St. Johns", "Nassau", "Baker", "Putnam"];
 
@@ -44,9 +44,11 @@ function name(p: Prospect) {
 export function ProspectsTable({
   initial,
   skipTracedToday,
+  limits,
 }: {
   initial: Prospect[];
   skipTracedToday: number;
+  limits: Limits;
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -143,10 +145,7 @@ export function ProspectsTable({
     }
   }
 
-  const skipTraceRemaining = Math.max(
-    0,
-    DAILY_SKIP_TRACE_LIMIT - skipTracedToday
-  );
+  const skipTraceRemaining = Math.max(0, limits.skipTrace - skipTracedToday);
 
   return (
     <>
@@ -255,7 +254,7 @@ export function ProspectsTable({
           Skip trace selected ({selected.size})
         </button>
         <span className="text-xs text-muted">
-          Up to {DAILY_SKIP_TRACE_LIMIT} a day · $
+          Up to {limits.skipTrace} a day · $
           {SKIP_TRACE_COST_PER_HIT.toFixed(2)} per hit, misses free ·{" "}
           <span className="tabular-nums">{skipTraceRemaining}</span> left today
         </span>
