@@ -10,7 +10,9 @@ import {
 } from "@/lib/location";
 
 export const metadata = {
-  title: "Contact FIDA — Florida Institute of Dental Assisting",
+  // The root layout appends " | Florida Institute of Dental Assisting".
+  // Keep page titles free of the brand or it renders twice.
+  title: "Contact Us",
   description:
     "Contact Florida Institute of Dental Assisting in Jacksonville: (904) 674-3131, 8761 Perimeter Park Blvd Ste. 107. Office hours Monday–Friday, 9 a.m.–3 p.m. Send a message and a staff member replies within one business day.",
   alternates: { canonical: "/contact" },
