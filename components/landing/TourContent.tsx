@@ -5,6 +5,7 @@ import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
 import { useLang } from "@/lib/i18n/LanguageProvider";
 import { tour as tr } from "@/lib/i18n/tourContact";
+import { MAP_URL } from "@/lib/location";
 
 const CALENDLY_URL =
   process.env.NEXT_PUBLIC_CALENDLY_URL ||
@@ -86,6 +87,14 @@ export function TourContent() {
                   {t(tr.hours)}
                 </p>
               </address>
+              <a
+                href={MAP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block mt-4 text-sm font-semibold text-teal hover:underline"
+              >
+                {t(tr.directionsLink)} <span aria-hidden="true">→</span>
+              </a>
             </div>
           </div>
         </section>

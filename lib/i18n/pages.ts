@@ -37,8 +37,8 @@ export const about = {
     {
       title: b("Small by design.", "Pequeños a propósito."),
       body: b(
-        "1:12 instructor-to-student ratio. Real mentorship, real feedback, real accountability.",
-        "Proporción instructor–estudiante de 1:12. Mentoría real, retroalimentación real, responsabilidad real.",
+        "Classes average eight students and never exceed twelve. Real mentorship, real feedback, real accountability.",
+        "Las clases promedian ocho estudiantes y nunca superan los doce. Mentoría real, retroalimentación real, responsabilidad real.",
       ),
     },
     {

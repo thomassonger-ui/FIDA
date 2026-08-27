@@ -46,8 +46,8 @@ const contactBlock: LegalSection = {
   heading: b("Contact us", "Contáctanos"),
   body: [
     b(
-      "Florida Institute of Dental Assisting · 8761 Perimeter Park Blvd, Ste. 107, Jacksonville, FL 32216 · (904) 674-3131 · Office hours 9 a.m.–3 p.m.",
-      "Florida Institute of Dental Assisting · 8761 Perimeter Park Blvd, Ste. 107, Jacksonville, FL 32216 · (904) 674-3131 · Horario de oficina: 9 a.m.–3 p.m.",
+      "Florida Institute of Dental Assisting · 8761 Perimeter Park Blvd, Ste. 107, Jacksonville, FL 32216 · (904) 674-3131 · Office hours Monday–Friday, 9 a.m.–3 p.m.",
+      "Florida Institute of Dental Assisting · 8761 Perimeter Park Blvd, Ste. 107, Jacksonville, FL 32216 · (904) 674-3131 · Horario de oficina: lunes a viernes, 9 a.m.–3 p.m.",
     ),
     b(
       "You can also reach us through the contact form on this site, which routes directly to our support queue.",

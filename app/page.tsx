@@ -1,4 +1,12 @@
 import { HomeContent } from "@/components/landing/HomeContent";
+import {
+  EMAIL,
+  MAP_URL,
+  PHONE_E164,
+  geoJsonLd,
+  openingHoursJsonLd,
+  postalAddressJsonLd,
+} from "@/lib/location";
 
 export const metadata = {
   title: {
@@ -18,16 +26,13 @@ const orgJsonLd = {
   url: "https://fldentalassisting.com",
   description:
     "Dental assisting school in Jacksonville, Florida offering an Entry Level Dental Assisting diploma and EFDA and Radiography courses approved by the Florida Board of Dentistry.",
-  telephone: "+1-904-674-3131",
-  email: "success@fldentalassisting.com",
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: "8761 Perimeter Park Blvd, Ste. 107",
-    addressLocality: "Jacksonville",
-    addressRegion: "FL",
-    postalCode: "32216",
-    addressCountry: "US",
-  },
+  telephone: PHONE_E164,
+  email: EMAIL,
+  address: postalAddressJsonLd,
+  geo: geoJsonLd,
+  hasMap: MAP_URL,
+  sameAs: [MAP_URL],
+  openingHoursSpecification: openingHoursJsonLd,
   areaServed: "Florida",
   availableLanguage: ["en", "es"],
 };

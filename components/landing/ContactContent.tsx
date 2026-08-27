@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { MAP_EMBED_URL, MAP_SHARE_URL, MAP_URL } from "@/lib/location";
 import { useState } from "react";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
@@ -88,9 +89,17 @@ export function ContactContent() {
                   <br />
                   Jacksonville, FL 32216
                 </address>
+                <a
+                  href={MAP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block mt-2 text-sm font-semibold text-teal hover:underline"
+                >
+                  {t(c.directionsLink)} <span aria-hidden="true">→</span>
+                </a>
                 <Link
                   href="/tour"
-                  className="inline-block mt-2 text-sm font-semibold text-teal hover:underline"
+                  className="block mt-1 text-sm font-semibold text-teal hover:underline"
                 >
                   {t(c.tourLink)} <span aria-hidden="true">→</span>
                 </Link>
@@ -235,6 +244,50 @@ export function ContactContent() {
                   </p>
                 </form>
               )}
+            </div>
+          </div>
+        </section>
+
+        {/* WHERE WE ARE — an embedded pin plus the practical detail people
+            actually want before a first visit. The structured data on the
+            homepage carries the geo coordinates for search engines; this is
+            here for the human deciding whether the drive is worth it. */}
+        <section
+          aria-labelledby="find-us"
+          className="bg-paper-subtle border-t border-rule"
+        >
+          <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-14 md:py-16">
+            <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
+              <div>
+                <div className="eyebrow">{t(c.mapEyebrow)}</div>
+                <h2
+                  id="find-us"
+                  className="mt-2 font-display text-2xl md:text-3xl text-navy leading-tight"
+                >
+                  {t(c.mapHeading)}
+                </h2>
+                <p className="mt-3 text-sm text-muted max-w-xl leading-relaxed">
+                  {t(c.mapParking)}
+                </p>
+              </div>
+              <a
+                href={MAP_SHARE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-semibold text-teal hover:underline shrink-0"
+              >
+                {t(c.mapLarger)} <span aria-hidden="true">→</span>
+              </a>
+            </div>
+
+            <div className="border border-rule rounded-md overflow-hidden bg-white">
+              <iframe
+                src={MAP_EMBED_URL}
+                title={t(c.mapTitle)}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="w-full h-[320px] md:h-[420px] border-0"
+              />
             </div>
           </div>
         </section>

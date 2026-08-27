@@ -75,7 +75,10 @@ export const credentials = {
 /* ------------------------------------------------------------- FOOTER --- */
 
 export const footer = {
-  hours: b("Open 9 a.m.–3 p.m.", "Abierto de 9 a.m. a 3 p.m."),
+  hours: b(
+    "Open Monday–Friday, 9 a.m.–3 p.m.",
+    "Abierto de lunes a viernes, 9 a.m. a 3 p.m.",
+  ),
   navigate: b("Navigate", "Navegación"),
   support: b("Support", "Soporte"),
   programs: b("Programs & Courses", "Programas y Cursos"),
@@ -148,11 +151,11 @@ export const home = {
       ),
     },
     {
-      stat: b("1:12", "1:12"),
-      label: b("Instructor-to-student ratio", "Proporción instructor–estudiante"),
+      stat: b("8", "8"),
+      label: b("Students in the average class", "Estudiantes por clase en promedio"),
       note: b(
-        "Real mentorship, not lecture halls",
-        "Mentoría real, no aulas masivas",
+        "Capped at 12 — real mentorship, not lecture halls",
+        "Máximo de 12 — mentoría real, no aulas masivas",
       ),
     },
     {

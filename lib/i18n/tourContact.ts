@@ -44,7 +44,11 @@ export const tour = {
   address: "8761 Perimeter Park Blvd, Ste. 107, Jacksonville, FL 32216",
   phoneLabel: b("Call us", "Llámanos"),
   hoursLabel: b("Office hours", "Horario de oficina"),
-  hours: b("9 a.m. – 3 p.m.", "9 a.m. – 3 p.m."),
+  directionsLink: b("Get directions", "Cómo llegar"),
+  hours: b(
+    "Monday – Friday, 9 a.m. – 3 p.m.",
+    "Lunes a viernes, 9 a.m. – 3 p.m.",
+  ),
   numbersEyebrow: b("By the numbers", "En números"),
   numbersHeading: b(
     "Our dental assisting school at a glance.",
@@ -70,10 +74,10 @@ export const tour = {
       ),
     },
     {
-      stat: "1:12",
+      stat: "8",
       label: b(
-        "Instructor-to-student ratio",
-        "Proporción instructor–estudiante",
+        "Students in the average class (12 max)",
+        "Estudiantes por clase en promedio (máximo 12)",
       ),
     },
   ],
@@ -101,7 +105,25 @@ export const contact = {
   visitEyebrow: b("Visit us", "Visítanos"),
   callEyebrow: b("Call us", "Llámanos"),
   hoursEyebrow: b("Office hours", "Horario de oficina"),
-  hours: b("9 a.m. – 3 p.m.", "9 a.m. – 3 p.m."),
+  directionsLink: b("Get directions", "Cómo llegar"),
+  mapEyebrow: b("Find us", "Encuéntranos"),
+  mapHeading: b(
+    "8761 Perimeter Park Blvd, Ste. 107",
+    "8761 Perimeter Park Blvd, Ste. 107",
+  ),
+  mapTitle: b(
+    "Map showing Florida Institute of Dental Assisting in Jacksonville, Florida",
+    "Mapa que muestra Florida Institute of Dental Assisting en Jacksonville, Florida",
+  ),
+  mapLarger: b("View larger map", "Ver mapa más grande"),
+  mapParking: b(
+    "Free parking on site. We are in the Perimeter Park office campus off Southside Boulevard, about ten minutes from JTB.",
+    "Estacionamiento gratuito en el lugar. Estamos en el campus de oficinas Perimeter Park, junto a Southside Boulevard, a unos diez minutos de JTB.",
+  ),
+  hours: b(
+    "Monday – Friday, 9 a.m. – 3 p.m.",
+    "Lunes a viernes, 9 a.m. – 3 p.m.",
+  ),
   tourLink: b("Schedule a tour", "Agenda una visita"),
 
   formEyebrow: b("Send a message", "Envía un mensaje"),
