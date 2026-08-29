@@ -303,7 +303,7 @@ export function HomeContent() {
       {/* WHY FIDA */}
       <section className="bg-paper-subtle">
         <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-20 md:py-28">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <div>
               <div className="eyebrow">{t(home.why.eyebrow)}</div>
               <h2 className="mt-3 font-display text-4xl md:text-5xl text-navy tracking-tight">
@@ -373,7 +373,7 @@ export function HomeContent() {
                 width={1440}
                 height={1800}
                 sizes="(min-width: 1024px) 45vw, 100vw"
-                className="mt-6 w-full aspect-[4/3] object-cover object-top rounded-lg shadow-card"
+                className="mt-6 w-full aspect-video object-cover object-[center_15%] rounded-lg shadow-card"
               />
             </div>
           </div>
