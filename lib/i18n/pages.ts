@@ -26,6 +26,10 @@ export const about = {
 
   valuesEyebrow: b("What we believe", "En qué creemos"),
   valuesHeading: b("Four things, done well.", "Cuatro cosas, bien hechas."),
+  cohortPhotoCaption: b(
+    "A FIDA cohort at our Jacksonville campus.",
+    "Una cohorte de FIDA en nuestro campus de Jacksonville.",
+  ),
   values: [
     {
       title: b("Hire-ready graduates.", "Egresados listos para trabajar."),
