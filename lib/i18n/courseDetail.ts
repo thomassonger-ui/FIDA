@@ -48,6 +48,14 @@ export type CourseDetail = {
     /** Optional affiliation, rendered as a link when orgUrl is present. */
     org?: string;
     orgUrl?: string;
+    /** Optional photo rendered beside the quote. */
+    photo?: {
+      src: string;
+      width: number;
+      height: number;
+      alt: Bilingual;
+      caption?: Bilingual;
+    };
   };
   eyebrow: Bilingual;
   h1: Bilingual;
@@ -62,6 +70,14 @@ export type CourseDetail = {
   curriculumHeading: Bilingual;
   curriculumBody: Bilingual;
   courses: DetailCourse[];
+  /** Optional program photos rendered under the curriculum grid. */
+  photos?: {
+    src: string;
+    width: number;
+    height: number;
+    alt: Bilingual;
+    caption?: Bilingual;
+  }[];
   costEyebrow: Bilingual;
   costHeading: Bilingual;
   costBody: Bilingual;

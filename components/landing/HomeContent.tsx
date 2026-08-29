@@ -324,6 +324,14 @@ export function HomeContent() {
                   </div>
                 ))}
               </div>
+              <Image
+                src="/photos/dental-assisting-classroom-training-jacksonville.jpg"
+                alt="FIDA instructor working chairside while four dental assisting students observe during hands-on training in Jacksonville"
+                width={1440}
+                height={1800}
+                sizes="(min-width: 1024px) 45vw, 100vw"
+                className="mt-10 rounded-lg shadow-card w-full h-auto"
+              />
             </div>
 
             <div className="card p-8 md:p-10 bg-white shadow-card">

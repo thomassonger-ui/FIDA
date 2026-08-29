@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
 import { useLang } from "@/lib/i18n/LanguageProvider";
@@ -46,6 +47,18 @@ export function AboutContent() {
               </div>
             ))}
           </div>
+        </section>
+
+        {/* COHORT PHOTO */}
+        <section className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 pb-20">
+          <Image
+            src="/photos/fida-dental-assisting-cohort-jacksonville.jpg"
+            alt="A cohort of FIDA dental assisting students under the Florida Institute of Dental Assisting sign"
+            width={1024}
+            height={768}
+            sizes="(min-width: 800px) 800px, 100vw"
+            className="mx-auto w-full max-w-[800px] rounded-lg shadow-card h-auto"
+          />
         </section>
 
         {/* TEAM */}

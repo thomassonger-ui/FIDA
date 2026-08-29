@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
 import { useLang } from "@/lib/i18n/LanguageProvider";
@@ -24,7 +25,8 @@ export function TourContent() {
         {/* HEADER */}
         <section className="bg-paper-subtle border-b border-rule">
           <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-16 md:py-20">
-            <div className="max-w-3xl">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+              <div className="max-w-3xl">
               <div className="eyebrow">{t(tr.eyebrow)}</div>
               <h1 className="mt-3 font-display text-4xl md:text-5xl lg:text-6xl text-navy tracking-tight leading-[1.05]">
                 {t(tr.heading)}
@@ -43,6 +45,17 @@ export function TourContent() {
                   {t(tr.bookCta)} <span aria-hidden="true">→</span>
                 </a>
               </div>
+              </div>
+
+              <Image
+                src="/photos/fida-dental-office-reception-jacksonville.jpg"
+                alt="Reception area at Florida Institute of Dental Assisting in Jacksonville"
+                width={1800}
+                height={1350}
+                priority
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className="rounded-lg shadow-card w-full h-auto"
+              />
             </div>
           </div>
         </section>

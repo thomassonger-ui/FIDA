@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
 import { useLang } from "@/lib/i18n/LanguageProvider";
@@ -118,7 +119,9 @@ export function CourseDetailContent({ d }: { d: CourseDetail }) {
         {/* TESTIMONIAL (optional) */}
         {d.testimonial && (
           <section className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 pb-14 md:pb-16">
-            <figure className="card bg-white p-8 md:p-10 max-w-3xl">
+            <figure className={`card bg-white p-8 md:p-10 ${d.testimonial.photo ? "max-w-5xl" : "max-w-3xl"}`}>
+              <div className={d.testimonial.photo ? "grid grid-cols-1 md:grid-cols-2 gap-8 items-center" : ""}>
+              <div>
               <blockquote className="font-display text-xl md:text-2xl text-navy leading-snug">
                 “{t(d.testimonial.quote)}”
               </blockquote>
@@ -142,6 +145,26 @@ export function CourseDetailContent({ d }: { d: CourseDetail }) {
                   </>
                 )}
               </figcaption>
+              </div>
+
+              {d.testimonial.photo && (
+                <div>
+                  <Image
+                    src={d.testimonial.photo.src}
+                    alt={t(d.testimonial.photo.alt)}
+                    width={d.testimonial.photo.width}
+                    height={d.testimonial.photo.height}
+                    sizes="(min-width: 768px) 40vw, 100vw"
+                    className="rounded-lg w-full h-auto"
+                  />
+                  {d.testimonial.photo.caption && (
+                    <p className="mt-3 text-xs text-muted leading-relaxed">
+                      {t(d.testimonial.photo.caption)}
+                    </p>
+                  )}
+                </div>
+              )}
+              </div>
             </figure>
           </section>
         )}
@@ -186,6 +209,31 @@ export function CourseDetailContent({ d }: { d: CourseDetail }) {
             ))}
           </div>
         </section>
+
+        {/* PROGRAM PHOTOS (optional) */}
+        {d.photos && d.photos.length > 0 && (
+          <section className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 pb-16 md:pb-20">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {d.photos.map((p) => (
+                <figure key={p.src} className="card bg-white overflow-hidden">
+                  <Image
+                    src={p.src}
+                    alt={t(p.alt)}
+                    width={p.width}
+                    height={p.height}
+                    sizes="(min-width: 768px) 50vw, 100vw"
+                    className="w-full h-auto object-cover"
+                  />
+                  {p.caption && (
+                    <figcaption className="p-4 text-sm text-muted leading-relaxed">
+                      {t(p.caption)}
+                    </figcaption>
+                  )}
+                </figure>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* COST */}
         <section className="bg-paper-subtle border-y border-rule">

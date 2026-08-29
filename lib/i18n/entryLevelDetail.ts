@@ -108,6 +108,19 @@ export const entryLevelDetail: CourseDetail = {
       "He tenido el gusto de recibir a tres asistentes egresadas de este programa. Y puedo decir que no podría estar más satisfecho con la cantidad de destrezas que acumularon durante el programa y también en el consultorio.",
     ),
     name: b("Dr. Hall, Amelia Perfect Smile", "Dr. Hall, Amelia Perfect Smile"),
+    photo: {
+      src: "/photos/dr-hall-amelia-perfect-smile-fida-graduates.jpg",
+      width: 1200,
+      height: 1371,
+      alt: b(
+        "Dr. Hall of Amelia Perfect Smile standing with two FIDA graduate dental assistants",
+        "El Dr. Hall de Amelia Perfect Smile junto a dos asistentes dentales egresadas de FIDA",
+      ),
+      caption: b(
+        "Dr. Hall of Amelia Perfect Smile, with FIDA graduates Allie Carter and Katy Fink.",
+        "El Dr. Hall de Amelia Perfect Smile, con las egresadas de FIDA Allie Carter y Katy Fink.",
+      ),
+    },
   },
   requirementsEyebrow: detailUi.requirementsEyebrow,
   requirementsHeading: b(
@@ -161,6 +174,34 @@ export const entryLevelDetail: CourseDetail = {
     { code: "ELDA11", title: b("Digital Scanning Technology", "Tecnología de escaneo digital") },
     { code: "ELDA12", title: b("Laboratory Procedures", "Procedimientos de laboratorio") },
     { code: "ELDA13", title: b("Resume Workshop & Interview Coaching", "Taller de currículum y preparación para entrevistas") },
+  ],
+  photos: [
+    {
+      src: "/photos/dental-instrument-sterilization-autoclave-training.jpg",
+      width: 1800,
+      height: 1350,
+      alt: b(
+        "Dental assisting student loading an instrument cassette into the autoclave during sterilization training",
+        "Estudiante de asistencia dental cargando un casete de instrumentos en el autoclave durante la práctica de esterilización",
+      ),
+      caption: b(
+        "Sterilization & Infection Control (ELDA02) — OSHA-compliant instrument processing, practiced hands-on.",
+        "Esterilización y control de infecciones (ELDA02): procesamiento de instrumentos conforme a OSHA, con práctica real.",
+      ),
+    },
+    {
+      src: "/photos/chairside-dental-assisting-clinical-training.jpg",
+      width: 1350,
+      height: 1800,
+      alt: b(
+        "Dental assisting student working chairside with a dentist during clinical training",
+        "Estudiante de asistencia dental trabajando junto al sillón con un dentista durante la práctica clínica",
+      ),
+      caption: b(
+        "Chairside clinical training — real four-handed dentistry in a working dental office.",
+        "Práctica clínica junto al sillón: odontología a cuatro manos real en un consultorio dental activo.",
+      ),
+    },
   ],
   costEyebrow: detailUi.costEyebrow,
   costHeading: b(
