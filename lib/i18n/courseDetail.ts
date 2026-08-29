@@ -107,6 +107,8 @@ const shared = {
   costEyebrow: b("Cost", "Costo"),
   faqEyebrow: b("Common questions", "Preguntas frecuentes"),
   ctaSeeAll: b("See all programs", "Ver todos los programas"),
+  glanceEyebrow: b("Key facts", "Datos clave"),
+  glanceHeading: b("The program at a glance.", "El programa de un vistazo."),
   factLabels: {
     length: b("Length", "Duración"),
     format: b("Format", "Formato"),

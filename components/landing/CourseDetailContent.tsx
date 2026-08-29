@@ -6,7 +6,7 @@ import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
 import { useLang } from "@/lib/i18n/LanguageProvider";
 import { PaymentStructure } from "@/components/landing/PaymentStructure";
-import { APPLY_URL, type CourseDetail } from "@/lib/i18n/courseDetail";
+import { APPLY_URL, detailUi, type CourseDetail } from "@/lib/i18n/courseDetail";
 
 /**
  * Shared body for the two SEO course-detail pages. Both routes stay server
@@ -61,7 +61,13 @@ export function CourseDetailContent({ d }: { d: CourseDetail }) {
         </section>
 
         {/* FACTS */}
-        <section className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-14 md:py-16">
+        <section className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-16 md:py-20">
+          <div className="max-w-3xl mb-8">
+            <div className="eyebrow">{t(detailUi.glanceEyebrow)}</div>
+            <h2 className="mt-3 font-display text-3xl md:text-4xl text-navy tracking-tight">
+              {t(detailUi.glanceHeading)}
+            </h2>
+          </div>
           <div className="card bg-white overflow-hidden">
             <dl className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-rule">
               {d.facts.map((f) => (
@@ -69,7 +75,7 @@ export function CourseDetailContent({ d }: { d: CourseDetail }) {
                   <dt className="text-xs font-semibold tracking-[0.12em] uppercase text-teal">
                     {t(f.label)}
                   </dt>
-                  <dd className="mt-2 text-navy leading-relaxed whitespace-pre-line">{t(f.value)}</dd>
+                  <dd className="mt-2 text-sm text-navy leading-relaxed whitespace-pre-line">{t(f.value)}</dd>
                 </div>
               ))}
             </dl>
@@ -120,7 +126,7 @@ export function CourseDetailContent({ d }: { d: CourseDetail }) {
 
         {/* TESTIMONIAL (optional) */}
         {d.testimonial && (
-          <section className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 pb-14 md:pb-16">
+          <section className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-16 md:py-20">
             <figure className={`card bg-white p-8 md:p-10 ${d.testimonial.photo ? "max-w-5xl" : "max-w-3xl"}`}>
               <div className={d.testimonial.photo ? "grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-10 items-center" : ""}>
               <div className={d.testimonial.photo ? "md:col-span-3" : ""}>
