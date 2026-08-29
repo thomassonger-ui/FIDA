@@ -29,7 +29,7 @@ export function HomeContent() {
       {/* HERO */}
       <section className="relative overflow-hidden bg-navy">
         <Image
-          src="/hero.webp"
+          src="/hero.png"
           alt=""
           fill
           priority

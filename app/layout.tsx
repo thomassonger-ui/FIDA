@@ -44,14 +44,14 @@ export const metadata: Metadata = {
       "Dental assisting training in Jacksonville, FL — Entry Level Dental Assisting diploma plus EFDA and Radiography courses approved by the Florida Board of Dentistry.",
     url: SITE_URL,
     locale: "en_US",
-    images: [{ url: "/hero.webp", alt: "Florida Institute of Dental Assisting" }],
+    images: [{ url: "/hero.png", alt: "Florida Institute of Dental Assisting" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Florida Institute of Dental Assisting",
     description:
       "Dental assisting training in Jacksonville, FL — diploma, EFDA, and Radiography programs.",
-    images: ["/hero.webp"],
+    images: ["/hero.png"],
   },
   robots: {
     index: true,
