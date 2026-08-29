@@ -303,7 +303,7 @@ export function HomeContent() {
       {/* WHY FIDA */}
       <section className="bg-paper-subtle">
         <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-20 md:py-28">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
             <div>
               <div className="eyebrow">{t(home.why.eyebrow)}</div>
               <h2 className="mt-3 font-display text-4xl md:text-5xl text-navy tracking-tight">
@@ -381,7 +381,7 @@ export function HomeContent() {
       </section>
 
       {/* ALREADY A STUDENT BAND — quick portal/support paths */}
-      <section className="bg-paper-subtle border-t border-rule">
+      <section className="bg-white border-t border-rule">
         <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-16 md:py-20">
           <div className="max-w-3xl mb-10">
             <div className="eyebrow">{t(home.student.eyebrow)}</div>
@@ -400,6 +400,18 @@ export function HomeContent() {
               </div>
               <div className="text-sm text-muted">{t(home.student.portalBody)}</div>
             </Link>
+            <a
+              href="https://fldentalassisting.moodlecloud.com/login/index.php"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="card card-hover block p-6"
+            >
+              <div className="eyebrow mb-2">{t(home.student.classroomEyebrow)}</div>
+              <div className="font-display text-xl text-navy mb-1">
+                {t(home.student.classroomTitle)}
+              </div>
+              <div className="text-sm text-muted">{t(home.student.classroomBody)}</div>
+            </a>
             <Link href="/tickets" className="card card-hover block p-6">
               <div className="eyebrow mb-2">{t(home.student.supportEyebrow)}</div>
               <div className="font-display text-xl text-navy mb-1">

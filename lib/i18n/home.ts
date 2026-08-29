@@ -324,5 +324,11 @@ export const home = {
       "Academic, tuition, scheduling, or tech help. No sign-in needed.",
       "Ayuda académica, de matrícula, de horarios o técnica. No necesitas iniciar sesión.",
     ),
+    classroomEyebrow: b("Classroom", "Aula virtual"),
+    classroomTitle: b("Go to Moodle", "Ir a Moodle"),
+    classroomBody: b(
+      "Your lessons, quizzes, and coursework live in Moodle.",
+      "Tus lecciones, exámenes y cursos están en Moodle.",
+    ),
   },
 };
