@@ -185,8 +185,8 @@ export const entryLevelDetail: CourseDetail = {
         "Estudiante de asistencia dental cargando un casete de instrumentos en el autoclave durante la práctica de esterilización",
       ),
       caption: b(
-        "Sterilization & Infection Control (ELDA02) — OSHA-compliant instrument processing, practiced hands-on.",
-        "Esterilización y control de infecciones (ELDA02): procesamiento de instrumentos conforme a OSHA, con práctica real.",
+        "Every student learns instrument sterilization and infection control, hands-on in our Jacksonville lab.",
+        "Cada estudiante aprende esterilización de instrumentos y control de infecciones, con práctica real en nuestro laboratorio de Jacksonville.",
       ),
     },
     {
@@ -198,8 +198,8 @@ export const entryLevelDetail: CourseDetail = {
         "Estudiante de asistencia dental trabajando junto al sillón con un dentista durante la práctica clínica",
       ),
       caption: b(
-        "Chairside clinical training — real four-handed dentistry in a working dental office.",
-        "Práctica clínica junto al sillón: odontología a cuatro manos real en un consultorio dental activo.",
+        "Assisting chairside with a real patient — the clinical experience at the heart of the program.",
+        "Asistiendo junto al sillón con un paciente real: la experiencia clínica en el corazón del programa.",
       ),
     },
   ],

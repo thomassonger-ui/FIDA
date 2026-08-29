@@ -62,15 +62,17 @@ export function CourseDetailContent({ d }: { d: CourseDetail }) {
 
         {/* FACTS */}
         <section className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-14 md:py-16">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {d.facts.map((f) => (
-              <div key={f.label.en} className="card bg-white p-6">
-                <div className="text-xs font-semibold tracking-[0.12em] uppercase text-teal">
-                  {t(f.label)}
+          <div className="card bg-white overflow-hidden">
+            <dl className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-rule">
+              {d.facts.map((f) => (
+                <div key={f.label.en} className="bg-white p-6">
+                  <dt className="text-xs font-semibold tracking-[0.12em] uppercase text-teal">
+                    {t(f.label)}
+                  </dt>
+                  <dd className="mt-2 text-navy leading-relaxed whitespace-pre-line">{t(f.value)}</dd>
                 </div>
-                <div className="mt-2 text-navy whitespace-pre-line">{t(f.value)}</div>
-              </div>
-            ))}
+              ))}
+            </dl>
           </div>
         </section>
 
@@ -120,8 +122,8 @@ export function CourseDetailContent({ d }: { d: CourseDetail }) {
         {d.testimonial && (
           <section className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 pb-14 md:pb-16">
             <figure className={`card bg-white p-8 md:p-10 ${d.testimonial.photo ? "max-w-5xl" : "max-w-3xl"}`}>
-              <div className={d.testimonial.photo ? "grid grid-cols-1 md:grid-cols-2 gap-8 items-center" : ""}>
-              <div>
+              <div className={d.testimonial.photo ? "grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-10 items-center" : ""}>
+              <div className={d.testimonial.photo ? "md:col-span-3" : ""}>
               <blockquote className="font-display text-xl md:text-2xl text-navy leading-snug">
                 “{t(d.testimonial.quote)}”
               </blockquote>
@@ -148,14 +150,14 @@ export function CourseDetailContent({ d }: { d: CourseDetail }) {
               </div>
 
               {d.testimonial.photo && (
-                <div>
+                <div className="md:col-span-2">
                   <Image
                     src={d.testimonial.photo.src}
                     alt={t(d.testimonial.photo.alt)}
                     width={d.testimonial.photo.width}
                     height={d.testimonial.photo.height}
                     sizes="(min-width: 768px) 40vw, 100vw"
-                    className="rounded-lg w-full h-auto"
+                    className="rounded-lg w-full aspect-[4/5] object-cover object-top"
                   />
                   {d.testimonial.photo.caption && (
                     <p className="mt-3 text-xs text-muted leading-relaxed">
@@ -222,7 +224,7 @@ export function CourseDetailContent({ d }: { d: CourseDetail }) {
                     width={p.width}
                     height={p.height}
                     sizes="(min-width: 768px) 50vw, 100vw"
-                    className="w-full h-auto object-cover"
+                    className="w-full aspect-[4/3] object-cover object-[center_40%]"
                   />
                   {p.caption && (
                     <figcaption className="p-4 text-sm text-muted leading-relaxed">
@@ -269,14 +271,22 @@ export function CourseDetailContent({ d }: { d: CourseDetail }) {
           <h2 className="mt-3 font-display text-3xl md:text-4xl text-navy tracking-tight">
             {t(d.faqHeading)}
           </h2>
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="mt-10 card bg-white overflow-hidden divide-y divide-rule">
             {d.faqs.map((f) => (
-              <div key={f.q.en} className="card bg-white p-6">
-                <h3 className="font-display text-lg text-navy leading-tight">
-                  {t(f.q)}
-                </h3>
-                <p className="mt-3 text-muted text-sm leading-relaxed">{t(f.a)}</p>
-              </div>
+              <details key={f.q.en} className="group">
+                <summary className="flex items-center justify-between gap-6 cursor-pointer list-none p-6 [&::-webkit-details-marker]:hidden hover:bg-paper-subtle transition-colors">
+                  <h3 className="font-display text-lg text-navy leading-tight">
+                    {t(f.q)}
+                  </h3>
+                  <span
+                    aria-hidden="true"
+                    className="flex-shrink-0 w-8 h-8 rounded-full border border-rule text-teal text-xl leading-none flex items-center justify-center transition-transform duration-200 group-open:rotate-45"
+                  >
+                    +
+                  </span>
+                </summary>
+                <p className="px-6 pb-6 text-muted leading-relaxed">{t(f.a)}</p>
+              </details>
             ))}
           </div>
         </section>
