@@ -9,6 +9,11 @@ export const metadata = {
   description:
     "Start your FIDA registration with Atticus, our AI admissions advisor. Get matched to the Entry Level Dental Assisting diploma program or an EFDA or Radiography course.",
   alternates: { canonical: "/atticus" },
+  // 2026-09-01: Tom wants the "Hi — I'm Atticus." Google sitelink gone so a
+  // more useful page (Tuition) can take the slot. Sitelinks aren't editable,
+  // so we noindex this page — Google drops it and backfills from prominent
+  // pages. QR/flyer/site links to /atticus are unaffected; robots may follow.
+  robots: { index: false, follow: true },
 };
 
 /**
