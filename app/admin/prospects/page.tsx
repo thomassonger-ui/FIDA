@@ -6,7 +6,11 @@ import {
   summarize,
 } from "@/lib/prospects-db";
 import { currentLimits, RAMP, MAILING_ADDRESS } from "@/lib/prospects-shared";
+import { SCHEDULE_LABEL } from "@/lib/drip";
 import { ProspectsTable } from "./prospects-table";
+
+const DRIP_SENDER =
+  process.env.DRIP_FROM || process.env.RESEND_FROM || "reply@fldentalassisting.com";
 
 export const dynamic = "force-dynamic";
 
@@ -133,6 +137,7 @@ export default async function ProspectsPage() {
       <ProspectsTable
         initial={prospects}
         skipTracedToday={traced}
+        sentToday={sent}
         limits={limits}
       />
 
@@ -194,9 +199,12 @@ export default async function ProspectsPage() {
             on once the vendor account and API key are set.
           </li>
           <li>
-            <strong className="text-ink">Resend sending domain</strong> — drip
-            sends are logged and capped at {limits.email}/day, and go live once
-            the FIDA domain is verified in Resend.
+            <strong className="text-ink">Drip email</strong> — {SCHEDULE_LABEL},
+            sent from {DRIP_SENDER}. Select prospects and press{" "}
+            <em>Start drip</em>; a scheduled job sends whatever is due every
+            weekday morning, up to {limits.email}/day. Use{" "}
+            <em>Send me a test</em> to check the sending domain is verified in
+            Resend before turning anyone on.
           </li>
         </ul>
       </div>

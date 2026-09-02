@@ -415,7 +415,32 @@ const HEADER_ALIASES: Record<string, string> = {
   note: "notes",
   source: "consent_source",
   "consent source": "consent_source",
+  // FIDA dentist/employer list (built from the FL DOH profession-701 file)
+  business_email: "email",
+  fida_lead_score: "score",
+  fida_candidate_type: "segment",
+  fida_course_opportunity: "program_interest",
+  practice_address_line_1: "address",
+  fida_territory: "territory",
+  outreach_status: "outreach_status",
+  credential_number: "credential_number",
 };
+
+/** Columns that have no prospects field of their own — folded into notes. */
+const NOTE_COLUMNS = ["outreach_status", "territory", "credential_number", "address"];
+
+/** Free-text values from the employer list → the codes the table filters on. */
+function normalizeValue(key: string, raw: string): string {
+  const v = raw.trim();
+  if (key === "segment" && /dentist|employer/i.test(v)) return "dentist_employer";
+  if (key === "program_interest") {
+    if (/radiograph.*expanded|expanded.*radiograph/i.test(v)) return "staff_training";
+    if (/expanded|efda/i.test(v)) return "efda";
+    if (/radiograph/i.test(v)) return "radiography";
+    if (/entry|diploma/i.test(v)) return "entry_level";
+  }
+  return v;
+}
 
 /** Minimal RFC-4180 parser — handles quoted fields and embedded commas. */
 export function parseCsv(text: string): string[][] {
@@ -489,13 +514,18 @@ export async function importCsv(
       consent_source: opts.consentSource ?? "purchased_list",
       stage: "identified",
     };
+    const extras: string[] = [];
     header.forEach((key, c) => {
       if (!key) return;
       const raw = (rows[r][c] ?? "").trim();
       if (!raw) return;
       if (key === "score") input.score = Number(raw) || 0;
-      else (input as Record<string, unknown>)[key] = raw;
+      else if (NOTE_COLUMNS.includes(key)) extras.push(raw);
+      else (input as Record<string, unknown>)[key] = normalizeValue(key, raw);
     });
+    if (extras.length) {
+      input.notes = [input.notes, extras.join(" · ")].filter(Boolean).join("\n");
+    }
 
     if (!input.email && !input.phone && !input.full_name && !input.last_name) {
       out.skipped++;

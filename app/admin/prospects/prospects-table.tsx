@@ -17,12 +17,14 @@ const SEGMENTS: { value: string; label: string }[] = [
   { value: "working_assistant", label: "Working dental assistant" },
   { value: "new_grad", label: "Recent high-school grad" },
   { value: "returning", label: "Returning to the field" },
+  { value: "dentist_employer", label: "Dentist / employer" },
 ];
 
 const PROGRAMS: { value: string; label: string }[] = [
   { value: "entry_level", label: "Entry Level Diploma" },
   { value: "efda", label: "EFDA (CE)" },
   { value: "radiography", label: "Radiography (CE)" },
+  { value: "staff_training", label: "Staff training (Rad + EFDA)" },
 ];
 
 const STAGE_TONE: Record<string, string> = {
@@ -35,6 +37,22 @@ const STAGE_TONE: Record<string, string> = {
   lost: "bg-paper-subtle text-subtle border-rule",
 };
 
+const DRIP_STEPS = 3;
+
+const DRIP_LABELS: Record<string, string> = {
+  not_started: "Off",
+  active: "On",
+  paused: "Paused",
+  finished: "Done",
+};
+
+const DRIP_TONE: Record<string, string> = {
+  not_started: "bg-paper-subtle text-subtle border-rule",
+  active: "bg-teal/10 text-teal-deep border-teal/30",
+  paused: "bg-amber-50 text-amber-800 border-amber-200",
+  finished: "bg-navy/10 text-navy border-navy/20",
+};
+
 function name(p: Prospect) {
   if (p.full_name?.trim()) return p.full_name.trim();
   const j = [p.first_name, p.last_name].filter(Boolean).join(" ").trim();
@@ -44,10 +62,12 @@ function name(p: Prospect) {
 export function ProspectsTable({
   initial,
   skipTracedToday,
+  sentToday,
   limits,
 }: {
   initial: Prospect[];
   skipTracedToday: number;
+  sentToday: number;
   limits: Limits;
 }) {
   const router = useRouter();
@@ -146,6 +166,52 @@ export function ProspectsTable({
   }
 
   const skipTraceRemaining = Math.max(0, limits.skipTrace - skipTracedToday);
+  const emailRemaining = Math.max(0, limits.email - sentToday);
+
+  async function drip(body: Record<string, unknown>) {
+    setBusy(true);
+    setMessage(null);
+    try {
+      const res = await fetch("/api/admin/prospects/drip", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const json = await res.json();
+      if (!json.ok) {
+        setMessage(json.error ?? "That didn't work.");
+        return;
+      }
+      if (body.action === "start" || body.action === "pause") {
+        setMessage(
+          `${body.action === "start" ? "Drip on" : "Drip paused"} for ${json.changed}.` +
+            (json.blocked ? ` ${json.blocked} skipped — no usable email.` : "")
+        );
+        setSelected(new Set());
+      } else if (body.action === "send_now") {
+        setMessage(
+          `Sent ${json.sent}, failed ${json.failed}, ${json.skipped} waiting for tomorrow's cap ` +
+            `(${json.due} were due; ${json.alreadySentToday + json.sent} of ${json.limit} used today).`
+        );
+      } else if (body.action === "test") {
+        setMessage(`Test email sent to ${body.to}.`);
+      }
+      startTransition(() => router.refresh());
+    } catch {
+      setMessage("Network error — nothing was changed.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function sendTest() {
+    const to = window.prompt("Send a sample of email #1 to which address?");
+    if (!to) return;
+    const employer = window.confirm(
+      "OK = dentist/employer version. Cancel = student version."
+    );
+    drip({ action: "test", to, step: 0, track: employer ? "employer" : "student" });
+  }
 
   return (
     <>
@@ -283,6 +349,48 @@ export function ProspectsTable({
         <button
           type="button"
           disabled={selected.size === 0 || busy}
+          onClick={() => drip({ action: "start", ids: [...selected] })}
+          className="btn-outline text-xs disabled:opacity-40"
+        >
+          Start drip ({selected.size})
+        </button>
+        <button
+          type="button"
+          disabled={selected.size === 0 || busy}
+          onClick={() => drip({ action: "pause", ids: [...selected] })}
+          className="btn-outline text-xs disabled:opacity-40"
+        >
+          Pause drip ({selected.size})
+        </button>
+
+        <span className="h-5 w-px bg-rule" aria-hidden />
+
+        <button
+          type="button"
+          disabled={busy || emailRemaining === 0}
+          onClick={() => drip({ action: "send_now" })}
+          title="Sends whatever is due right now, up to today's cap. The cron does this every weekday morning anyway."
+          className="btn-outline text-xs disabled:opacity-40"
+        >
+          Send today&rsquo;s batch
+        </button>
+        <span className="text-xs text-muted">
+          <span className="tabular-nums">{emailRemaining}</span> of {limits.email} emails left today
+        </span>
+        <button
+          type="button"
+          disabled={busy}
+          onClick={sendTest}
+          className="text-xs text-teal underline"
+        >
+          Send me a test
+        </button>
+
+        <span className="h-5 w-px bg-rule" aria-hidden />
+
+        <button
+          type="button"
+          disabled={selected.size === 0 || busy}
           onClick={() => bulk(showRemoved ? "restore" : "remove")}
           className="btn-outline text-xs disabled:opacity-40"
         >
@@ -316,13 +424,14 @@ export function ProspectsTable({
               <th className="px-3 py-3 font-semibold">Phone</th>
               <th className="px-3 py-3 font-semibold">Email</th>
               <th className="px-3 py-3 font-semibold">Stage</th>
+              <th className="px-3 py-3 font-semibold">Drip</th>
               <th className="px-3 py-3 font-semibold">Consent</th>
             </tr>
           </thead>
           <tbody>
             {rows.length === 0 ? (
               <tr>
-                <td colSpan={10} className="px-3 py-10 text-center text-muted">
+                <td colSpan={11} className="px-3 py-10 text-center text-muted">
                   No prospects match. Import a CSV or add one by hand to get
                   started.
                 </td>
@@ -380,6 +489,21 @@ export function ProspectsTable({
                       }`}
                     >
                       {STAGE_LABELS[p.stage] ?? p.stage}
+                    </span>
+                  </td>
+                  <td className="px-3 py-3">
+                    <span
+                      className={`inline-block text-xs font-semibold px-2 py-0.5 rounded-full border ${
+                        DRIP_TONE[p.drip_status] ?? DRIP_TONE.not_started
+                      }`}
+                      title={
+                        p.drip_last_sent_at
+                          ? `Last sent ${new Date(p.drip_last_sent_at).toLocaleDateString()}`
+                          : "Nothing sent yet"
+                      }
+                    >
+                      {DRIP_LABELS[p.drip_status] ?? p.drip_status}
+                      {p.drip_step > 0 ? ` · ${p.drip_step}/${DRIP_STEPS}` : ""}
                     </span>
                   </td>
                   <td className="px-3 py-3">
