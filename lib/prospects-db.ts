@@ -48,7 +48,24 @@ export type ProspectFilters = {
   hasPhone?: boolean;
   hasEmail?: boolean;
   showRemoved?: boolean;
+  /** Board view: hide the (huge) identified pool. */
+  excludeIdentified?: boolean;
+  sort?: SortKey;
+  dir?: "asc" | "desc";
 };
+
+export const SORT_KEYS = [
+  "score",
+  "full_name",
+  "current_employer",
+  "city",
+  "county",
+  "program_interest",
+  "stage",
+  "drip_status",
+  "created_at",
+] as const;
+export type SortKey = (typeof SORT_KEYS)[number];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function applyFilters(q: any, filters: ProspectFilters) {
@@ -61,6 +78,7 @@ function applyFilters(q: any, filters: ProspectFilters) {
   if (filters.stage) q = q.eq("stage", filters.stage);
   if (filters.hasPhone) q = q.not("phone", "is", null);
   if (filters.hasEmail) q = q.not("email", "is", null);
+  if (filters.excludeIdentified) q = q.neq("stage", "identified");
   if (filters.search) {
     const s = filters.search.replace(/[%,()]/g, "");
     q = q.or(
@@ -87,8 +105,12 @@ export async function listProspects(
   try {
     const supabase = getServerClient();
     const q = applyFilters(supabase.from("prospects").select("*"), filters);
+    const sort: SortKey = SORT_KEYS.includes(filters.sort as SortKey)
+      ? (filters.sort as SortKey)
+      : "score";
+    const ascending = filters.dir ? filters.dir === "asc" : sort !== "score" && sort !== "created_at";
     const { data, error } = await q
-      .order("score", { ascending: false })
+      .order(sort, { ascending, nullsFirst: false })
       .order("created_at", { ascending: false })
       .limit(limit);
     if (error) return [];
@@ -167,7 +189,9 @@ export function summarize(prospects: Prospect[]): PipelineStats {
 }
 
 /** The four headline numbers, counted in the database (the list is too big to load). */
-export async function pipelineStats(): Promise<Omit<PipelineStats, "byStage">> {
+export async function pipelineStats(): Promise<
+  Omit<PipelineStats, "byStage"> & { identified: number }
+> {
   try {
     const supabase = getServerClient();
     const nowIso = new Date().toISOString();
@@ -177,8 +201,8 @@ export async function pipelineStats(): Promise<Omit<PipelineStats, "byStage">> {
         .from("prospects")
         .select("id", { count: "exact", head: true })
         .is("removed_at", null)
-        .not("stage", "in", "(lost,graduated)");
-    const [a, b, c, d] = await Promise.all([
+        .not("stage", "in", "(lost,graduated,identified)");
+    const [a, b, c, d, e] = await Promise.all([
       live(),
       live().lt("next_followup_at", nowIso),
       live().or(`last_touch_at.is.null,last_touch_at.lt.${weekAgo}`),
@@ -186,15 +210,21 @@ export async function pipelineStats(): Promise<Omit<PipelineStats, "byStage">> {
         .from("prospects")
         .select("id", { count: "exact", head: true })
         .in("stage", ["registered", "enrolled", "graduated"]),
+      supabase
+        .from("prospects")
+        .select("id", { count: "exact", head: true })
+        .is("removed_at", null)
+        .eq("stage", "identified"),
     ]);
     return {
       inPipeline: a.count ?? 0,
       overdue: b.count ?? 0,
       stale7d: c.count ?? 0,
       registered: d.count ?? 0,
+      identified: e.count ?? 0,
     };
   } catch {
-    return { inPipeline: 0, overdue: 0, stale7d: 0, registered: 0 };
+    return { inPipeline: 0, overdue: 0, stale7d: 0, registered: 0, identified: 0 };
   }
 }
 
@@ -275,6 +305,63 @@ export async function upsertProspect(
     const { data, error } = await supabase
       .from("prospects")
       .insert(row)
+      .select("*")
+      .single();
+    if (error) return { error: error.message };
+    return { prospect: data as Prospect };
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Unknown error" };
+  }
+}
+
+const EDITABLE: (keyof Prospect)[] = [
+  "first_name",
+  "last_name",
+  "full_name",
+  "email",
+  "phone",
+  "city",
+  "state",
+  "zip",
+  "county",
+  "current_employer",
+  "program_interest",
+  "segment",
+  "score",
+  "notes",
+  "next_followup_at",
+  "dnc",
+  "email_ok",
+  "sms_ok",
+];
+
+/** Edit one prospect by id. Only the fields a human would edit; ignores the rest. */
+export async function updateProspect(
+  id: string,
+  patch: Record<string, unknown>
+): Promise<{ prospect: Prospect } | { error: string }> {
+  try {
+    const supabase = getServerClient();
+    const row: Record<string, unknown> = {};
+    for (const k of EDITABLE) if (k in patch) row[k] = patch[k];
+    if ("email" in row) row.email = normalizeEmail(row.email as string | null);
+    if ("score" in row) row.score = Number(row.score) || 0;
+    if ("first_name" in row || "last_name" in row) {
+      const { data: cur } = await supabase
+        .from("prospects")
+        .select("first_name,last_name")
+        .eq("id", id)
+        .maybeSingle();
+      const fn = ("first_name" in row ? row.first_name : cur?.first_name) as string | null;
+      const ln = ("last_name" in row ? row.last_name : cur?.last_name) as string | null;
+      row.full_name = [fn, ln].filter(Boolean).join(" ").trim() || null;
+    }
+    for (const k of Object.keys(row)) if (row[k] === "") row[k] = null;
+    if (Object.keys(row).length === 0) return { error: "Nothing to update." };
+    const { data, error } = await supabase
+      .from("prospects")
+      .update(row)
+      .eq("id", id)
       .select("*")
       .single();
     if (error) return { error: error.message };

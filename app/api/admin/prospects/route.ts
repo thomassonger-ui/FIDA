@@ -38,6 +38,8 @@ export async function GET(req: NextRequest) {
     hasPhone: sp.get("hasPhone") === "1",
     hasEmail: sp.get("hasEmail") === "1",
     showRemoved: sp.get("showRemoved") === "1",
+    sort: (sp.get("sort") ?? undefined) as ProspectFilters["sort"],
+    dir: sp.get("dir") === "asc" ? "asc" : sp.get("dir") === "desc" ? "desc" : undefined,
   };
   const limit = Math.min(Math.max(Number(sp.get("limit")) || 500, 1), 2000);
   const [prospects, matched] = await Promise.all([

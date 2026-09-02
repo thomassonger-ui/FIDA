@@ -29,7 +29,13 @@ function daysSinceTouch(p: Prospect): number | null {
   );
 }
 
-export function Board({ prospects }: { prospects: Prospect[] }) {
+export function Board({
+  prospects,
+  identified,
+}: {
+  prospects: Prospect[];
+  identified: number;
+}) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [view, setView] = useState<"board" | "table">("board");
@@ -181,14 +187,22 @@ export function Board({ prospects }: { prospects: Prospect[] }) {
                   {STAGE_LABELS[s]}
                 </span>
                 <span className="text-xs tabular-nums text-ink">
-                  {byStage[s].length}
+                  {s === "identified" ? identified.toLocaleString() : byStage[s].length}
                 </span>
               </div>
               <p className="px-1 mb-2 text-[10px] leading-snug text-subtle">
                 {STAGE_HELP[s]}
               </p>
               <div className="space-y-2 min-h-[80px] bg-ink/[0.02] border border-rule/60 rounded-sm p-2">
-                {byStage[s].length === 0 ? (
+                {s === "identified" ? (
+                  <div className="text-xs text-muted text-center py-4 px-2">
+                    {identified.toLocaleString()} on the list. Pick them in{" "}
+                    <a href="/admin/prospects" className="text-teal underline">
+                      Prospects
+                    </a>{" "}
+                    — starting the drip or moving to Nurture brings them here.
+                  </div>
+                ) : byStage[s].length === 0 ? (
                   <div className="text-xs text-muted text-center py-4">—</div>
                 ) : (
                   byStage[s].map((p) => <Card key={p.id} p={p} />)

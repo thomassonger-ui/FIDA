@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { listProspects, summarize } from "@/lib/prospects-db";
+import { listProspects, pipelineStats } from "@/lib/prospects-db";
 import { Board } from "./board";
 
 export const dynamic = "force-dynamic";
@@ -7,8 +7,12 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "Recruiting pipeline · FIDA Admin" };
 
 export default async function PipelinePage() {
-  const prospects = await listProspects({}, 1000);
-  const stats = summarize(prospects);
+  // The board is for people being worked. The identified pool (the whole
+  // imported list) stays in Prospects — it would be thousands of cards here.
+  const [prospects, stats] = await Promise.all([
+    listProspects({ excludeIdentified: true }, 1000),
+    pipelineStats(),
+  ]);
 
   return (
     <div>
@@ -69,7 +73,7 @@ export default async function PipelinePage() {
         </div>
       </div>
 
-      <Board prospects={prospects} />
+      <Board prospects={prospects} identified={stats.identified} />
     </div>
   );
 }

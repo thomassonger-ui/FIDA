@@ -10,6 +10,17 @@ import {
   type Prospect,
 } from "@/lib/prospects-shared";
 
+type SortKey =
+  | "score"
+  | "full_name"
+  | "current_employer"
+  | "city"
+  | "county"
+  | "program_interest"
+  | "stage"
+  | "drip_status"
+  | "created_at";
+
 const COUNTIES = [
   "Duval", "Clay", "St. Johns", "Nassau", "Baker", "Putnam",
   "Orange", "Seminole", "Hillsborough", "Pinellas", "Miami-Dade", "Broward",
@@ -91,6 +102,9 @@ export function ProspectsTable({
   const [hasPhone, setHasPhone] = useState(false);
   const [hasEmail, setHasEmail] = useState(false);
   const [showRemoved, setShowRemoved] = useState(false);
+  const [sort, setSort] = useState<SortKey>("score");
+  const [dir, setDir] = useState<"asc" | "desc">("desc");
+  const [editing, setEditing] = useState<Prospect | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -116,6 +130,8 @@ export function ProspectsTable({
     if (hasPhone) params.set("hasPhone", "1");
     if (hasEmail) params.set("hasEmail", "1");
     if (showRemoved) params.set("showRemoved", "1");
+    params.set("sort", sort);
+    params.set("dir", dir);
     params.set("limit", String(PAGE));
 
     const id = ++reqId.current;
@@ -136,7 +152,85 @@ export function ProspectsTable({
       }
     }, 250);
     return () => clearTimeout(t);
-  }, [search, county, zip, segment, program, stage, hasPhone, hasEmail, showRemoved]);
+  }, [search, county, zip, segment, program, stage, hasPhone, hasEmail, showRemoved, sort, dir]);
+
+  function sortBy(key: SortKey) {
+    if (sort === key) setDir(dir === "asc" ? "desc" : "asc");
+    else {
+      setSort(key);
+      setDir(key === "score" || key === "created_at" ? "desc" : "asc");
+    }
+  }
+
+  function Th({ k, children }: { k?: SortKey; children: React.ReactNode }) {
+    if (!k) return <th className="px-3 py-3 font-semibold">{children}</th>;
+    const active = sort === k;
+    return (
+      <th className="px-3 py-3 font-semibold">
+        <button
+          type="button"
+          onClick={() => sortBy(k)}
+          className={`uppercase tracking-wider hover:text-ink ${active ? "text-ink" : ""}`}
+        >
+          {children}
+          {active ? (dir === "asc" ? " ↑" : " ↓") : ""}
+        </button>
+      </th>
+    );
+  }
+
+  async function setRowStage(id: string, value: string) {
+    setBusy(true);
+    setMessage(null);
+    try {
+      const res = await fetch("/api/admin/prospects", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: [id], action: "stage", stage: value }),
+      });
+      const json = await res.json();
+      if (!json.ok) setMessage(json.error ?? "That didn't work.");
+      else {
+        setRows((rs) => rs.map((r) => (r.id === id ? { ...r, stage: value as Prospect["stage"] } : r)));
+        startTransition(() => router.refresh());
+      }
+    } catch {
+      setMessage("Network error — nothing was changed.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function saveEdit(form: FormData) {
+    if (!editing) return;
+    setBusy(true);
+    setMessage(null);
+    const patch: Record<string, unknown> = {};
+    for (const k of [
+      "first_name", "last_name", "email", "phone", "current_employer",
+      "city", "zip", "county", "program_interest", "segment", "score", "notes",
+    ]) patch[k] = String(form.get(k) ?? "").trim();
+    patch.dnc = form.get("dnc") === "on";
+    patch.email_ok = form.get("email_ok") === "on";
+    try {
+      const res = await fetch(`/api/admin/prospects/${editing.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(patch),
+      });
+      const json = await res.json();
+      if (!json.ok) setMessage(json.error ?? "That didn't work.");
+      else {
+        setRows((rs) => rs.map((r) => (r.id === editing.id ? json.prospect : r)));
+        setEditing(null);
+        startTransition(() => router.refresh());
+      }
+    } catch {
+      setMessage("Network error — nothing was changed.");
+    } finally {
+      setBusy(false);
+    }
+  }
 
   const allShown = rows.length > 0 && rows.every((r) => selected.has(r.id));
 
@@ -431,22 +525,24 @@ export function ProspectsTable({
                   aria-label="Select all shown"
                 />
               </th>
-              <th className="px-3 py-3 font-semibold">Name</th>
-              <th className="px-3 py-3 font-semibold">Office / employer</th>
-              <th className="px-3 py-3 font-semibold">City</th>
-              <th className="px-3 py-3 font-semibold">Program</th>
-              <th className="px-3 py-3 font-semibold">Score&nbsp;↓</th>
-              <th className="px-3 py-3 font-semibold">Phone</th>
-              <th className="px-3 py-3 font-semibold">Email</th>
-              <th className="px-3 py-3 font-semibold">Stage</th>
-              <th className="px-3 py-3 font-semibold">Drip</th>
-              <th className="px-3 py-3 font-semibold">Consent</th>
+              <Th k="full_name">Name</Th>
+              <Th k="current_employer">Office / employer</Th>
+              <Th k="city">City</Th>
+              <Th k="county">County</Th>
+              <Th k="program_interest">Program</Th>
+              <Th k="score">Score</Th>
+              <Th>Phone</Th>
+              <Th>Email</Th>
+              <Th k="stage">Stage</Th>
+              <Th k="drip_status">Drip</Th>
+              <Th>Consent</Th>
+              <Th>&nbsp;</Th>
             </tr>
           </thead>
           <tbody>
             {rows.length === 0 ? (
               <tr>
-                <td colSpan={11} className="px-3 py-10 text-center text-muted">
+                <td colSpan={13} className="px-3 py-10 text-center text-muted">
                   No prospects match. Import a CSV or add one by hand to get
                   started.
                 </td>
@@ -470,6 +566,7 @@ export function ProspectsTable({
                     {p.current_employer || "—"}
                   </td>
                   <td className="px-3 py-3 text-muted">{p.city || "—"}</td>
+                  <td className="px-3 py-3 text-muted">{p.county || "—"}</td>
                   <td className="px-3 py-3 text-muted">
                     {PROGRAMS.find((x) => x.value === p.program_interest)
                       ?.label ??
@@ -498,13 +595,22 @@ export function ProspectsTable({
                     )}
                   </td>
                   <td className="px-3 py-3">
-                    <span
-                      className={`inline-block text-xs font-semibold px-2 py-0.5 rounded-full border ${
+                    <select
+                      value={p.stage}
+                      disabled={busy}
+                      onChange={(e) => setRowStage(p.id, e.target.value)}
+                      aria-label={`Stage for ${name(p)}`}
+                      className={`text-xs font-semibold px-2 py-0.5 rounded-full border bg-transparent cursor-pointer ${
                         STAGE_TONE[p.stage] ?? STAGE_TONE.identified
                       }`}
                     >
-                      {STAGE_LABELS[p.stage] ?? p.stage}
-                    </span>
+                      {STAGES.map((st) => (
+                        <option key={st} value={st}>
+                          {STAGE_LABELS[st]}
+                        </option>
+                      ))}
+                      <option value="lost">Lost</option>
+                    </select>
                   </td>
                   <td className="px-3 py-3">
                     <span
@@ -544,8 +650,118 @@ export function ProspectsTable({
                       )}
                     </div>
                   </td>
+                  <td className="px-3 py-3 text-right">
+                    <button
+                      type="button"
+                      onClick={() => setEditing(editing?.id === p.id ? null : p)}
+                      className="text-xs text-teal underline"
+                    >
+                      {editing?.id === p.id ? "Close" : "Edit"}
+                    </button>
+                  </td>
                 </tr>
-              ))
+              )).flatMap((tr) => {
+                const p = rows.find((r) => r.id === tr.key);
+                if (!p || editing?.id !== p.id) return [tr];
+                return [
+                  tr,
+                  <tr key={`${p.id}-edit`} className="border-t border-rule bg-paper-subtle/60">
+                    <td colSpan={13} className="px-4 py-4">
+                      <form
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          saveEdit(new FormData(e.currentTarget));
+                        }}
+                        className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm max-w-5xl"
+                      >
+                        {(
+                          [
+                            ["first_name", "First name"],
+                            ["last_name", "Last name"],
+                            ["email", "Email"],
+                            ["phone", "Phone"],
+                            ["current_employer", "Office / employer"],
+                            ["city", "City"],
+                            ["zip", "Zip"],
+                            ["county", "County"],
+                            ["score", "Score"],
+                          ] as [keyof Prospect, string][]
+                        ).map(([k, label]) => (
+                          <label key={k} className="flex flex-col gap-1 text-xs text-muted">
+                            {label}
+                            <input
+                              name={k}
+                              defaultValue={(p[k] as string | number | null) ?? ""}
+                              className="border border-rule rounded-sm px-2 py-1.5 text-sm bg-paper text-ink"
+                            />
+                          </label>
+                        ))}
+                        <label className="flex flex-col gap-1 text-xs text-muted">
+                          Program
+                          <select
+                            name="program_interest"
+                            defaultValue={p.program_interest ?? ""}
+                            className="border border-rule rounded-sm px-2 py-1.5 text-sm bg-paper text-ink"
+                          >
+                            <option value="">—</option>
+                            {PROGRAMS.map((x) => (
+                              <option key={x.value} value={x.value}>
+                                {x.label}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                        <label className="flex flex-col gap-1 text-xs text-muted">
+                          Segment
+                          <select
+                            name="segment"
+                            defaultValue={p.segment ?? ""}
+                            className="border border-rule rounded-sm px-2 py-1.5 text-sm bg-paper text-ink"
+                          >
+                            <option value="">—</option>
+                            {SEGMENTS.map((x) => (
+                              <option key={x.value} value={x.value}>
+                                {x.label}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                        <div className="flex flex-col gap-2 text-xs text-muted justify-end pb-1">
+                          <label className="flex items-center gap-2">
+                            <input type="checkbox" name="email_ok" defaultChecked={p.email_ok} />
+                            OK to email
+                          </label>
+                          <label className="flex items-center gap-2">
+                            <input type="checkbox" name="dnc" defaultChecked={p.dnc} />
+                            Do not call
+                          </label>
+                        </div>
+                        <label className="col-span-2 md:col-span-4 flex flex-col gap-1 text-xs text-muted">
+                          Notes
+                          <textarea
+                            name="notes"
+                            rows={2}
+                            defaultValue={p.notes ?? ""}
+                            className="border border-rule rounded-sm px-2 py-1.5 text-sm bg-paper text-ink"
+                          />
+                        </label>
+                        <div className="col-span-2 md:col-span-4 flex gap-2">
+                          <button type="submit" disabled={busy} className="btn-primary text-xs">
+                            Save
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setEditing(null)}
+                            className="btn-outline text-xs"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </form>
+                    </td>
+                  </tr>,
+                ];
+              })
             )}
           </tbody>
         </table>
