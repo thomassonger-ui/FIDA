@@ -660,7 +660,13 @@ export async function importCsv(
       const raw = (rows[r][c] ?? "").trim();
       if (!raw) return;
       if (key === "score") input.score = Number(raw) || 0;
-      else if (NOTE_COLUMNS.includes(key)) extras.push(raw);
+      else if (NOTE_COLUMNS.includes(key)) {
+        // Fold list-only columns into notes, in plain words.
+        if (key === "outreach_status") {
+          if (/priority/i.test(raw)) extras.push("Priority buyer");
+        } else if (key === "credential_number") extras.push(`Lic ${raw}`);
+        else extras.push(raw);
+      }
       else (input as Record<string, unknown>)[key] = normalizeValue(key, raw);
     });
     if (extras.length) {

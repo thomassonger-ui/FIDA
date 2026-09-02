@@ -43,6 +43,54 @@ export const STAGE_HELP: Record<string, string> = {
   lost: "Not moving forward. Kept for the record.",
 };
 
+// ------------------------------------------------------------
+// Tracks — two kinds of prospect share one table and one set of stage KEYS
+// (so the drip, the board and promotion all keep working), but the words
+// differ. Students move through the school funnel. Dentists/employers are
+// buying CE for their assistants, so their funnel is shorter.
+// ------------------------------------------------------------
+
+export type Track = "student" | "employer";
+
+export function trackOf(p: { segment: string | null }): Track {
+  return p.segment === "dentist_employer" ? "employer" : "student";
+}
+
+export const TRACK_LABELS: Record<Track, string> = {
+  student: "Students",
+  employer: "Dentists",
+};
+
+/** Stage keys each track uses, in funnel order (lost sits outside). */
+export const TRACK_STAGES: Record<Track, readonly Stage[]> = {
+  student: STAGES,
+  employer: ["identified", "nurture", "applied", "registered"],
+};
+
+const EMPLOYER_STAGE_LABELS: Record<string, string> = {
+  identified: "New",
+  nurture: "In outreach",
+  applied: "Interested",
+  registered: "Staff enrolled",
+  lost: "Lost",
+};
+
+const EMPLOYER_STAGE_HELP: Record<string, string> = {
+  identified: "On the list. Nobody has reached out yet.",
+  nurture: "Drip is running or a call has gone out.",
+  applied: "Replied, asked a question, or wants the enrollment link.",
+  registered: "At least one of their assistants has registered for a course.",
+  lost: "Not interested. Kept for the record.",
+};
+
+export function stageLabel(track: Track, stage: string): string {
+  return (track === "employer" ? EMPLOYER_STAGE_LABELS[stage] : undefined) ?? STAGE_LABELS[stage] ?? stage;
+}
+
+export function stageHelp(track: Track, stage: string): string {
+  return (track === "employer" ? EMPLOYER_STAGE_HELP[stage] : undefined) ?? STAGE_HELP[stage] ?? "";
+}
+
 export type DripStatus = "not_started" | "active" | "paused" | "finished";
 
 export type Prospect = {

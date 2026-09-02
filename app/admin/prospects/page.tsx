@@ -2,12 +2,11 @@ import Link from "next/link";
 import {
   countProspects,
   listProspects,
-  pipelineStats,
   skipTracedToday,
   sentToday,
 } from "@/lib/prospects-db";
 import { currentLimits, RAMP, MAILING_ADDRESS } from "@/lib/prospects-shared";
-import { SCHEDULE_LABEL } from "@/lib/drip";
+import { SCHEDULE_LABEL, STEP_COUNT, dripStats } from "@/lib/drip";
 import { ProspectsTable } from "./prospects-table";
 
 const DRIP_SENDER =
@@ -18,10 +17,10 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "Prospects · FIDA Admin" };
 
 export default async function ProspectsPage() {
-  const [prospects, total, stats, traced, sent] = await Promise.all([
+  const [prospects, total, drip, traced, sent] = await Promise.all([
     listProspects({}, 500),
     countProspects({}),
-    pipelineStats(),
+    dripStats(),
     skipTracedToday(),
     sentToday(),
   ]);
@@ -112,31 +111,39 @@ export default async function ProspectsPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-        <div className="card p-5">
-          <div className="eyebrow text-muted">In pipeline</div>
-          <div className="font-display text-4xl tabular-nums mt-2">
-            {stats.inPipeline}
-          </div>
-        </div>
-        <div className="card p-5">
-          <div className="eyebrow text-muted">Follow-ups overdue</div>
-          <div className="font-display text-4xl tabular-nums mt-2 text-teal">
-            {stats.overdue}
-          </div>
-        </div>
-        <div className="card p-5">
-          <div className="eyebrow text-muted">No touch in 7d</div>
-          <div className="font-display text-4xl tabular-nums mt-2 text-teal">
-            {stats.stale7d}
-          </div>
-        </div>
-        <div className="card p-5">
-          <div className="eyebrow text-muted">Registered</div>
-          <div className="font-display text-4xl tabular-nums mt-2 text-teal">
-            {stats.registered}
-          </div>
-        </div>
+      {/* DRIP AT A GLANCE — pipeline numbers (overdue, stale, registered)
+          live on the board; this page is about the sequence. */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-8">
+        <Stat
+          label="In sequence"
+          value={drip.active.toLocaleString()}
+          sub={`${drip.dueNow.toLocaleString()} due now · ${drip.paused.toLocaleString()} paused`}
+        />
+        <Stat
+          label="Sent today"
+          value={`${drip.sentToday} / ${drip.limit}`}
+          sub={`${Math.max(0, drip.limit - drip.sentToday)} left today`}
+        />
+        <Stat
+          label="Completed"
+          value={drip.completed.toLocaleString()}
+          sub={`all ${STEP_COUNT} touches`}
+        />
+        <Stat
+          label="Unsubscribed"
+          value={drip.unsubscribed.toLocaleString()}
+          sub="opted out — never emailed again"
+        />
+        <Stat
+          label="Fenced off"
+          value={drip.fencedOff.toLocaleString()}
+          sub="no usable email — never dripped"
+        />
+        <Stat
+          label="Emails sent"
+          value={drip.sentAllTime.toLocaleString()}
+          sub={drip.failed ? `all time · ${drip.failed} failed` : "all time"}
+        />
       </div>
 
       <ProspectsTable
@@ -214,6 +221,16 @@ export default async function ProspectsPage() {
           </li>
         </ul>
       </div>
+    </div>
+  );
+}
+
+function Stat({ label, value, sub }: { label: string; value: string; sub: string }) {
+  return (
+    <div className="card p-5">
+      <div className="eyebrow text-teal-deep">{label}</div>
+      <div className="font-display text-4xl tabular-nums mt-2 text-ink">{value}</div>
+      <div className="text-xs text-muted mt-1">{sub}</div>
     </div>
   );
 }

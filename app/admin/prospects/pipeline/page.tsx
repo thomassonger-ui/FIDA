@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { listProspects, pipelineStats } from "@/lib/prospects-db";
+import { countProspects, listProspects, pipelineStats } from "@/lib/prospects-db";
 import { Board } from "./board";
 
 export const dynamic = "force-dynamic";
@@ -9,10 +9,15 @@ export const metadata = { title: "Recruiting pipeline · FIDA Admin" };
 export default async function PipelinePage() {
   // The board is for people being worked. The identified pool (the whole
   // imported list) stays in Prospects — it would be thousands of cards here.
-  const [prospects, stats] = await Promise.all([
+  const [prospects, stats, identifiedEmployers] = await Promise.all([
     listProspects({ excludeIdentified: true }, 1000),
     pipelineStats(),
+    countProspects({ stage: "identified", segment: "dentist_employer" }),
   ]);
+  const identified = {
+    employer: identifiedEmployers,
+    student: Math.max(0, stats.identified - identifiedEmployers),
+  };
 
   return (
     <div>
@@ -39,11 +44,12 @@ export default async function PipelinePage() {
       </div>
 
       <p className="mt-3 text-muted max-w-2xl text-sm">
-        Shared between Tom, Debbie and Ashley. Move candidates along the
-        funnel, stamp a touch after every contact, and set the next follow-up —
-        overdue turns red. <strong className="text-ink">Registered</strong>{" "}
-        means the $150 fee is paid; promoting from Applied creates the student
-        record in one click.
+        Shared between Tom, Debbie and Ashley. Two funnels: <strong className="text-ink">Dentists</strong>{" "}
+        (practice owners buying Radiography/EFDA for their assistants — New →
+        In outreach → Interested → Staff enrolled) and{" "}
+        <strong className="text-ink">Students</strong> (Identified → Nurture →
+        Applied → Registered → Enrolled → Graduated, where Registered means the
+        $150 fee is paid and promotes them into Students).
       </p>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
@@ -73,7 +79,7 @@ export default async function PipelinePage() {
         </div>
       </div>
 
-      <Board prospects={prospects} identified={stats.identified} />
+      <Board prospects={prospects} identified={identified} />
     </div>
   );
 }

@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import {
   STAGES,
   STAGE_LABELS,
+  TRACK_STAGES,
+  stageLabel,
+  trackOf,
   SKIP_TRACE_COST_PER_HIT,
   type Limits,
   type Prospect,
@@ -232,6 +235,14 @@ export function ProspectsTable({
     }
   }
 
+  // Bulk stage labels follow the selection: dentist words when every selected
+  // row is a dentist, student words otherwise.
+  const selectionTrack =
+    selected.size > 0 &&
+    rows.filter((r) => selected.has(r.id)).every((r) => trackOf(r) === "employer")
+      ? "employer"
+      : "student";
+
   const allShown = rows.length > 0 && rows.every((r) => selected.has(r.id));
 
   function toggle(id: string) {
@@ -447,9 +458,9 @@ export function ProspectsTable({
           className="border border-rule rounded-sm px-3 py-2 text-sm bg-paper disabled:opacity-40"
         >
           <option value="">Move {selected.size || ""} to stage…</option>
-          {STAGES.map((s) => (
+          {TRACK_STAGES[selectionTrack].map((s) => (
             <option key={s} value={s}>
-              {STAGE_LABELS[s]}
+              {stageLabel(selectionTrack, s)}
             </option>
           ))}
           <option value="lost">Lost</option>
@@ -604,11 +615,14 @@ export function ProspectsTable({
                         STAGE_TONE[p.stage] ?? STAGE_TONE.identified
                       }`}
                     >
-                      {STAGES.map((st) => (
+                      {TRACK_STAGES[trackOf(p)].map((st) => (
                         <option key={st} value={st}>
-                          {STAGE_LABELS[st]}
+                          {stageLabel(trackOf(p), st)}
                         </option>
                       ))}
+                      {!TRACK_STAGES[trackOf(p)].includes(p.stage) && p.stage !== "lost" && (
+                        <option value={p.stage}>{STAGE_LABELS[p.stage]}</option>
+                      )}
                       <option value="lost">Lost</option>
                     </select>
                   </td>

@@ -459,6 +459,58 @@ export async function runDripBatch(opts: { dryRun?: boolean } = {}): Promise<Dri
   return result;
 }
 
+// ------------------------------------------------------------
+// Headline numbers for /admin/prospects
+// ------------------------------------------------------------
+
+export type DripStats = {
+  active: number;
+  dueNow: number;
+  paused: number;
+  sentToday: number;
+  limit: number;
+  completed: number;
+  unsubscribed: number;
+  fencedOff: number;
+  sentAllTime: number;
+  failed: number;
+};
+
+export async function dripStats(): Promise<DripStats> {
+  const supabase = getServerClient();
+  const head = () => supabase.from("prospects").select("id", { count: "exact", head: true });
+  const [activeRows, paused, completed, unsubscribed, fenced, sentAll, failed, sentTodayN] =
+    await Promise.all([
+      supabase
+        .from("prospects")
+        .select("id,drip_status,drip_step,drip_last_sent_at,stage,email,email_ok,unsubscribed_at,removed_at")
+        .eq("drip_status", "active")
+        .is("removed_at", null)
+        .limit(5000),
+      head().eq("drip_status", "paused").is("removed_at", null),
+      head().eq("drip_status", "finished").is("unsubscribed_at", null),
+      head().not("unsubscribed_at", "is", null),
+      head().is("removed_at", null).or("email.is.null,email_ok.eq.false,unsubscribed_at.not.is.null"),
+      supabase.from("prospect_sends").select("id", { count: "exact", head: true }).eq("status", "sent"),
+      supabase.from("prospect_sends").select("id", { count: "exact", head: true }).eq("status", "failed"),
+      sentToday(),
+    ]);
+  const now = Date.now();
+  const active = (activeRows.data as Prospect[] | null) ?? [];
+  return {
+    active: active.length,
+    dueNow: active.filter((p) => dripDue(p, now)).length,
+    paused: paused.count ?? 0,
+    sentToday: sentTodayN,
+    limit: currentLimits().email,
+    completed: completed.count ?? 0,
+    unsubscribed: unsubscribed.count ?? 0,
+    fencedOff: fenced.count ?? 0,
+    sentAllTime: sentAll.count ?? 0,
+    failed: failed.count ?? 0,
+  };
+}
+
 /** Send step N of the sequence to an arbitrary address — for checking setup. */
 export async function sendDripTest(
   to: string,

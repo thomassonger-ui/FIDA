@@ -3,11 +3,14 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
-  STAGES,
-  STAGE_LABELS,
-  STAGE_HELP,
+  TRACK_LABELS,
+  TRACK_STAGES,
+  stageHelp,
+  stageLabel,
+  trackOf,
   type Prospect,
   type Stage,
+  type Track,
 } from "@/lib/prospects-shared";
 
 function name(p: Prospect) {
@@ -32,20 +35,25 @@ function daysSinceTouch(p: Prospect): number | null {
 export function Board({
   prospects,
   identified,
+  defaultTrack = "employer",
 }: {
   prospects: Prospect[];
-  identified: number;
+  /** Count of stage=identified rows per track — they are not loaded as cards. */
+  identified: Record<Track, number>;
+  defaultTrack?: Track;
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [view, setView] = useState<"board" | "table">("board");
+  const [track, setTrack] = useState<Track>(defaultTrack);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const STAGES = TRACK_STAGES[track];
   const byStage: Record<string, Prospect[]> = {};
   for (const s of STAGES) byStage[s] = [];
   for (const p of prospects) {
-    if (p.removed_at || p.stage === "lost") continue;
+    if (p.removed_at || p.stage === "lost" || trackOf(p) !== track) continue;
     if (byStage[p.stage]) byStage[p.stage].push(p);
   }
 
@@ -116,7 +124,7 @@ export function Board({
           )}
         </div>
         <div className="mt-2 flex gap-1.5">
-          {p.stage === "applied" ? (
+          {p.stage === "applied" && track === "student" ? (
             <button
               type="button"
               disabled={busyId === p.id}
@@ -133,7 +141,7 @@ export function Board({
               onClick={() => move(p.id, next)}
               className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-sm border border-rule text-muted hover:border-teal hover:text-teal disabled:opacity-40"
             >
-              → {STAGE_LABELS[next]}
+              → {stageLabel(track, next)}
             </button>
           ) : null}
           <button
@@ -151,7 +159,22 @@ export function Board({
 
   return (
     <>
-      <div className="mt-8 flex items-center gap-2">
+      <div className="mt-8 flex items-center gap-2 flex-wrap">
+        {(["employer", "student"] as Track[]).map((t) => (
+          <button
+            key={t}
+            type="button"
+            onClick={() => setTrack(t)}
+            className={`px-3 py-1 text-xs uppercase tracking-wider rounded-sm border ${
+              track === t
+                ? "bg-teal text-white border-teal"
+                : "border-rule text-ink hover:border-teal"
+            }`}
+          >
+            {TRACK_LABELS[t]}
+          </button>
+        ))}
+        <span className="h-5 w-px bg-rule mx-1" aria-hidden />
         <button
           type="button"
           onClick={() => setView("board")}
@@ -184,23 +207,23 @@ export function Board({
             <div key={s} className="w-64 shrink-0">
               <div className="flex items-baseline justify-between px-1 mb-1">
                 <span className="text-[10px] uppercase tracking-wider text-muted">
-                  {STAGE_LABELS[s]}
+                  {stageLabel(track, s)}
                 </span>
                 <span className="text-xs tabular-nums text-ink">
-                  {s === "identified" ? identified.toLocaleString() : byStage[s].length}
+                  {s === "identified" ? identified[track].toLocaleString() : byStage[s].length}
                 </span>
               </div>
               <p className="px-1 mb-2 text-[10px] leading-snug text-subtle">
-                {STAGE_HELP[s]}
+                {stageHelp(track, s)}
               </p>
               <div className="space-y-2 min-h-[80px] bg-ink/[0.02] border border-rule/60 rounded-sm p-2">
                 {s === "identified" ? (
                   <div className="text-xs text-muted text-center py-4 px-2">
-                    {identified.toLocaleString()} on the list. Pick them in{" "}
+                    {identified[track].toLocaleString()} on the list. Pick them in{" "}
                     <a href="/admin/prospects" className="text-teal underline">
                       Prospects
                     </a>{" "}
-                    — starting the drip or moving to Nurture brings them here.
+                    — starting the drip or moving them to {stageLabel(track, "nurture")} brings them here.
                   </div>
                 ) : byStage[s].length === 0 ? (
                   <div className="text-xs text-muted text-center py-4">—</div>
@@ -235,7 +258,7 @@ export function Board({
                       {name(p)}
                     </td>
                     <td className="px-3 py-3 text-muted">
-                      {STAGE_LABELS[p.stage]}
+                      {stageLabel(track, p.stage)}
                     </td>
                     <td className="px-3 py-3 text-muted tabular-nums">
                       {stale === null ? "—" : `${stale}d ago`}
