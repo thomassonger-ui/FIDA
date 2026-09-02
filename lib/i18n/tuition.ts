@@ -105,6 +105,27 @@ export const tuition = {
     enroll: b("Enroll now", "Inscríbete ahora"),
   },
 
+  /* --- Real outcome (photo) --- */
+  outcome: {
+    eyebrow: b("Where graduates land", "Dónde llegan los egresados"),
+    heading: b(
+      "Three FIDA graduates now assist at one Jacksonville practice.",
+      "Tres egresadas de FIDA hoy asisten en un mismo consultorio de Jacksonville.",
+    ),
+    body: b(
+      "Dr. Hall of Amelia Perfect Smile has hired three assistants out of this program. Tuition buys the training — the job is what it's for.",
+      "El Dr. Hall de Amelia Perfect Smile ha contratado a tres asistentes egresadas de este programa. La matrícula paga la formación; el empleo es el objetivo.",
+    ),
+    photoAlt: b(
+      "Dr. Hall of Amelia Perfect Smile standing with two FIDA graduate dental assistants",
+      "El Dr. Hall de Amelia Perfect Smile junto a dos asistentes dentales egresadas de FIDA",
+    ),
+    photoCaption: b(
+      "Dr. Hall with FIDA graduates Allie Carter and Katy Fink.",
+      "El Dr. Hall con las egresadas de FIDA Allie Carter y Katy Fink.",
+    ),
+  },
+
   /* --- Career outlook (cited) --- */
   outlook: {
     eyebrow: b("Career outlook", "Perspectiva laboral"),

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
@@ -149,6 +150,30 @@ export function TuitionContent() {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* REAL OUTCOME — photo proof next to the price */}
+        <section className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 pt-16 md:pt-20">
+          <div className="card bg-white overflow-hidden grid grid-cols-1 md:grid-cols-5">
+            <figure className="md:col-span-2">
+              <Image
+                src="/photos/dr-hall-amelia-perfect-smile-fida-graduates.jpg"
+                alt={t(tu.outcome.photoAlt)}
+                width={1200}
+                height={1371}
+                sizes="(min-width: 768px) 40vw, 100vw"
+                className="w-full h-full aspect-[4/5] md:aspect-auto object-cover object-top"
+              />
+            </figure>
+            <div className="md:col-span-3 p-8 md:p-10 flex flex-col justify-center">
+              <div className="eyebrow">{t(tu.outcome.eyebrow)}</div>
+              <h2 className="mt-3 font-display text-3xl md:text-4xl text-navy tracking-tight">
+                {t(tu.outcome.heading)}
+              </h2>
+              <p className="mt-5 text-muted leading-relaxed">{t(tu.outcome.body)}</p>
+              <p className="mt-5 text-sm text-subtle">{t(tu.outcome.photoCaption)}</p>
             </div>
           </div>
         </section>

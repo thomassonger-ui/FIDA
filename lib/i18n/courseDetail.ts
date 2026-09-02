@@ -244,6 +244,21 @@ export const efdaDetail: CourseDetail = {
     "FIDA’s EFDA course tuition is a flat $1,049.00. That covers the full hybrid program — online theory, the in-office clinical component, and your capstone assessment. Ask us about payment options when you start.",
     "La matrícula del curso EFDA de FIDA es de $1,049.00 en total. Cubre el programa híbrido completo: la teoría en línea, el componente clínico en el consultorio y tu evaluación final. Pregúntanos por las opciones de pago cuando comiences.",
   ),
+  photos: [
+    {
+      src: "/photos/chairside-dental-assisting-clinical-training.jpg",
+      width: 1350,
+      height: 1800,
+      alt: b(
+        "Dental assisting student working chairside with a dentist during clinical training at FIDA",
+        "Estudiante de asistencia dental trabajando junto al sillón con un dentista durante la práctica clínica en FIDA",
+      ),
+      caption: b(
+        "Theory is online; the skills are learned chairside, under your supervising dentist — the same way our Jacksonville diploma students train.",
+        "La teoría es en línea; las destrezas se aprenden junto al sillón, bajo tu dentista supervisor, igual que se forman nuestros estudiantes de diploma en Jacksonville.",
+      ),
+    },
+  ],
   priceDisplay: "$1,049",
   priceNote: b(
     "Total tuition · 5 weeks · 20 clock hours",
@@ -406,6 +421,21 @@ export const radiographyDetail: CourseDetail = {
     "Total tuition · 6 weeks · 14 clock hours",
     "Matrícula total · 6 semanas · 14 horas reloj",
   ),
+  photos: [
+    {
+      src: "/photos/dental-instrument-sterilization-autoclave-training.jpg",
+      width: 1800,
+      height: 1350,
+      alt: b(
+        "Dental assisting student loading an instrument cassette into the autoclave in the FIDA lab",
+        "Estudiante de asistencia dental cargando un casete de instrumentos en el autoclave del laboratorio de FIDA",
+      ),
+      caption: b(
+        "The course is online, but the instructors aren't virtual — Debbie and Ashley run our in-person diploma program in this Jacksonville lab.",
+        "El curso es en línea, pero las instructoras no son virtuales: Debbie y Ashley dirigen nuestro programa de diploma presencial en este laboratorio de Jacksonville.",
+      ),
+    },
+  ],
   faqEyebrow: shared.faqEyebrow,
   faqHeading: b(
     "Florida dental radiography FAQ",

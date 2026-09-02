@@ -116,6 +116,14 @@ export const contact = {
     "Mapa que muestra Florida Institute of Dental Assisting en Jacksonville, Florida",
   ),
   mapLarger: b("View larger map", "Ver mapa más grande"),
+  receptionAlt: b(
+    "The FIDA reception area in Jacksonville with seating and floor-to-ceiling windows",
+    "La recepción de FIDA en Jacksonville con asientos y ventanales de piso a techo",
+  ),
+  receptionCaption: b(
+    "Our reception area at 8761 Perimeter Park Blvd, Suite 107 — this is what you'll see when you walk in.",
+    "Nuestra recepción en 8761 Perimeter Park Blvd, Suite 107: esto es lo que verás al entrar.",
+  ),
   mapParking: b(
     "Free parking on site. We are in the Perimeter Park office campus off Southside Boulevard, about ten minutes from JTB.",
     "Estacionamiento gratuito en el lugar. Estamos en el campus de oficinas Perimeter Park, junto a Southside Boulevard, a unos diez minutos de JTB.",

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { MAP_EMBED_URL, MAP_SHARE_URL, MAP_URL } from "@/lib/location";
 import { useState } from "react";
@@ -280,14 +281,29 @@ export function ContactContent() {
               </a>
             </div>
 
-            <div className="border border-rule rounded-md overflow-hidden bg-white">
-              <iframe
-                src={MAP_EMBED_URL}
-                title={t(c.mapTitle)}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="w-full h-[320px] md:h-[420px] border-0"
-              />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <figure className="card bg-white overflow-hidden flex flex-col">
+                <Image
+                  src="/photos/fida-dental-office-reception-jacksonville.jpg"
+                  alt={t(c.receptionAlt)}
+                  width={1800}
+                  height={1350}
+                  sizes="(min-width: 1024px) 50vw, 100vw"
+                  className="w-full aspect-[4/3] lg:aspect-auto lg:flex-1 object-cover"
+                />
+                <figcaption className="p-4 text-sm text-muted leading-relaxed">
+                  {t(c.receptionCaption)}
+                </figcaption>
+              </figure>
+              <div className="border border-rule rounded-md overflow-hidden bg-white">
+                <iframe
+                  src={MAP_EMBED_URL}
+                  title={t(c.mapTitle)}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="w-full h-[320px] md:h-[420px] lg:h-full lg:min-h-[420px] border-0"
+                />
+              </div>
             </div>
           </div>
         </section>

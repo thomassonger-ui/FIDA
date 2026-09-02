@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
@@ -50,6 +51,14 @@ export function ProgramsContent() {
           className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 pt-16 scroll-mt-24"
         >
           <div className="card bg-white overflow-hidden">
+            <Image
+              src="/photos/dental-assisting-classroom-training-jacksonville.jpg"
+              alt={t(c.diploma.photoAlt)}
+              width={1440}
+              height={1800}
+              sizes="(min-width: 1280px) 1280px, 100vw"
+              className="w-full aspect-[21/9] object-cover object-[center_18%] border-b border-rule"
+            />
             <div className="grid grid-cols-1 lg:grid-cols-2">
               <div className="p-8 md:p-10">
                 <div className="eyebrow">{t(c.diploma.eyebrow)}</div>

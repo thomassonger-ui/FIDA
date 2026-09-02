@@ -1,7 +1,9 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
 import { AtticusChat } from "@/components/admissions/AtticusChat";
+import { COHORTS } from "@/lib/cohort";
 
 export const metadata = {
   title: "Admissions",
@@ -24,14 +26,14 @@ const steps = [
   {
     n: "03",
     title: "Start your program",
-    body: "Complete enrollment steps and join your cohort. Summer starts June 3, 2026.",
+    body: `Complete enrollment steps and join your cohort. Next diploma class starts ${COHORTS[0].date.en}.`,
   },
 ];
 
 const faqs = [
   {
     q: "Is this actually an AI?",
-    a: "Yes &mdash; Atticus is a real AI admissions advisor built on Claude. It answers questions, helps you compare programs, and hands off to a huma FIDA advisor when you&rsquo;re ready to enroll.",
+    a: "Yes &mdash; Atticus is a real AI admissions advisor built on Claude. It answers questions, helps you compare programs, and hands off to a human FIDA advisor when you&rsquo;re ready to enroll.",
   },
   {
     q: "Do I have to decide anything right now?",
@@ -104,22 +106,36 @@ export default async function AdmissionsPage({
 
             <div className="card p-6 bg-navy text-white">
               <div className="text-xs font-semibold tracking-[0.14em] uppercase text-teal-soft">
-                Upcoming cohort
+                Next diploma class
               </div>
-              <div className="mt-2 font-display text-3xl">Summer 2026</div>
-              <div className="mt-1 text-navy-100 text-sm">Starts June 3, 2026 &middot; Jacksonville</div>
+              <div className="mt-2 font-display text-3xl">{COHORTS[0].date.en}</div>
+              <div className="mt-1 text-navy-100 text-sm">
+                {COHORTS[0].schedule.en} &middot; Jacksonville
+              </div>
               <div className="mt-5 pt-5 border-t border-white/10 text-sm text-navy-100 space-y-2">
-                <div className="flex items-center justify-between">
-                  <span>Priority deadline</span>
-                  <span className="text-white font-semibold">May 15</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>Seats remaining</span>
-                  <span className="text-white font-semibold">24 / 60</span>
-                </div>
+                {COHORTS.slice(1).map((co) => (
+                  <div key={co.date.en} className="flex items-center justify-between gap-4">
+                    <span>{co.label.en}</span>
+                    <span className="text-white font-semibold text-right">{co.date.en}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
+            <figure className="card bg-white overflow-hidden">
+              <Image
+                src="/photos/fida-dental-assisting-cohort-jacksonville.jpg"
+                alt="A cohort of FIDA dental assisting students under the Florida Institute of Dental Assisting sign in Jacksonville"
+                width={1024}
+                height={768}
+                sizes="(min-width: 1024px) 40vw, 100vw"
+                className="w-full h-auto"
+              />
+              <figcaption className="p-4 text-sm text-muted leading-relaxed">
+                A recent FIDA cohort at our Jacksonville school. Small classes, one
+                instructor per group, and you&rsquo;ll know everyone by name in week one.
+              </figcaption>
+            </figure>
           </aside>
         </div>
       </section>

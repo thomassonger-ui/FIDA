@@ -59,6 +59,10 @@ export const programsCopy = {
       "$9,700 de matrícula + $150 de cuota de inscripción",
     ),
     nextCohortLabel: b("Upcoming classes", "Próximas clases"),
+    photoAlt: b(
+      "FIDA instructor working chairside while dental assisting students observe during hands-on training in Jacksonville",
+      "Instructora de FIDA trabajando junto al sillón mientras estudiantes de asistencia dental observan durante la práctica en Jacksonville",
+    ),
     scheduleLabel: b("Class schedule", "Horario de clases"),
     apply: b("Apply now", "Inscribirse ahora"),
     details: b("Full program details", "Detalles completos del programa"),

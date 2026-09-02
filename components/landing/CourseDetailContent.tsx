@@ -221,7 +221,13 @@ export function CourseDetailContent({ d }: { d: CourseDetail }) {
         {/* PROGRAM PHOTOS (optional) */}
         {d.photos && d.photos.length > 0 && (
           <section className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 pb-16 md:pb-20">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div
+              className={
+                d.photos.length === 1
+                  ? "max-w-3xl mx-auto"
+                  : "grid grid-cols-1 md:grid-cols-2 gap-6"
+              }
+            >
               {d.photos.map((p) => (
                 <figure key={p.src} className="card bg-white overflow-hidden">
                   <Image
