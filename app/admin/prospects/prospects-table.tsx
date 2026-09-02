@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
   STAGES,
@@ -10,7 +10,14 @@ import {
   type Prospect,
 } from "@/lib/prospects-shared";
 
-const COUNTIES = ["Duval", "Clay", "St. Johns", "Nassau", "Baker", "Putnam"];
+const COUNTIES = [
+  "Duval", "Clay", "St. Johns", "Nassau", "Baker", "Putnam",
+  "Orange", "Seminole", "Hillsborough", "Pinellas", "Miami-Dade", "Broward",
+  "Palm Beach", "Lee", "Collier", "Sarasota", "Brevard", "Volusia", "Polk",
+];
+
+/** Rows the server returns per query. The DB holds far more — filter to find them. */
+const PAGE = 500;
 
 const SEGMENTS: { value: string; label: string }[] = [
   { value: "career_changer", label: "Career changer" },
@@ -61,11 +68,13 @@ function name(p: Prospect) {
 
 export function ProspectsTable({
   initial,
+  total,
   skipTracedToday,
   sentToday,
   limits,
 }: {
   initial: Prospect[];
+  total: number;
   skipTracedToday: number;
   sentToday: number;
   limits: Limits;
@@ -86,46 +95,48 @@ export function ProspectsTable({
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
-  const rows = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    return initial.filter((p) => {
-      if (!showRemoved && p.removed_at) return false;
-      if (showRemoved && !p.removed_at) return false;
-      if (county && (p.county ?? "") !== county) return false;
-      if (zip && (p.zip ?? "") !== zip.trim()) return false;
-      if (segment && (p.segment ?? "") !== segment) return false;
-      if (program && (p.program_interest ?? "") !== program) return false;
-      if (stage && p.stage !== stage) return false;
-      if (hasPhone && !p.phone) return false;
-      if (hasEmail && !p.email) return false;
-      if (q) {
-        const hay = [
-          name(p),
-          p.email,
-          p.phone,
-          p.city,
-          p.zip,
-          p.current_employer,
-        ]
-          .filter(Boolean)
-          .join(" ")
-          .toLowerCase();
-        if (!hay.includes(q)) return false;
+  // Filters run on the server — the list is far bigger than one page.
+  const [rows, setRows] = useState<Prospect[]>(initial);
+  const [matched, setMatched] = useState<number>(total);
+  const [loading, setLoading] = useState(false);
+  const reqId = useRef(0);
+
+  useEffect(() => {
+    setRows(initial);
+  }, [initial]);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (search.trim()) params.set("search", search.trim());
+    if (county) params.set("county", county);
+    if (zip.trim()) params.set("zip", zip.trim());
+    if (segment) params.set("segment", segment);
+    if (program) params.set("program", program);
+    if (stage) params.set("stage", stage);
+    if (hasPhone) params.set("hasPhone", "1");
+    if (hasEmail) params.set("hasEmail", "1");
+    if (showRemoved) params.set("showRemoved", "1");
+    params.set("limit", String(PAGE));
+
+    const id = ++reqId.current;
+    const t = setTimeout(async () => {
+      setLoading(true);
+      try {
+        const res = await fetch(`/api/admin/prospects?${params.toString()}`);
+        const json = await res.json();
+        if (id !== reqId.current) return; // a newer query superseded this one
+        if (json.ok) {
+          setRows(json.prospects);
+          setMatched(json.matched ?? json.prospects.length);
+        }
+      } catch {
+        /* keep whatever is showing */
+      } finally {
+        if (id === reqId.current) setLoading(false);
       }
-      return true;
-    });
-  }, [
-    initial,
-    search,
-    county,
-    zip,
-    segment,
-    program,
-    stage,
-    hasPhone,
-    hasEmail,
-    showRemoved,
-  ]);
+    }, 250);
+    return () => clearTimeout(t);
+  }, [search, county, zip, segment, program, stage, hasPhone, hasEmail, showRemoved]);
 
   const allShown = rows.length > 0 && rows.every((r) => selected.has(r.id));
 
@@ -220,7 +231,7 @@ export function ProspectsTable({
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search name, office, city or zip"
+          placeholder="Search name, email, city, zip, territory or license #"
           className="border border-rule rounded-sm px-3 py-2 text-sm bg-paper w-64"
         />
         <select
@@ -305,7 +316,11 @@ export function ProspectsTable({
           show removed
         </label>
         <div className="text-sm text-muted ml-auto tabular-nums">
-          {rows.length} {rows.length === 1 ? "prospect" : "prospects"}
+          {loading
+            ? "Searching…"
+            : matched > rows.length
+              ? `showing ${rows.length} of ${matched.toLocaleString()} — narrow the filters to see the rest`
+              : `${matched.toLocaleString()} ${matched === 1 ? "prospect" : "prospects"}`}
         </div>
       </div>
 

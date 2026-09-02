@@ -1,9 +1,10 @@
 import Link from "next/link";
 import {
+  countProspects,
   listProspects,
+  pipelineStats,
   skipTracedToday,
   sentToday,
-  summarize,
 } from "@/lib/prospects-db";
 import { currentLimits, RAMP, MAILING_ADDRESS } from "@/lib/prospects-shared";
 import { SCHEDULE_LABEL } from "@/lib/drip";
@@ -17,9 +18,13 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "Prospects · FIDA Admin" };
 
 export default async function ProspectsPage() {
-  const prospects = await listProspects({ showRemoved: true }, 1000);
-  const [traced, sent] = await Promise.all([skipTracedToday(), sentToday()]);
-  const stats = summarize(prospects);
+  const [prospects, total, stats, traced, sent] = await Promise.all([
+    listProspects({}, 500),
+    countProspects({}),
+    pipelineStats(),
+    skipTracedToday(),
+    sentToday(),
+  ]);
   const limits = currentLimits();
 
   return (
@@ -136,6 +141,7 @@ export default async function ProspectsPage() {
 
       <ProspectsTable
         initial={prospects}
+        total={total}
         skipTracedToday={traced}
         sentToday={sent}
         limits={limits}

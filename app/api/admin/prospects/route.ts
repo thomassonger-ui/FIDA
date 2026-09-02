@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
+  countProspects,
   listProspects,
   upsertProspect,
   setStage,
@@ -38,8 +39,12 @@ export async function GET(req: NextRequest) {
     hasEmail: sp.get("hasEmail") === "1",
     showRemoved: sp.get("showRemoved") === "1",
   };
-  const prospects = await listProspects(filters);
-  return NextResponse.json({ ok: true, prospects, total: prospects.length });
+  const limit = Math.min(Math.max(Number(sp.get("limit")) || 500, 1), 2000);
+  const [prospects, matched] = await Promise.all([
+    listProspects(filters, limit),
+    countProspects(filters),
+  ]);
+  return NextResponse.json({ ok: true, prospects, total: prospects.length, matched });
 }
 
 /** POST /api/admin/prospects — create or update one prospect by email. */

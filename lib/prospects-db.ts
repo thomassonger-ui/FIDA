@@ -50,46 +50,67 @@ export type ProspectFilters = {
   showRemoved?: boolean;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function applyFilters(q: any, filters: ProspectFilters) {
+  if (!filters.showRemoved) q = q.is("removed_at", null);
+  else q = q.not("removed_at", "is", null);
+  if (filters.county) q = q.ilike("county", `%${filters.county}%`);
+  if (filters.zip) q = q.eq("zip", filters.zip);
+  if (filters.segment) q = q.eq("segment", filters.segment);
+  if (filters.program) q = q.eq("program_interest", filters.program);
+  if (filters.stage) q = q.eq("stage", filters.stage);
+  if (filters.hasPhone) q = q.not("phone", "is", null);
+  if (filters.hasEmail) q = q.not("email", "is", null);
+  if (filters.search) {
+    const s = filters.search.replace(/[%,()]/g, "");
+    q = q.or(
+      [
+        `full_name.ilike.%${s}%`,
+        `first_name.ilike.%${s}%`,
+        `last_name.ilike.%${s}%`,
+        `email.ilike.%${s}%`,
+        `phone.ilike.%${s}%`,
+        `city.ilike.%${s}%`,
+        `zip.ilike.%${s}%`,
+        `current_employer.ilike.%${s}%`,
+        `notes.ilike.%${s}%`,
+      ].join(",")
+    );
+  }
+  return q;
+}
+
 export async function listProspects(
   filters: ProspectFilters = {},
   limit = 500
 ): Promise<Prospect[]> {
   try {
     const supabase = getServerClient();
-    let q = supabase.from("prospects").select("*");
-
-    if (!filters.showRemoved) q = q.is("removed_at", null);
-    if (filters.county) q = q.ilike("county", `%${filters.county}%`);
-    if (filters.zip) q = q.eq("zip", filters.zip);
-    if (filters.segment) q = q.eq("segment", filters.segment);
-    if (filters.program) q = q.eq("program_interest", filters.program);
-    if (filters.stage) q = q.eq("stage", filters.stage);
-    if (filters.hasPhone) q = q.not("phone", "is", null);
-    if (filters.hasEmail) q = q.not("email", "is", null);
-    if (filters.search) {
-      const s = filters.search.replace(/[%,]/g, "");
-      q = q.or(
-        [
-          `full_name.ilike.%${s}%`,
-          `first_name.ilike.%${s}%`,
-          `last_name.ilike.%${s}%`,
-          `email.ilike.%${s}%`,
-          `city.ilike.%${s}%`,
-          `zip.ilike.%${s}%`,
-          `current_employer.ilike.%${s}%`,
-        ].join(",")
-      );
-    }
-
+    const q = applyFilters(supabase.from("prospects").select("*"), filters);
     const { data, error } = await q
       .order("score", { ascending: false })
       .order("created_at", { ascending: false })
       .limit(limit);
-
     if (error) return [];
     return (data as Prospect[]) ?? [];
   } catch {
     return [];
+  }
+}
+
+/** How many rows match — so the table can say "showing 500 of 13,806". */
+export async function countProspects(filters: ProspectFilters = {}): Promise<number> {
+  try {
+    const supabase = getServerClient();
+    const q = applyFilters(
+      supabase.from("prospects").select("id", { count: "exact", head: true }),
+      filters
+    );
+    const { count, error } = await q;
+    if (error) return 0;
+    return count ?? 0;
+  } catch {
+    return 0;
   }
 }
 
@@ -143,6 +164,38 @@ export function summarize(prospects: Prospect[]): PipelineStats {
     ).length,
     byStage,
   };
+}
+
+/** The four headline numbers, counted in the database (the list is too big to load). */
+export async function pipelineStats(): Promise<Omit<PipelineStats, "byStage">> {
+  try {
+    const supabase = getServerClient();
+    const nowIso = new Date().toISOString();
+    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+    const live = () =>
+      supabase
+        .from("prospects")
+        .select("id", { count: "exact", head: true })
+        .is("removed_at", null)
+        .not("stage", "in", "(lost,graduated)");
+    const [a, b, c, d] = await Promise.all([
+      live(),
+      live().lt("next_followup_at", nowIso),
+      live().or(`last_touch_at.is.null,last_touch_at.lt.${weekAgo}`),
+      supabase
+        .from("prospects")
+        .select("id", { count: "exact", head: true })
+        .in("stage", ["registered", "enrolled", "graduated"]),
+    ]);
+    return {
+      inPipeline: a.count ?? 0,
+      overdue: b.count ?? 0,
+      stale7d: c.count ?? 0,
+      registered: d.count ?? 0,
+    };
+  } catch {
+    return { inPipeline: 0, overdue: 0, stale7d: 0, registered: 0 };
+  }
 }
 
 /** Emails dispatched since local midnight — checked against currentLimits().email. */
