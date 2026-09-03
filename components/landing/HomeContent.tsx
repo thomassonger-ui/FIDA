@@ -194,9 +194,12 @@ export function HomeContent() {
               <div className="eyebrow">{t(atticusCopy.sectionEyebrow)}</div>
               <h2 className="mt-3 font-display text-4xl md:text-5xl text-navy tracking-tight leading-tight">
                 {t(atticusCopy.sectionHeadingLead)}
-                <span className="text-teal">
+                <Link
+                  href="/programs"
+                  className="text-teal no-underline hover:text-teal-deep transition-colors"
+                >
                   {t(atticusCopy.sectionHeadingAccent)}
-                </span>
+                </Link>
               </h2>
               <p className="mt-5 text-muted text-lg leading-relaxed">
                 {t(atticusCopy.sectionBody)}
