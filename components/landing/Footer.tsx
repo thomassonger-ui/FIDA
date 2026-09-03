@@ -105,28 +105,28 @@ export function Footer() {
 
         {/* Verification statement — legible, understated, above the legal line. */}
         <div className="mt-14 pt-8 border-t border-white/10 flex flex-col sm:flex-row sm:items-center gap-5">
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-6 shrink-0">
           <a
             href="https://www.fldoe.org/policy/cie/"
             target="_blank"
             rel="noopener noreferrer"
-            className="shrink-0 inline-flex items-center justify-center bg-white rounded-sm px-3 py-2 w-fit"
+            className="shrink-0 inline-flex items-center opacity-90 hover:opacity-100 transition-opacity"
             aria-label="Florida Department of Education — Commission for Independent Education"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/fldoe-logo.png"
+              src="/fldoe-logo-dark.png"
               alt="Florida Department of Education"
               width={485}
               height={412}
-              className="h-14 w-auto"
+              className="h-16 w-auto"
             />
           </a>
           <a
             href="https://floridasdentistry.gov/"
             target="_blank"
             rel="noopener noreferrer"
-            className="shrink-0 inline-flex items-center justify-center bg-white rounded-sm px-3 py-2 w-fit"
+            className="shrink-0 inline-flex items-center opacity-90 hover:opacity-100 transition-opacity"
             aria-label="Florida Board of Dentistry"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -135,7 +135,7 @@ export function Footer() {
               alt="Florida Board of Dentistry"
               width={362}
               height={356}
-              className="h-14 w-auto"
+              className="h-16 w-auto"
             />
           </a>
           </div>
