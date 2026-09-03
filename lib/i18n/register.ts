@@ -21,18 +21,27 @@ export const register = {
   eyebrow: b("Enroll · Entry Level Dental Assisting", "Inscripción · Asistencia Dental de Nivel Inicial"),
   h1: b("Secure your seat.", "Asegura tu cupo."),
   lede: b(
-    `Two steps to get started: apply through Atticus, then pay the ${REGISTRATION_FEE} registration fee online. A FIDA advisor follows up within one business day.`,
-    `Dos pasos para comenzar: postúlate con Atticus y luego paga la cuota de inscripción de ${REGISTRATION_FEE} en línea. Un asesor de FIDA te dará seguimiento en un día hábil.`,
+    `Three steps to get started: book a campus tour, pay the ${REGISTRATION_FEE} registration fee after you've decided, then complete your application. A FIDA advisor is with you the whole way.`,
+    `Tres pasos para comenzar: reserva un recorrido del campus, paga la cuota de inscripción de ${REGISTRATION_FEE} cuando hayas decidido, y luego completa tu solicitud. Un asesor de FIDA te acompaña en todo el proceso.`,
   ),
 
-  step1Label: b("Step 1", "Paso 1"),
-  step1Title: b("Apply through Atticus", "Postúlate con Atticus"),
+  step0Label: b("Step 1", "Paso 1"),
+  step0Title: b("Book a campus tour", "Reserva un recorrido del campus"),
+  step0Body: b(
+    "Everything starts with a visit. Pick a time on our calendar, see the classroom and lab, meet Debbie and Ashley, and ask anything. Free, no commitment.",
+    "Todo empieza con una visita. Elige una hora en nuestro calendario, conoce el aula y el laboratorio, conoce a Debbie y Ashley y pregunta lo que quieras. Gratis, sin compromiso.",
+  ),
+  step0Cta: b("Book my tour", "Reservar mi recorrido"),
+  step0Done: b("Already toured? Go to Step 2.", "¿Ya hiciste el recorrido? Pasa al Paso 2."),
+
+  step1Label: b("Step 3", "Paso 3"),
+  step1Title: b("Complete your application", "Completa tu solicitud"),
   step1Body: b(
-    "Atticus is our admissions intake — about five minutes. It captures your background, schedule, and the class you're aiming for, and creates your student record.",
-    "Atticus es nuestro sistema de admisiones: unos cinco minutos. Registra tu experiencia, horario y la clase que te interesa, y crea tu expediente de estudiante.",
+    "Once your registration fee is in, finish the online application and enrollment agreement with Atticus — about five minutes. Your seat deposit comes after that.",
+    "Con tu cuota de inscripción recibida, completa la solicitud en línea y el acuerdo de inscripción con Atticus: unos cinco minutos. El depósito de cupo viene después.",
   ),
   step1Cta: b("Start my application", "Iniciar mi solicitud"),
-  step1Done: b("Already applied? Go to Step 2.", "¿Ya te postulaste? Pasa al Paso 2."),
+  step1Done: b("Use the same name and email you used to pay.", "Usa el mismo nombre y correo con los que pagaste."),
 
   step2Label: b("Step 2", "Paso 2"),
   step2Title: b(
@@ -40,50 +49,50 @@ export const register = {
     `Paga la cuota de inscripción de ${REGISTRATION_FEE}`,
   ),
   step2Body: b(
-    "Paid securely through QuickBooks — credit or debit card, bank transfer (ACH), PayPal, or Venmo. Opens in a new tab; QuickBooks emails your receipt.",
-    "Se paga de forma segura a través de QuickBooks: tarjeta de crédito o débito, transferencia bancaria (ACH), PayPal o Venmo. Se abre en una pestaña nueva; QuickBooks te envía el recibo por correo.",
+    "After your tour, when you've decided to enroll. Non-refundable, and it counts toward your $750 seat deposit. Paid securely through QuickBooks — card, ACH, PayPal, or Venmo; opens in a new tab and QuickBooks emails your receipt.",
+    "Después de tu recorrido, cuando hayas decidido inscribirte. No reembolsable, y se acredita a tu depósito de cupo de $750. Se paga de forma segura a través de QuickBooks: tarjeta, ACH, PayPal o Venmo; se abre en una pestaña nueva y QuickBooks te envía el recibo.",
   ),
   step2Cta: b(
     "Secure My Seat – Pay Registration Fee",
     "Asegura mi cupo – Pagar cuota de inscripción",
   ),
   step2Note: b(
-    "Use the same name and email you gave Atticus so we can match your payment to your application.",
-    "Usa el mismo nombre y correo que le diste a Atticus para que podamos vincular tu pago con tu solicitud.",
+    "Use the same name and email on your application so we can match the payment to you.",
+    "Usa el mismo nombre y correo en tu solicitud para que podamos vincular el pago contigo.",
   ),
 
   nextEyebrow: b("What happens next", "Qué sigue"),
   nextHeading: b(
-    "After your registration fee is in, here's the path to your first day.",
-    "Una vez recibida tu cuota de inscripción, este es el camino hasta tu primer día.",
+    "After your application is in, here's the path to your first day.",
+    "Una vez enviada tu solicitud, este es el camino hasta tu primer día.",
   ),
   next: [
     {
-      title: b("Admissions interview & campus tour", "Entrevista de admisión y recorrido del campus"),
-      body: b(
-        "A FIDA advisor contacts you within one business day to schedule your interview and a tour of our Jacksonville campus.",
-        "Un asesor de FIDA te contacta en un día hábil para programar tu entrevista y un recorrido por nuestro campus en Jacksonville.",
-      ),
-    },
-    {
       title: b(`${SEAT_DEPOSIT} seat deposit`, `Depósito de cupo de ${SEAT_DEPOSIT}`),
       body: b(
-        "Once you're admitted, the deposit reserves your seat in a specific class. Card, ACH, check, or cash.",
-        "Una vez admitido, el depósito reserva tu cupo en una clase específica. Tarjeta, ACH, cheque o efectivo.",
+        "Reserves your seat in a specific class. Your $150 registration counts toward it, so $600 is due here. Card, ACH, check, or cash.",
+        "Reserva tu cupo en una clase específica. Tu inscripción de $150 se acredita, así que aquí se pagan $600. Tarjeta, ACH, cheque o efectivo.",
       ),
     },
     {
-      title: b("Choose your payment plan", "Elige tu plan de pago"),
+      title: b("We review & verify", "Revisamos y verificamos"),
       body: b(
-        `The ${BALANCE_AFTER_DEPOSIT} balance goes on an interest-free 6- or 8-month in-house plan, or an 18-month plan through TFC Tuition Financing. Your advisor sets it up with you.`,
-        `El saldo de ${BALANCE_AFTER_DEPOSIT} se paga en un plan interno sin intereses de 6 u 8 meses, o en un plan de 18 meses a través de TFC Tuition Financing. Tu asesor lo configura contigo.`,
+        "FIDA reviews your application, enrollment agreement, and payments. Questions come from a real advisor, not a form.",
+        "FIDA revisa tu solicitud, tu acuerdo de inscripción y tus pagos. Cualquier pregunta viene de un asesor real, no de un formulario.",
       ),
     },
     {
-      title: b("Enrollment paperwork & first day", "Documentación de inscripción y primer día"),
+      title: b("Your acceptance email", "Tu correo de aceptación"),
       body: b(
-        "Sign the program registration forms, submit your vaccination records, and get your class start date, scrubs, and clinical kit details.",
-        "Firma los formularios de inscripción del programa, entrega tus comprobantes de vacunación y recibe la fecha de inicio, los uniformes y los detalles de tu kit clínico.",
+        `Once approved: your acceptance letter, the school catalog, orientation details, and your class start date. The ${BALANCE_AFTER_DEPOSIT} balance goes on an interest-free 6- or 8-month plan, or 18 months through TFC.`,
+        `Una vez aprobado: tu carta de aceptación, el catálogo de la escuela, los detalles de orientación y tu fecha de inicio. El saldo de ${BALANCE_AFTER_DEPOSIT} se paga en un plan sin intereses de 6 u 8 meses, o en 18 meses a través de TFC.`,
+      ),
+    },
+    {
+      title: b("Orientation & first day", "Orientación y primer día"),
+      body: b(
+        "Attend orientation, get your scrubs and clinical kit details, and receive access to your course for the class start.",
+        "Asiste a la orientación, recibe tus uniformes y los detalles del kit clínico, y obtén acceso a tu curso para el inicio de clases.",
       ),
     },
   ],

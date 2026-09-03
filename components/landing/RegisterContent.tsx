@@ -6,7 +6,7 @@ import { Footer } from "@/components/landing/Footer";
 import { useLang } from "@/lib/i18n/LanguageProvider";
 import { register as r } from "@/lib/i18n/register";
 import { COHORTS } from "@/lib/cohort";
-import { QBO_REGISTRATION_URL, REGISTRATION_FEE } from "@/lib/payment";
+import { CALENDLY_TOUR_URL, QBO_REGISTRATION_URL, REGISTRATION_FEE } from "@/lib/payment";
 
 /**
  * /register body — Entry Level Dental Assisting enrollment hub.
@@ -37,26 +37,31 @@ export function RegisterContent() {
 
         {/* TWO STEPS */}
         <section className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-12 md:py-16">
-          <ol className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Step 1 — Atticus */}
-            <li className="card bg-white p-8 md:p-10 flex flex-col">
+          <ol className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Step 1 — Campus tour (Calendly). Everything starts here. */}
+            <li className="card bg-white p-8 md:p-10 flex flex-col border-teal/40">
               <div className="text-xs font-semibold tracking-[0.12em] uppercase text-teal">
-                {t(r.step1Label)}
+                {t(r.step0Label)}
               </div>
               <h2 className="mt-3 font-display text-2xl md:text-3xl text-navy leading-tight">
-                {t(r.step1Title)}
+                {t(r.step0Title)}
               </h2>
-              <p className="mt-4 text-muted leading-relaxed flex-1">{t(r.step1Body)}</p>
+              <p className="mt-4 text-muted leading-relaxed flex-1">{t(r.step0Body)}</p>
               <div className="mt-6">
-                <Link href="/atticus" className="btn-ghost">
-                  {t(r.step1Cta)} <span aria-hidden="true">→</span>
-                </Link>
+                <a
+                  href={CALENDLY_TOUR_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-primary w-full sm:w-auto"
+                >
+                  {t(r.step0Cta)} <span aria-hidden="true">↗</span>
+                </a>
               </div>
-              <p className="mt-3 text-sm text-subtle">{t(r.step1Done)}</p>
+              <p className="mt-3 text-sm text-subtle">{t(r.step0Done)}</p>
             </li>
 
             {/* Step 2 — QBO payment */}
-            <li className="card bg-white p-8 md:p-10 flex flex-col border-teal/40">
+            <li className="card bg-white p-8 md:p-10 flex flex-col">
               <div className="flex items-baseline justify-between gap-3">
                 <div className="text-xs font-semibold tracking-[0.12em] uppercase text-teal">
                   {t(r.step2Label)}
@@ -79,6 +84,23 @@ export function RegisterContent() {
                 </a>
               </div>
               <p className="mt-3 text-sm text-subtle">{t(r.step2Note)}</p>
+            </li>
+
+            {/* Step 3 — Application (Atticus for now; the full application + agreement is next) */}
+            <li className="card bg-white p-8 md:p-10 flex flex-col">
+              <div className="text-xs font-semibold tracking-[0.12em] uppercase text-teal">
+                {t(r.step1Label)}
+              </div>
+              <h2 className="mt-3 font-display text-2xl md:text-3xl text-navy leading-tight">
+                {t(r.step1Title)}
+              </h2>
+              <p className="mt-4 text-muted leading-relaxed flex-1">{t(r.step1Body)}</p>
+              <div className="mt-6">
+                <Link href="/atticus" className="btn-ghost">
+                  {t(r.step1Cta)} <span aria-hidden="true">→</span>
+                </Link>
+              </div>
+              <p className="mt-3 text-sm text-subtle">{t(r.step1Done)}</p>
             </li>
           </ol>
         </section>

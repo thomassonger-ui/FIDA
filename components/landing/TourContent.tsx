@@ -8,9 +8,9 @@ import { useLang } from "@/lib/i18n/LanguageProvider";
 import { tour as tr } from "@/lib/i18n/tourContact";
 import { MAP_URL } from "@/lib/location";
 
-const CALENDLY_URL =
-  process.env.NEXT_PUBLIC_CALENDLY_URL ||
-  "https://calendly.com/fldentalassisting/appointment";
+import { CALENDLY_TOUR_URL } from "@/lib/payment";
+
+const CALENDLY_URL = CALENDLY_TOUR_URL;
 
 /** /tour body — client component; the route keeps metadata. */
 export function TourContent() {

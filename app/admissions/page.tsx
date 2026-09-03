@@ -15,18 +15,18 @@ export const metadata = {
 const steps = [
   {
     n: "01",
-    title: "Have a conversation",
-    body: "Tell Atticus about your background, schedule, and what matters to you. Five minutes, no paperwork.",
+    title: "Book a campus tour",
+    body: "Everything starts with a visit. See the classroom and lab, meet Debbie and Ashley, and decide if FIDA is right for you. Free, no commitment.",
   },
   {
     n: "02",
-    title: "Meet a real human",
-    body: "A FIDA advisor follows up within one business day to walk you through tuition, scheduling, and any questions.",
+    title: "Register and apply",
+    body: "Once you've decided: pay the $150 registration fee online, complete your application and enrollment agreement, then the rest of the $750 seat deposit reserves your seat.",
   },
   {
     n: "03",
-    title: "Start your program",
-    body: `Complete enrollment steps and join your cohort. Next diploma class starts ${COHORTS[0].date.en}.`,
+    title: "Get accepted and start",
+    body: `We review and verify, then send your acceptance letter, catalog, and orientation details. Next diploma class starts ${COHORTS[0].date.en}.`,
   },
 ];
 

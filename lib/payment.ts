@@ -35,6 +35,9 @@ const b = (en: string, es: string): Bilingual => ({ en, es });
 export const QBO_REGISTRATION_URL =
   "https://connect.intuit.com/portal/app/CommerceNetwork/view/scs-v1-6ebd237e819646d4a7b5338b9edc4df60ca2d513149a49fb8bf33283208f96bab55cd5e6f2f643098f0225351d231c0e-0?locale=EN_US&cta=paylinkbuybutton";
 
+/** Calendly — campus tour. The FIRST step of enrolling (agreed 2026-09-02). */
+export const CALENDLY_TOUR_URL = "https://calendly.com/fldentalassisting";
+
 /** TFC Tuition Financing — third-party 18-month plan. */
 export const TFC_URL = "https://www.tfctuition.com/";
 
@@ -63,31 +66,41 @@ export const MILITARY_PLAN_8_MONTHLY = "$950";
 export const paymentCopy = {
   eyebrow: b("How payment works", "Cómo funciona el pago"),
   heading: b(
-    "Three stages — you always know what's due and when.",
-    "Tres etapas: siempre sabrás qué se debe y cuándo.",
+    "Four steps — you always know what's due and when.",
+    "Cuatro pasos: siempre sabrás qué se debe y cuándo.",
   ),
 
   stages: [
     {
       step: "1",
-      amount: REGISTRATION_FEE,
-      title: b("Registration fee", "Cuota de inscripción"),
+      amount: "Free",
+      title: b("Book a campus tour", "Reserva un recorrido"),
       body: b(
-        "Paid online when you register. Secures your place in the admissions process and is collected through QuickBooks — card, bank transfer (ACH), PayPal, or Venmo.",
-        "Se paga en línea al inscribirte. Asegura tu lugar en el proceso de admisión y se cobra a través de QuickBooks: tarjeta, transferencia bancaria (ACH), PayPal o Venmo.",
+        "Everything starts with a visit. Pick a time on our calendar, see the classroom and lab, meet Debbie and Ashley, and decide if FIDA is right for you. Nothing to pay yet.",
+        "Todo empieza con una visita. Elige una hora en nuestro calendario, conoce el aula y el laboratorio, conoce a Debbie y Ashley, y decide si FIDA es para ti. Todavía no se paga nada.",
       ),
+      cta: { label: b("Book my tour", "Reservar mi recorrido"), href: CALENDLY_TOUR_URL },
     },
     {
       step: "2",
-      amount: SEAT_DEPOSIT,
-      title: b("Seat deposit", "Depósito de cupo"),
+      amount: REGISTRATION_FEE,
+      title: b("Registration fee", "Cuota de inscripción"),
       body: b(
-        "Due after your admissions interview and campus tour — this is what reserves your seat in a specific class. Your $150 registration fee counts toward it, so $600 is due at this step.",
-        "Se paga después de tu entrevista de admisión y recorrido del campus: es lo que reserva tu cupo en una clase específica. Tu cuota de inscripción de $150 se acredita al depósito, así que en esta etapa se pagan $600.",
+        "After your tour, when you've decided to enroll. Paid online through QuickBooks — card, bank transfer (ACH), PayPal, or Venmo. Non-refundable; it counts toward your seat deposit.",
+        "Después de tu recorrido, cuando hayas decidido inscribirte. Se paga en línea a través de QuickBooks: tarjeta, transferencia bancaria (ACH), PayPal o Venmo. No reembolsable; se acredita a tu depósito de cupo.",
       ),
     },
     {
       step: "3",
+      amount: SEAT_DEPOSIT,
+      title: b("Seat deposit", "Depósito de cupo"),
+      body: b(
+        "Due once your online application and enrollment agreement are in — this is what reserves your seat in a specific class. Your $150 registration fee counts toward it, so $600 is due at this step.",
+        "Se paga cuando tu solicitud en línea y tu acuerdo de inscripción estén completos: es lo que reserva tu cupo en una clase específica. Tu cuota de inscripción de $150 se acredita al depósito, así que en esta etapa se pagan $600.",
+      ),
+    },
+    {
+      step: "4",
       amount: BALANCE_AFTER_DEPOSIT,
       title: b("Tuition balance", "Saldo de matrícula"),
       body: b(

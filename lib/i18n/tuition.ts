@@ -56,10 +56,10 @@ export const tuition = {
       b("All material and lab fees", "Todas las cuotas de materiales y laboratorio"),
     ],
     financing: b(
-      "Pay in three stages: a $150 registration fee online, a $750 seat deposit after admissions (your $150 registration counts toward it), and the balance on an interest-free 6- or 8-month in-house plan — or 18 months through TFC. Full breakdown below.",
-      "Paga en tres etapas: una cuota de inscripción de $150 en línea, un depósito de cupo de $750 después de la admisión (la inscripción de $150 se acredita), y el saldo en un plan interno sin intereses de 6 u 8 meses — o en 18 meses a través de TFC. Desglose completo abajo.",
+      "Book a campus tour first — nothing is due until you've visited and decided. Then: a $150 registration fee online, a $750 seat deposit once your application is in (your $150 counts toward it), and the balance on an interest-free 6- or 8-month in-house plan — or 18 months through TFC. Full breakdown below.",
+      "Primero reserva un recorrido del campus: no se paga nada hasta que hayas visitado y decidido. Luego: una cuota de inscripción de $150 en línea, un depósito de cupo de $750 cuando tu solicitud esté completa (los $150 se acreditan), y el saldo en un plan interno sin intereses de 6 u 8 meses — o en 18 meses a través de TFC. Desglose completo abajo.",
     ),
-    cta: b("Register & pay the $150 fee", "Inscríbete y paga la cuota de $150"),
+    cta: b("How to enroll — start with a tour", "Cómo inscribirte: empieza con un recorrido"),
     detailsLink: b("Full program details", "Detalles completos del programa"),
   },
 

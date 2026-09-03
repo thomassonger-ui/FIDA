@@ -68,16 +68,16 @@ export const atticus = {
       "Responde unas preguntas y te dirigiremos al curso adecuado.",
     ),
     orDivider: b("or talk to a person", "o habla con una persona"),
-    calendlyEyebrow: b("Talk to Debbie or Ashley", "Habla con Debbie o Ashley"),
+    calendlyEyebrow: b("Step 1 — visit us", "Paso 1: visítanos"),
     calendlyHeading: b(
-      "Lock in a 15-minute call. Real conversation, no pressure.",
-      "Reserva una llamada de 15 minutos. Una conversación real, sin presión.",
+      "Book a campus tour. Everything starts here.",
+      "Reserva un recorrido del campus. Todo empieza aquí.",
     ),
     calendlyBody: b(
-      "Pick a slot that works — evenings and weekends included. They’ll answer every question about courses, schedules, and prerequisites directly.",
-      "Elige el horario que te convenga, incluidas tardes y fines de semana. Te responderán directamente cualquier pregunta sobre cursos, horarios y requisitos.",
+      "Pick a time on Debbie and Ashley's calendar, see the classroom and lab, and ask anything about courses, schedules, and prerequisites. Free, no commitment — and nothing to pay until you've visited and decided.",
+      "Elige una hora en el calendario de Debbie y Ashley, conoce el aula y el laboratorio, y pregunta lo que quieras sobre cursos, horarios y requisitos. Gratis, sin compromiso, y no se paga nada hasta que hayas visitado y decidido.",
     ),
-    calendlyCta: b("Book a 15-min call", "Reservar una llamada de 15 min"),
+    calendlyCta: b("Book my campus tour", "Reservar mi recorrido"),
     tiles: [
       {
         title: b("Programs & courses", "Programas y cursos"),
@@ -101,17 +101,17 @@ export const atticus = {
         ),
       },
     ],
-    // Enrollment step 2 card (diploma program) — links to /register.
+    // Enrollment card (diploma program) — the path, tour first. Links to /register.
     nextStepEyebrow: b("Applying to the diploma program?", "¿Postulando al programa de diploma?"),
     nextStepHeading: b(
-      "Step 2: pay your $150 registration fee.",
-      "Paso 2: paga tu cuota de inscripción de $150.",
+      "Tour first. Then register, apply, and reserve your seat.",
+      "Primero el recorrido. Luego inscríbete, postúlate y reserva tu cupo.",
     ),
     nextStepBody: b(
-      "Once Atticus has your application, secure your place in the admissions process. Paid online through QuickBooks — card, ACH, PayPal, or Venmo.",
-      "Cuando Atticus tenga tu solicitud, asegura tu lugar en el proceso de admisión. Se paga en línea a través de QuickBooks: tarjeta, ACH, PayPal o Venmo.",
+      "1. Book a campus tour. 2. Pay the $150 registration fee once you've decided. 3. Complete your application and enrollment agreement. 4. Pay the rest of the $750 seat deposit. Then your acceptance email, orientation, and class.",
+      "1. Reserva un recorrido. 2. Paga la cuota de inscripción de $150 cuando hayas decidido. 3. Completa tu solicitud y acuerdo de inscripción. 4. Paga el resto del depósito de cupo de $750. Luego tu correo de aceptación, la orientación y las clases.",
     ),
-    nextStepCta: b("Secure my seat", "Asegurar mi cupo"),
+    nextStepCta: b("See the steps", "Ver los pasos"),
     referredFrom: b("Referred from", "Referido desde"),
     backToFida: b("Back to FIDA", "Volver a FIDA"),
   },

@@ -28,7 +28,7 @@ export function PaymentStructure({ showHeading = true }: { showHeading?: boolean
       )}
 
       {/* STAGES */}
-      <ol className={`${showHeading ? "mt-10" : ""} grid grid-cols-1 md:grid-cols-3 gap-4`}>
+      <ol className={`${showHeading ? "mt-10" : ""} grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4`}>
         {p.stages.map((s) => (
           <li key={s.step} className="card bg-white p-6 flex flex-col">
             <div className="flex items-baseline justify-between gap-3">
@@ -38,7 +38,17 @@ export function PaymentStructure({ showHeading = true }: { showHeading?: boolean
               <span className="font-display text-3xl text-navy">{s.amount}</span>
             </div>
             <div className="mt-2 font-display text-lg text-navy">{t(s.title)}</div>
-            <p className="mt-2 text-sm text-muted leading-relaxed">{t(s.body)}</p>
+            <p className="mt-2 text-sm text-muted leading-relaxed flex-1">{t(s.body)}</p>
+            {"cta" in s && s.cta && (
+              <a
+                href={s.cta.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary mt-4 w-fit text-sm"
+              >
+                {t(s.cta.label)} <span aria-hidden="true">↗</span>
+              </a>
+            )}
           </li>
         ))}
       </ol>

@@ -7,7 +7,9 @@ import { AtticusChat } from "@/components/admissions/AtticusChat";
 import { useLang } from "@/lib/i18n/LanguageProvider";
 import { atticus as A } from "@/lib/i18n/atticus";
 
-const CALENDLY_BASE = "https://calendly.com/fldentalassisting/appointment";
+import { CALENDLY_TOUR_URL } from "@/lib/payment";
+
+const CALENDLY_BASE = CALENDLY_TOUR_URL;
 
 /**
  * /atticus — the registration-intake page. The live chat is the primary path;
@@ -65,8 +67,7 @@ export function AtticusPageContent({ src }: { src: string | null }) {
                 ))}
               </div>
 
-              {/* NEXT STEP — $150 registration fee (diploma program).
-                  Atticus is step 1 of enrollment; the QBO payment is step 2. */}
+              {/* ENROLLMENT PATH — tour → $150 → application → deposit. */}
               <div className="mt-6 card bg-navy text-white p-5">
                 <div className="text-xs font-semibold tracking-[0.12em] uppercase text-teal-soft">
                   {t(p.nextStepEyebrow)}
