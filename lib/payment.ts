@@ -9,7 +9,9 @@ import type { Bilingual } from "@/lib/i18n/LanguageProvider";
  *     QuickBooks Online "Buy Button" (QBO Payments: card / ACH / PayPal /
  *     Venmo). Kept in QBO — not PayPal — so registration + tuition A/R stay
  *     in one ledger for the CPA.
- *   - $750 seat deposit secures the seat (collected after admissions).
+ *   - $750 seat deposit secures the seat (collected after admissions). The
+ *     $150 registration fee COUNTS TOWARD it, so $600 is actually due at
+ *     that step (Tom, 2026-09-02). $150 + $600 + $9,100 = $9,850.
  *   - $9,700 tuition. After the deposit, $9,100 is financed.
  *   - In-house, interest-free: 6 months $1,516.66/mo or 8 months $1,137.50/mo.
  *   - Military / first responder: $1,500 off → $8,350 total, $7,600 financed
@@ -40,6 +42,8 @@ export const TFC_URL = "https://www.tfctuition.com/";
 
 export const REGISTRATION_FEE = "$150";
 export const SEAT_DEPOSIT = "$750";
+/** What's actually due at the deposit step — the $150 registration counts toward the $750. */
+export const SEAT_DEPOSIT_DUE = "$600";
 export const TUITION = "$9,700";
 export const TOTAL_COST = "$9,850"; // tuition + registration
 export const BALANCE_AFTER_DEPOSIT = "$9,100";
@@ -78,8 +82,8 @@ export const paymentCopy = {
       amount: SEAT_DEPOSIT,
       title: b("Seat deposit", "Depósito de cupo"),
       body: b(
-        "Due after your admissions interview and campus tour. This is what reserves your seat in a specific class.",
-        "Se paga después de tu entrevista de admisión y recorrido del campus. Es lo que reserva tu cupo en una clase específica.",
+        "Due after your admissions interview and campus tour — this is what reserves your seat in a specific class. Your $150 registration fee counts toward it, so $600 is due at this step.",
+        "Se paga después de tu entrevista de admisión y recorrido del campus: es lo que reserva tu cupo en una clase específica. Tu cuota de inscripción de $150 se acredita al depósito, así que en esta etapa se pagan $600.",
       ),
     },
     {

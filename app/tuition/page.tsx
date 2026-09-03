@@ -27,7 +27,7 @@ const jsonLd = {
         "@type": "Course",
         name: "Entry Level Dental Assisting (Diploma Program)",
         description:
-          "Six-month in-person diploma program in Jacksonville, FL. $9,700 tuition plus a $150 registration fee. A $750 seat deposit applies; the balance is payable on an interest-free 6- or 8-month in-house plan.",
+          "Six-month in-person diploma program in Jacksonville, FL. $9,700 tuition plus a $150 registration fee. A $750 seat deposit applies (the registration fee counts toward it); the balance is payable on an interest-free 6- or 8-month in-house plan.",
         url: "https://fldentalassisting.com/programs/entry-level-dental-assisting",
         provider: {
           "@type": "EducationalOrganization",

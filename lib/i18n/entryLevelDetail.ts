@@ -65,8 +65,8 @@ export const entryLevelDetail: CourseDetail = {
     {
       label: detailUi.factLabels.tuition,
       value: b(
-        "$9,850 total — $9,700 tuition + $150 registration. $750 seat deposit; interest-free 6- or 8-month plans",
-        "$9,850 en total — $9,700 de matrícula + $150 de inscripción. Depósito de cupo de $750; planes sin intereses de 6 u 8 meses",
+        "$9,850 total — $9,700 tuition + $150 registration. $750 seat deposit (registration counts toward it); interest-free 6- or 8-month plans",
+        "$9,850 en total — $9,700 de matrícula + $150 de inscripción. Depósito de cupo de $750 (la inscripción se acredita); planes sin intereses de 6 u 8 meses",
       ),
     },
     {
@@ -209,8 +209,8 @@ export const entryLevelDetail: CourseDetail = {
     "¿Cuánto cuesta el programa de diploma?",
   ),
   costBody: b(
-    "Tuition is $9,700 plus a $150 registration fee — $9,850 total. That includes your two textbooks, a set of personalized scrubs, CPR/BLS/AED certification through the AHA, your student clinical kit, a personalized notebook binder, the resume workshop, membership to the American Dental Assistants Association, and all material and lab fees. You pay in three stages — the $150 registration fee online, a $750 seat deposit after admissions, and the balance on an interest-free 6- or 8-month in-house plan or an 18-month plan through TFC.",
-    "La matrícula es de $9,700 más una cuota de inscripción de $150 — $9,850 en total. Incluye tus dos libros de texto, un juego de uniformes (scrubs) personalizados, la certificación CPR/BLS/AED a través de la AHA, tu kit clínico de estudiante, una carpeta personalizada, el taller de currículum, la membresía en la American Dental Assistants Association y todas las cuotas de materiales y laboratorio. Pagas en tres etapas: la cuota de inscripción de $150 en línea, un depósito de cupo de $750 después de la admisión, y el saldo en un plan interno sin intereses de 6 u 8 meses o en un plan de 18 meses a través de TFC.",
+    "Tuition is $9,700 plus a $150 registration fee — $9,850 total. That includes your two textbooks, a set of personalized scrubs, CPR/BLS/AED certification through the AHA, your student clinical kit, a personalized notebook binder, the resume workshop, membership to the American Dental Assistants Association, and all material and lab fees. You pay in three stages — the $150 registration fee online, a $750 seat deposit after admissions (the $150 counts toward it), and the balance on an interest-free 6- or 8-month in-house plan or an 18-month plan through TFC.",
+    "La matrícula es de $9,700 más una cuota de inscripción de $150 — $9,850 en total. Incluye tus dos libros de texto, un juego de uniformes (scrubs) personalizados, la certificación CPR/BLS/AED a través de la AHA, tu kit clínico de estudiante, una carpeta personalizada, el taller de currículum, la membresía en la American Dental Assistants Association y todas las cuotas de materiales y laboratorio. Pagas en tres etapas: la cuota de inscripción de $150 en línea, un depósito de cupo de $750 después de la admisión (los $150 se acreditan), y el saldo en un plan interno sin intereses de 6 u 8 meses o en un plan de 18 meses a través de TFC.",
   ),
   // Renders <PaymentStructure/> under the cost grid (lib/payment.ts).
   showPaymentStructure: true,
@@ -261,8 +261,8 @@ export const entryLevelDetail: CourseDetail = {
         "¿Cómo pago y qué se debe en cada momento?",
       ),
       a: b(
-        "Three stages. First, a $150 registration fee paid online when you register. Second, a $750 seat deposit after your admissions interview and tour — that's what holds your seat. Third, the $9,100 balance on an interest-free in-house plan ($1,516.66/month over 6 months or $1,137.50/month over 8 months) or an 18-month plan through TFC Tuition Financing. We accept card, ACH, check, and cash. Eligible military members and first responders receive a $1,500 tuition incentive — $8,350 total, $7,600 balance after the deposit, on the same plans ($1,266.67 over 6 months or $950 over 8 months); verified with a military ID or DD214.",
-        "Tres etapas. Primero, una cuota de inscripción de $150 que se paga en línea al inscribirte. Segundo, un depósito de cupo de $750 después de tu entrevista de admisión y recorrido — eso es lo que reserva tu cupo. Tercero, el saldo de $9,100 en un plan interno sin intereses ($1,516.66 al mes por 6 meses o $1,137.50 al mes por 8 meses) o un plan de 18 meses a través de TFC Tuition Financing. Aceptamos tarjeta, ACH, cheque y efectivo. Los militares y primeros respondientes elegibles reciben un incentivo de matrícula de $1,500 — $8,350 en total, saldo de $7,600 después del depósito, en los mismos planes ($1,266.67 por 6 meses o $950 por 8 meses); se verifica con identificación militar o DD214.",
+        "Three stages. First, a $150 registration fee paid online when you register. Second, a $750 seat deposit after your admissions interview and tour — that's what holds your seat, and your $150 registration counts toward it, so $600 is due then. Third, the $9,100 balance on an interest-free in-house plan ($1,516.66/month over 6 months or $1,137.50/month over 8 months) or an 18-month plan through TFC Tuition Financing. We accept card, ACH, check, and cash. Eligible military members and first responders receive a $1,500 tuition incentive — $8,350 total, $7,600 balance after the deposit, on the same plans ($1,266.67 over 6 months or $950 over 8 months); verified with a military ID or DD214.",
+        "Tres etapas. Primero, una cuota de inscripción de $150 que se paga en línea al inscribirte. Segundo, un depósito de cupo de $750 después de tu entrevista de admisión y recorrido — eso es lo que reserva tu cupo, y tu inscripción de $150 se acredita, así que entonces se pagan $600. Tercero, el saldo de $9,100 en un plan interno sin intereses ($1,516.66 al mes por 6 meses o $1,137.50 al mes por 8 meses) o un plan de 18 meses a través de TFC Tuition Financing. Aceptamos tarjeta, ACH, cheque y efectivo. Los militares y primeros respondientes elegibles reciben un incentivo de matrícula de $1,500 — $8,350 en total, saldo de $7,600 después del depósito, en los mismos planes ($1,266.67 por 6 meses o $950 por 8 meses); se verifica con identificación militar o DD214.",
       ),
     },
     {

@@ -231,7 +231,7 @@ export function renderDrip(step: number, p: Prospect): DripMessage {
         "",
         programLine(p),
         "",
-        "Nobody pays it all up front. For the diploma it's $150 to register, a $750 seat deposit after admissions, and the rest on a 6- or 8-month in-house plan with no interest. Books, scrubs, CPR certification and your clinical kit are all included.",
+        "Nobody pays it all up front. For the diploma it's $150 to register (which counts toward the $750 seat deposit after admissions), and the rest on a 6- or 8-month in-house plan with no interest. Books, scrubs, CPR certification and your clinical kit are all included.",
         "",
         `Full breakdown: ${origin}/tuition`,
         "",
