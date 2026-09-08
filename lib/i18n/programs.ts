@@ -215,8 +215,8 @@ export const programs: BiProgram[] = [
     prerequisites: [
       b("Be at least 18 years of age.", "Tener al menos 18 años de edad."),
       b(
-        "A minimum of 3 months of continuous on-the-job training in the positioning and exposing of dental radiographs under a Florida-licensed dentist. Volunteer or shadowing does NOT count.",
-        "Un mínimo de 3 meses de capacitación continua en el trabajo posicionando y tomando radiografías dentales bajo un dentista con licencia de Florida. El voluntariado o la observación NO cuentan.",
+        "A minimum of 3 months of continuous on-the-job training in the positioning and exposing of dental radiographs under a Florida-licensed dentist, in any dental office — general practice or specialty. Volunteer or shadowing does NOT count.",
+        "Un mínimo de 3 meses de capacitación continua en el trabajo posicionando y tomando radiografías dentales bajo un dentista con licencia de Florida, en cualquier consultorio dental — práctica general o de especialidad. El voluntariado o la observación NO cuentan.",
       ),
       b(
         "Signed acknowledgement from your supervising dentist confirming the three months of training.",
@@ -275,8 +275,8 @@ export const programs: BiProgram[] = [
     prerequisites: [
       b("Be at least 18 years of age.", "Tener al menos 18 años de edad."),
       b(
-        "A minimum of 3 months of continuous on-the-job chairside training. Volunteer or shadowing does NOT count.",
-        "Un mínimo de 3 meses de capacitación continua en el trabajo junto al sillón dental. El voluntariado o la observación NO cuentan.",
+        "A minimum of 3 months of continuous on-the-job chairside training under a Florida-licensed dentist, in any dental office — general practice or specialty. Volunteer or shadowing does NOT count.",
+        "Un mínimo de 3 meses de capacitación continua en el trabajo junto al sillón dental bajo un dentista con licencia de Florida, en cualquier consultorio dental — práctica general o de especialidad. El voluntariado o la observación NO cuentan.",
       ),
       b(
         "Signed acknowledgement from your supervising dentist confirming the three months of training.",

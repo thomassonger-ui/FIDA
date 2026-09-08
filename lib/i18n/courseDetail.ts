@@ -207,8 +207,8 @@ export const efdaDetail: CourseDetail = {
   requirements: [
     age18,
     b(
-      "Complete a minimum of 3 months of continuous on-the-job chairside training under a Florida-licensed dentist. Volunteer or shadowing hours do not count.",
-      "Completar un mínimo de 3 meses de capacitación continua en el trabajo junto al sillón dental bajo un dentista con licencia de Florida. Las horas de voluntariado u observación no cuentan.",
+      "Complete a minimum of 3 months of continuous on-the-job chairside training under a Florida-licensed dentist, in any dental office — general practice or specialty. Volunteer or shadowing hours do not count.",
+      "Completar un mínimo de 3 meses de capacitación continua en el trabajo junto al sillón dental bajo un dentista con licencia de Florida, en cualquier consultorio dental — práctica general o de especialidad. Las horas de voluntariado u observación no cuentan.",
     ),
     signedAck,
     englishCompetency,
@@ -280,8 +280,8 @@ export const efdaDetail: CourseDetail = {
         "¿Cuáles son los requisitos para inscribirse en el curso EFDA?",
       ),
       a: b(
-        "You must be at least 18, have at least three months of continuous on-the-job chairside training under a Florida-licensed dentist, provide a signed acknowledgement from that dentist, and demonstrate English competency. Volunteer or shadowing hours do not count.",
-        "Debes tener al menos 18 años, contar con un mínimo de tres meses de capacitación continua junto al sillón bajo un dentista con licencia de Florida, presentar una constancia firmada por ese dentista y demostrar competencia en inglés. Las horas de voluntariado u observación no cuentan.",
+        "You must be at least 18, have at least three months of continuous on-the-job chairside training under a Florida-licensed dentist (any dental office — general practice or specialty), provide a signed acknowledgement from that dentist, and demonstrate English competency. Volunteer or shadowing hours do not count.",
+        "Debes tener al menos 18 años, contar con un mínimo de tres meses de capacitación continua junto al sillón bajo un dentista con licencia de Florida (en cualquier consultorio dental — práctica general o de especialidad), presentar una constancia firmada por ese dentista y demostrar competencia en inglés. Las horas de voluntariado u observación no cuentan.",
       ),
     },
     {
@@ -387,8 +387,8 @@ export const radiographyDetail: CourseDetail = {
   requirements: [
     age18,
     b(
-      "Complete a minimum of 3 months of continuous on-the-job training positioning and exposing dental radiographs under a Florida-licensed dentist. Volunteer or shadowing hours do not count.",
-      "Completar un mínimo de 3 meses de capacitación continua en el trabajo posicionando y tomando radiografías dentales bajo un dentista con licencia de Florida. Las horas de voluntariado u observación no cuentan.",
+      "Complete a minimum of 3 months of continuous on-the-job training positioning and exposing dental radiographs under a Florida-licensed dentist, in any dental office — general practice or specialty. Volunteer or shadowing hours do not count.",
+      "Completar un mínimo de 3 meses de capacitación continua en el trabajo posicionando y tomando radiografías dentales bajo un dentista con licencia de Florida, en cualquier consultorio dental — práctica general o de especialidad. Las horas de voluntariado u observación no cuentan.",
     ),
     signedAck,
     englishCompetency,
@@ -455,8 +455,8 @@ export const radiographyDetail: CourseDetail = {
     {
       q: b("What are the requirements to enroll?", "¿Cuáles son los requisitos para inscribirse?"),
       a: b(
-        "You must be at least 18, have at least three months of continuous on-the-job training positioning and exposing radiographs under a Florida-licensed dentist, provide a signed acknowledgement from that dentist, and demonstrate English competency. Volunteer or shadowing hours do not count.",
-        "Debes tener al menos 18 años, contar con un mínimo de tres meses de capacitación continua en el trabajo posicionando y tomando radiografías bajo un dentista con licencia de Florida, presentar una constancia firmada por ese dentista y demostrar competencia en inglés. Las horas de voluntariado u observación no cuentan.",
+        "You must be at least 18, have at least three months of continuous on-the-job training positioning and exposing radiographs under a Florida-licensed dentist (any dental office — general practice or specialty), provide a signed acknowledgement from that dentist, and demonstrate English competency. Volunteer or shadowing hours do not count.",
+        "Debes tener al menos 18 años, contar con un mínimo de tres meses de capacitación continua en el trabajo posicionando y tomando radiografías bajo un dentista con licencia de Florida (en cualquier consultorio dental — práctica general o de especialidad), presentar una constancia firmada por ese dentista y demostrar competencia en inglés. Las horas de voluntariado u observación no cuentan.",
       ),
     },
     {
