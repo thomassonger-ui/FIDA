@@ -132,8 +132,8 @@ const capstone = b(
 );
 
 const signedAck = b(
-  "Provide a signed acknowledgement from your supervising dentist confirming the three months of training.",
-  "Presentar una constancia firmada por tu dentista supervisor que confirme los tres meses de capacitación.",
+  "Provide a signed acknowledgement from your supervising dentist (general or specialty practice) confirming the three months of training.",
+  "Presentar una constancia firmada por tu dentista supervisor (práctica general o de especialidad) que confirme los tres meses de capacitación.",
 );
 
 const age18 = b("Be at least 18 years of age.", "Tener al menos 18 años de edad.");

@@ -219,8 +219,8 @@ export const programs: BiProgram[] = [
         "Un mínimo de 3 meses de capacitación continua en el trabajo posicionando y tomando radiografías dentales bajo un dentista con licencia de Florida, en cualquier consultorio dental — práctica general o de especialidad. El voluntariado o la observación NO cuentan.",
       ),
       b(
-        "Signed acknowledgement from your supervising dentist confirming the three months of training.",
-        "Constancia firmada por tu dentista supervisor que confirme los tres meses de capacitación.",
+        "Signed acknowledgement from your supervising dentist (general or specialty practice) confirming the three months of training.",
+        "Constancia firmada por tu dentista supervisor (práctica general o de especialidad) que confirme los tres meses de capacitación.",
       ),
       // LOCKED verbatim in English.
       b(
@@ -279,8 +279,8 @@ export const programs: BiProgram[] = [
         "Un mínimo de 3 meses de capacitación continua en el trabajo junto al sillón dental bajo un dentista con licencia de Florida, en cualquier consultorio dental — práctica general o de especialidad. El voluntariado o la observación NO cuentan.",
       ),
       b(
-        "Signed acknowledgement from your supervising dentist confirming the three months of training.",
-        "Constancia firmada por tu dentista supervisor que confirme los tres meses de capacitación.",
+        "Signed acknowledgement from your supervising dentist (general or specialty practice) confirming the three months of training.",
+        "Constancia firmada por tu dentista supervisor (práctica general o de especialidad) que confirme los tres meses de capacitación.",
       ),
       // LOCKED verbatim in English.
       b(
