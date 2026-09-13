@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { promoteToStudent } from "@/lib/prospects-db";
+import { programUsesAgreement, sendEnrollmentAgreement } from "@/lib/enrollment";
+import { getStudentById } from "@/lib/students-db";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -9,6 +11,9 @@ export const dynamic = "force-dynamic";
  *
  * Registered = the $150 fee is paid. Writes the students row and links it
  * back. Students stays the single record from here on.
+ *
+ * Entry Level students also get the enrollment agreement emailed here
+ * (2026-09-13) — this click is the "$150 paid" trigger Ashley asked for.
  */
 export async function POST(
   req: NextRequest,
@@ -24,5 +29,11 @@ export async function POST(
   const res = await promoteToStudent(id, body);
   if ("error" in res)
     return NextResponse.json({ ok: false, error: res.error }, { status: 400 });
-  return NextResponse.json({ ok: true, studentId: res.studentId });
+  let agreement: "sent" | "skipped" | string = "skipped";
+  const student = await getStudentById(res.studentId);
+  if (student && programUsesAgreement(student.program)) {
+    const sent = await sendEnrollmentAgreement(res.studentId, "auto:promote");
+    agreement = sent.ok ? "sent" : `failed: ${sent.error}`;
+  }
+  return NextResponse.json({ ok: true, studentId: res.studentId, agreement });
 }

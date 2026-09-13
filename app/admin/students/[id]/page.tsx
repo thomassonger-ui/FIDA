@@ -10,6 +10,9 @@ import {
 } from "@/lib/tickets-db";
 import { SendInviteButton } from "./send-invite-button";
 import { AdminUploadDocForm } from "./upload-form";
+import { AgreementCard } from "./agreement-card";
+import { latestAgreementForStudent, programUsesAgreement } from "@/lib/enrollment";
+import { planLabel } from "@/lib/enrollment-agreement-text";
 
 export const dynamic = "force-dynamic";
 
@@ -55,6 +58,7 @@ export default async function AdminStudentDetail({
 
   const tickets = await ticketsForStudent(student.id, student.email);
   const docs = await listStudentDocuments(student.id);
+  const agreement = await latestAgreementForStudent(student.id);
   const signed: Record<number, string | null> = {};
   for (const d of docs) signed[d.id] = await signedDocumentUrl(d.storage_path);
 
@@ -164,6 +168,19 @@ export default async function AdminStudentDetail({
 
         {/* Sidebar */}
         <aside className="space-y-4 text-sm">
+          <AgreementCard
+            studentId={student.id}
+            summary={{
+              status: agreement ? (agreement.status === "signed" ? "signed" : "sent") : "none",
+              sentAt: agreement?.sent_at ?? null,
+              signedAt: agreement?.signed_at ?? null,
+              signerName: agreement?.signer_name ?? null,
+              plan: agreement?.fields?.payment_plan ? planLabel(agreement.fields.payment_plan, !!agreement.fields.military) : null,
+              depositEmailSentAt: agreement?.deposit_email_sent_at ?? null,
+              depositPaidAt: agreement?.deposit_paid_at ?? null,
+              usesAgreement: programUsesAgreement(student.program),
+            }}
+          />
           <div className="card p-4">
             <div className="eyebrow mb-2">Portal status</div>
             <div className="text-navy">{student.status}</div>

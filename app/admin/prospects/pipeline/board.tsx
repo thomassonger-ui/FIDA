@@ -87,7 +87,11 @@ export function Board({
       });
       const json = await res.json();
       if (!json.ok) setError(json.error ?? "Could not promote.");
-      else startTransition(() => router.refresh());
+      else {
+        if (typeof json.agreement === "string" && json.agreement.startsWith("failed"))
+          setError(`Promoted, but the enrollment agreement email ${json.agreement} — re-send it from the student page.`);
+        startTransition(() => router.refresh());
+      }
     } catch {
       setError("Network error — nothing was promoted.");
     } finally {
