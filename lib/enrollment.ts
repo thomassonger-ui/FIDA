@@ -4,7 +4,9 @@
  *   sendEnrollmentAgreement(studentId)  → row + email with signing link
  *   getAgreementByToken(token)          → for the public /enroll/[token] page
  *   signAgreement(token, fields, meta)  → PDF → student_documents + document_records,
- *                                         deposit email ($600 QBO link), staff notice
+ *                                         PDF emailed to student + staff, deposit email ($600 QBO link)
+ *   countersignAgreement(agreementId)   → staff signs the School Official / Representative lines;
+ *                                         fully executed PDF re-filed + emailed to student + staff
  *   markDepositPaid(agreementId)        → staff button
  *
  * Env: RESEND_API_KEY (+ DRIP_FROM / DRIP_REPLY_TO, shared with the drip),
@@ -17,7 +19,8 @@ import { getServerClient } from "./supabase";
 import { siteOrigin } from "./site-url";
 import { getStudentById, uploadStudentDocument, type Student } from "./students-db";
 import { renderAgreementPdf, type AgreementFields } from "./enrollment-pdf";
-import { AGREEMENT_VERSION, SCHOOL, planLabel, type PaymentPlan } from "./enrollment-agreement-text";
+import { AGREEMENT_VERSION, INITIAL_KEYS, SCHOOL, planLabel, type InitialKey, type PaymentPlan } from "./enrollment-agreement-text";
+import { scheduleFor } from "./enrollment-schedule";
 import { SEAT_DEPOSIT_DUE, SEAT_DEPOSIT, REGISTRATION_FEE } from "./payment";
 
 export type AgreementStatus = "sent" | "signed" | "void";
@@ -43,6 +46,11 @@ export type EnrollmentAgreement = {
   document_record_id: number | null;
   deposit_email_sent_at: string | null;
   deposit_paid_at: string | null;
+  countersigned_at: string | null;
+  countersigner_name: string | null;
+  countersigner_title: string | null;
+  countersigned_pdf_sha256: string | null;
+  countersigned_document_record_id: number | null;
   created_at: string;
 };
 
@@ -166,7 +174,17 @@ export type SignInput = {
   user_agent: string;
 };
 
-const PLANS: PaymentPlan[] = ["plan_6", "plan_8", "tfc", "paid_in_full"];
+const PLANS: PaymentPlan[] = ["paid_in_full", "in_house", "tfc"];
+
+/** 2–4 letters, matches the first letters of the legal name's words (e.g. "Mary Ann Smith" → MAS or MS). */
+function initialsMatch(initials: string, legalName: string): boolean {
+  const parts = legalName.split(/\s+/).filter(Boolean);
+  if (parts.length < 2) return false;
+  const all = parts.map((p) => p[0].toUpperCase()).join("");
+  const firstLast = `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+  const v = initials.toUpperCase().replace(/[^A-Z]/g, "");
+  return v.length >= 2 && (v === all || v === firstLast);
+}
 
 export function isMinor(dob: string, at = new Date()): boolean {
   const m = dob.match(/^(\d{4})-(\d{2})-(\d{2})$/);
@@ -179,27 +197,45 @@ export function isMinor(dob: string, at = new Date()): boolean {
 export function validateSignInput(raw: unknown): { input: SignInput } | { error: string } {
   const r = (raw ?? {}) as Record<string, unknown>;
   const s = (k: string, max = 200) => String(r[k] ?? "").trim().slice(0, max);
+  const rawInitials = (r.initials ?? {}) as Record<string, unknown>;
+  const initials = Object.fromEntries(
+    INITIAL_KEYS.map((k) => [k, String(rawInitials[k] ?? "").trim().toUpperCase().slice(0, 4)])
+  ) as Record<InitialKey, string>;
   const fields: AgreementFields = {
     legal_name: s("legal_name", 120),
     dob: s("dob", 10),
     email: s("email", 160).toLowerCase(),
-    phone: s("phone", 40),
-    address: s("address", 300),
-    emergency_contact: s("emergency_contact", 200),
-    start_date: s("start_date", 80),
+    address: s("address", 200),
+    city_state_zip: s("city_state_zip", 120),
+    phone_home: s("phone_home", 40),
+    phone_cell: s("phone_cell", 40),
+    phone_work: s("phone_work", 40),
+    emergency_name: s("emergency_name", 120),
+    emergency_relationship: s("emergency_relationship", 60),
+    emergency_phone: s("emergency_phone", 40),
+    start_date: s("start_date", 120),
     payment_plan: s("payment_plan", 20) as PaymentPlan,
-    military: r.military === true || r.military === "on" || r.military === "true",
+    military_spouse: r.military_spouse === true || r.military_spouse === "on" || r.military_spouse === "true",
+    initials,
   };
   const signer_name = s("signer_name", 120);
   const guardian_name = s("guardian_name", 120) || null;
 
-  if (fields.legal_name.length < 3) return { error: "Enter your full legal name." };
+  if (fields.legal_name.length < 3 || !/\s/.test(fields.legal_name)) return { error: "Enter your full legal name (first and last)." };
   if (!/^\d{4}-\d{2}-\d{2}$/.test(fields.dob)) return { error: "Enter your date of birth." };
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email)) return { error: "Enter a valid email address." };
-  if (fields.phone.length < 7) return { error: "Enter your phone number." };
-  if (fields.address.length < 8) return { error: "Enter your mailing address." };
-  if (fields.emergency_contact.length < 5) return { error: "Enter an emergency contact (name and phone)." };
+  if (fields.address.length < 5) return { error: "Enter your street address." };
+  if (fields.city_state_zip.length < 8) return { error: "Enter your city, state and ZIP." };
+  if (fields.phone_cell.length < 7 && fields.phone_home.length < 7) return { error: "Enter at least a cell or home phone number." };
+  if (fields.emergency_name.length < 3) return { error: "Enter an emergency contact name." };
+  if (fields.emergency_relationship.length < 2) return { error: "Enter your relationship to the emergency contact." };
+  if (fields.emergency_phone.length < 7) return { error: "Enter the emergency contact's phone number." };
+  if (!scheduleFor(fields.start_date)) return { error: "Choose the class you are enrolling in." };
   if (!PLANS.includes(fields.payment_plan)) return { error: "Choose a payment plan." };
+  for (const k of INITIAL_KEYS) {
+    if (!initialsMatch(fields.initials[k], fields.legal_name))
+      return { error: "Please type your initials in each of the four \"Student Initial\" boxes (they must match your legal name)." };
+  }
   if (signer_name.toLowerCase() !== fields.legal_name.toLowerCase())
     return { error: "Your typed signature must match your legal name exactly." };
   if (isMinor(fields.dob) && !guardian_name)
@@ -281,26 +317,28 @@ export async function signAgreement(
   // Keep the student row current with what they told us.
   await supabase
     .from("students")
-    .update({ full_name: input.fields.legal_name, phone: input.fields.phone })
+    .update({ full_name: input.fields.legal_name, phone: input.fields.phone_cell || input.fields.phone_home || input.fields.phone_work || null })
     .eq("id", student.id);
 
   // 3) Deposit email + staff notice — failures here don't undo the signature.
   const depositUrl = process.env.QBO_DEPOSIT_URL?.trim() || null;
   const first = input.fields.legal_name.split(" ")[0];
+  const attachment = { filename, content: buffer.toString("base64") };
   const deposit = await sendMail({
     to: input.fields.email,
     subject: `Signed — next, your ${SEAT_DEPOSIT_DUE} seat deposit`,
+    attachments: [attachment],
     text: [
       `Hi ${first},`,
       "",
-      "Your enrollment agreement is signed and on file. Thank you!",
+      "Your enrollment agreement is signed and on file. Thank you! A copy of what you signed is attached to this email. Once the school signs, you'll receive the fully executed copy.",
       "",
       `Last step to secure your seat: pay the ${SEAT_DEPOSIT_DUE} remainder of your ${SEAT_DEPOSIT} seat deposit (your ${REGISTRATION_FEE} registration fee already counts toward it).`,
       "",
       depositUrl ? `Pay the ${SEAT_DEPOSIT_DUE} deposit here: ${depositUrl}` : `We'll send your ${SEAT_DEPOSIT_DUE} deposit invoice from our QuickBooks account shortly — watch for an email from Intuit.`,
       "",
-      `Payment plan you selected: ${planLabel(input.fields.payment_plan, input.fields.military)}.`,
-      input.fields.military ? "Bring your military ID or DD214 to orientation so we can apply the incentive." : "",
+      `Payment plan you selected: ${planLabel(input.fields.payment_plan)}`,
+      input.fields.military_spouse ? "You indicated you are the spouse of an active-duty military member or first responder — bring proof to orientation so we can apply the $1,500 reduction." : "",
       "",
       "Once the deposit is in, we'll confirm your seat and send your acceptance packet with orientation details.",
       "",
@@ -317,13 +355,15 @@ export async function signAgreement(
   await sendMail({
     to: notify,
     subject: `Enrollment agreement signed — ${input.fields.legal_name}`,
+    attachments: [attachment],
     text: [
-      `${input.fields.legal_name} signed the Entry Level enrollment agreement at ${signedAt.toLocaleString("en-US", { timeZone: "America/New_York" })} ET.`,
+      `${input.fields.legal_name} signed the Entry Level enrollment agreement at ${signedAt.toLocaleString("en-US", { timeZone: "America/New_York" })} ET. The signed PDF is attached and filed in the student record and the document vault.`,
       "",
-      `Plan: ${planLabel(input.fields.payment_plan, input.fields.military)}${input.fields.military ? " (military/first-responder incentive — verify ID)" : ""}`,
-      `Start date requested: ${input.fields.start_date || "not specified"}`,
+      `Plan: ${planLabel(input.fields.payment_plan)}${input.fields.military_spouse ? " (military/first-responder SPOUSE reduction claimed — verify)" : ""}`,
+      `Class: ${input.fields.start_date || "not specified"}`,
       input.guardian_name ? `Guardian signed: ${input.guardian_name} (student under 18)` : "",
       "",
+      `NEXT: open the student record and click "Countersign" to sign the School Official and Representative lines. The fully executed copy is then emailed to the student and to you.`,
       `Student record: ${siteOrigin()}/admin/students/${student.id}`,
       `Vault: ${siteOrigin()}/admin/documents`,
       "",
@@ -334,6 +374,101 @@ export async function signAgreement(
   });
 
   return { ok: true, agreement: signed, depositUrl };
+}
+
+export async function countersignAgreement(
+  agreementId: string,
+  by: { name: string; title: string }
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const name = by.name.trim().slice(0, 120);
+  const title = by.title.trim().slice(0, 80);
+  if (name.length < 3) return { ok: false, error: "Type your full name to countersign." };
+  const supabase = getServerClient();
+  const { data } = await supabase.from(TABLE).select("*").eq("id", agreementId).maybeSingle();
+  const agreement = data as EnrollmentAgreement | null;
+  if (!agreement || agreement.status !== "signed") return { ok: false, error: "The student hasn't signed yet." };
+  if (agreement.countersigned_at) return { ok: false, error: "This agreement is already countersigned." };
+  const student = await getStudentById(agreement.student_id);
+  if (!student) return { ok: false, error: "Student not found." };
+  const fields = agreement.fields as AgreementFields;
+  if (!fields?.legal_name || !fields.initials) return { ok: false, error: "This agreement was signed under an older form and can't be countersigned online." };
+
+  const now = new Date();
+  const pdf = await renderAgreementPdf(fields, {
+    signer_name: agreement.signer_name ?? fields.legal_name,
+    guardian_name: agreement.guardian_name,
+    signed_at: new Date(agreement.signed_at ?? agreement.created_at),
+    signer_ip: agreement.signer_ip ?? "",
+    user_agent: agreement.signer_user_agent ?? "",
+    agreement_id: agreement.id,
+    version: agreement.version,
+    countersign: { name, title, signed_at: now },
+  });
+  const buffer = Buffer.from(pdf);
+  const sha256 = createHash("sha256").update(buffer).digest("hex");
+  const safeName = fields.legal_name.replace(/[^\w]+/g, "_");
+  const filename = `Enrollment_Agreement_${safeName}_EXECUTED_${now.toISOString().slice(0, 10)}.pdf`;
+
+  const up = await uploadStudentDocument({
+    studentId: student.id,
+    filename,
+    mimeType: "application/pdf",
+    buffer,
+    uploadedBy: "staff",
+    uploadedByEmail: null,
+    label: "Enrollment Agreement (fully executed)",
+    isRequired: false,
+  });
+  if ("error" in up) return { ok: false, error: `Could not file the executed PDF: ${up.error}` };
+  const recordId = await fileInVault({
+    student, filename, buffer, sha256,
+    notes: `Countersigned ${now.toISOString()} by ${name}${title ? ` (${title})` : ""}. Student e-signed ${agreement.signed_at}. Agreement ${agreement.id} (${agreement.version}).`,
+  });
+
+  const { error } = await supabase
+    .from(TABLE)
+    .update({
+      countersigned_at: now.toISOString(),
+      countersigner_name: name,
+      countersigner_title: title || null,
+      countersigned_pdf_sha256: sha256,
+      countersigned_document_record_id: recordId,
+    })
+    .eq("id", agreement.id);
+  if (error) return { ok: false, error: error.message };
+
+  const attachment = { filename, content: buffer.toString("base64") };
+  const first = fields.legal_name.split(" ")[0];
+  const studentMail = await sendMail({
+    to: agreement.signer_email || fields.email || student.email,
+    subject: "Your fully executed FIDA enrollment agreement",
+    attachments: [attachment],
+    text: [
+      `Hi ${first},`,
+      "",
+      `${SCHOOL.name} has signed your enrollment agreement. The fully executed copy is attached for your records; it's also in your student portal under Documents.`,
+      "",
+      "Welcome — we'll be in touch with your acceptance packet and orientation details.",
+      "",
+      "Debbie & Ashley",
+      SCHOOL.name,
+      `${SCHOOL.phone} · ${SCHOOL.email}`,
+    ].join("\n"),
+  });
+  const notify = process.env.ENROLLMENT_NOTIFY_EMAIL?.trim() || SCHOOL.email;
+  await sendMail({
+    to: notify,
+    subject: `Enrollment agreement executed — ${fields.legal_name}`,
+    attachments: [attachment],
+    text: [
+      `${name} countersigned ${fields.legal_name}'s enrollment agreement at ${now.toLocaleString("en-US", { timeZone: "America/New_York" })} ET. Fully executed PDF attached and filed in the student record and the document vault.`,
+      studentMail.ok ? "The student was emailed the executed copy." : `Emailing the student FAILED: ${studentMail.error}`,
+      "",
+      `Student record: ${siteOrigin()}/admin/students/${student.id}`,
+      `Vault: ${siteOrigin()}/admin/documents`,
+    ].join("\n"),
+  });
+  return { ok: true };
 }
 
 export async function markDepositPaid(agreementId: string, paid: boolean): Promise<boolean> {
@@ -405,11 +540,17 @@ async function fileInVault(input: {
 // Mail — transactional (no List-Unsubscribe; these aren't marketing)
 // ------------------------------------------------------------
 
-async function sendMail(opts: { to: string; subject: string; text: string }): Promise<{ ok: true } | { ok: false; error: string }> {
+async function sendMail(opts: {
+  to: string;
+  subject: string;
+  text: string;
+  attachments?: { filename: string; content: string }[]; // content = base64
+}): Promise<{ ok: true } | { ok: false; error: string }> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) return { ok: false, error: "RESEND_API_KEY is not set." };
   const from = process.env.ENROLLMENT_FROM || process.env.DRIP_FROM || process.env.RESEND_FROM || "FIDA Admissions <reply@fldentalassisting.com>";
   const payload: Record<string, unknown> = { from, to: [opts.to], subject: opts.subject, text: opts.text };
+  if (opts.attachments?.length) payload.attachments = opts.attachments;
   const rt = process.env.DRIP_REPLY_TO;
   if (rt) payload.reply_to = rt;
   try {

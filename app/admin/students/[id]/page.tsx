@@ -175,9 +175,11 @@ export default async function AdminStudentDetail({
               sentAt: agreement?.sent_at ?? null,
               signedAt: agreement?.signed_at ?? null,
               signerName: agreement?.signer_name ?? null,
-              plan: agreement?.fields?.payment_plan ? planLabel(agreement.fields.payment_plan, !!agreement.fields.military) : null,
+              plan: agreement?.fields?.payment_plan ? planLabel(agreement.fields.payment_plan) : null,
               depositEmailSentAt: agreement?.deposit_email_sent_at ?? null,
               depositPaidAt: agreement?.deposit_paid_at ?? null,
+              countersignedAt: agreement?.countersigned_at ?? null,
+              countersignerName: agreement?.countersigner_name ?? null,
               usesAgreement: programUsesAgreement(student.program),
             }}
           />
