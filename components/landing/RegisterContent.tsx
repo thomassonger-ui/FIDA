@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
+import { ApplicationModal } from "@/components/landing/ApplicationModal";
 import { useLang } from "@/lib/i18n/LanguageProvider";
 import { register as r } from "@/lib/i18n/register";
 import { COHORTS } from "@/lib/cohort";
@@ -16,8 +18,17 @@ import { CALENDLY_TOUR_URL, QBO_REGISTRATION_URL, REGISTRATION_FEE } from "@/lib
 export function RegisterContent() {
   const { t } = useLang();
 
+  /* qboOpened: the visitor has clicked through to QuickBooks, so step 2 swaps
+     to the "finish in that tab" panel. feePaid: they came back and said so —
+     we can't verify it from here (QuickBooks doesn't call us back), staff
+     reconcile against QBO by name and email, exactly as they do today. */
+  const [qboOpened, setQboOpened] = useState(false);
+  const [feePaid, setFeePaid] = useState(false);
+  const [appOpen, setAppOpen] = useState(false);
+
   return (
     <div className="min-h-screen flex flex-col">
+      <ApplicationModal open={appOpen} onClose={() => setAppOpen(false)} />
       <Nav />
 
       {/* WCAG 1.3.1 / 2.4.1 — named landmark, and the skip link target. */}
@@ -35,72 +46,140 @@ export function RegisterContent() {
           </div>
         </section>
 
-        {/* TWO STEPS */}
+        {/* EASY AS 1-2-3 */}
         <section className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-12 md:py-16">
-          <ol className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Step 1 — Campus tour (Calendly). Everything starts here. */}
-            <li className="card bg-white p-8 md:p-10 flex flex-col border-teal/40">
-              <div className="text-xs font-semibold tracking-[0.12em] uppercase text-teal">
-                {t(r.step0Label)}
+          <div className="max-w-2xl mb-8 md:mb-10">
+            <h2 className="font-display text-3xl md:text-4xl text-navy tracking-tight">
+              {t(r.easyHeading)}
+            </h2>
+            <p className="mt-3 text-muted leading-relaxed">{t(r.easySub)}</p>
+          </div>
+
+          {/*
+            items-stretch + each card a flex column with an mt-auto footer keeps
+            the three CTAs on one line regardless of how much body copy each
+            card carries. The old layout let the longest button label push its
+            card's CTA out of line with the other two.
+          */}
+          <ol className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+            {/* Step 1 — Campus tour (Calendly). Free, and visibly so: tinted
+                card, teal border, FREE badge. Nothing is owed at this step and
+                the page should never let that be ambiguous. */}
+            <li className="card bg-teal/[0.04] border-2 border-teal/50 p-8 md:p-10 flex flex-col">
+              <div className="flex items-center justify-between gap-3">
+                <div className="text-xs font-semibold tracking-[0.12em] uppercase text-teal">
+                  {t(r.step0Label)}
+                </div>
+                <span className="rounded-full bg-teal px-3 py-1 text-xs font-bold uppercase tracking-[0.08em] text-white">
+                  {t(r.freeBadge)}
+                </span>
               </div>
-              <h2 className="mt-3 font-display text-2xl md:text-3xl text-navy leading-tight">
+              <h3 className="mt-3 font-display text-2xl md:text-3xl text-navy leading-tight">
                 {t(r.step0Title)}
-              </h2>
+              </h3>
               <p className="mt-4 text-muted leading-relaxed flex-1">{t(r.step0Body)}</p>
               <div className="mt-6">
                 <a
                   href={CALENDLY_TOUR_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn-primary w-full sm:w-auto"
+                  className="btn-primary w-full justify-center"
                 >
                   {t(r.step0Cta)} <span aria-hidden="true">↗</span>
                 </a>
+                <p className="mt-3 text-sm text-subtle min-h-[2.75rem]">{t(r.step0Done)}</p>
               </div>
-              <p className="mt-3 text-sm text-subtle">{t(r.step0Done)}</p>
             </li>
 
-            {/* Step 2 — QBO payment */}
+            {/* Step 2 — $150 registration fee, paid through QuickBooks.
+                Intuit sends x-frame-options SAMEORIGIN and frame-ancestors
+                'self' https://*.intuit.com, so their pay page CANNOT be put in
+                a modal on this domain — an iframe renders an empty box. It
+                opens in its own tab, and the panel below keeps the visitor
+                oriented here while that happens. */}
             <li className="card bg-white p-8 md:p-10 flex flex-col">
-              <div className="flex items-baseline justify-between gap-3">
+              <div className="flex items-center justify-between gap-3">
                 <div className="text-xs font-semibold tracking-[0.12em] uppercase text-teal">
                   {t(r.step2Label)}
                 </div>
+                <span className="rounded-full bg-navy/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.08em] text-navy">
+                  {t(r.paidBadge)}
+                </span>
+              </div>
+              <div className="mt-3 flex items-baseline gap-3">
                 <div className="font-display text-4xl text-navy">{REGISTRATION_FEE}</div>
               </div>
-              <h2 className="mt-3 font-display text-2xl md:text-3xl text-navy leading-tight">
+              <h3 className="mt-2 font-display text-2xl md:text-3xl text-navy leading-tight">
                 {t(r.step2Title)}
-              </h2>
+              </h3>
               <p className="mt-4 text-muted leading-relaxed flex-1">{t(r.step2Body)}</p>
+
               <div className="mt-6">
-                {/* QuickBooks Online Buy Button — link supplied by Ashley 2026-08-25. */}
-                <a
-                  href={QBO_REGISTRATION_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-primary w-full sm:w-auto"
-                >
-                  {t(r.step2Cta)} <span aria-hidden="true">↗</span>
-                </a>
+                {!qboOpened ? (
+                  <>
+                    <a
+                      href={QBO_REGISTRATION_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setQboOpened(true)}
+                      className="btn-primary w-full justify-center"
+                    >
+                      {t(r.step2Cta)} <span aria-hidden="true">↗</span>
+                    </a>
+                    <p className="mt-3 text-sm text-subtle min-h-[2.75rem]">{t(r.step2Note)}</p>
+                  </>
+                ) : (
+                  <div className="rounded-md border border-teal/40 bg-teal/[0.06] p-4">
+                    <div className="font-semibold text-navy text-sm">{t(r.qboOpenedTitle)}</div>
+                    <p className="mt-1.5 text-sm text-muted leading-relaxed">{t(r.qboOpenedBody)}</p>
+                    <button
+                      type="button"
+                      onClick={() => setFeePaid(true)}
+                      className="btn-primary mt-4 w-full justify-center"
+                    >
+                      {t(r.qboPaidCta)} <span aria-hidden="true">→</span>
+                    </button>
+                    <a
+                      href={QBO_REGISTRATION_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-3 block text-center text-sm font-semibold text-teal hover:underline"
+                    >
+                      {t(r.qboReopen)} <span aria-hidden="true">↗</span>
+                    </a>
+                  </div>
+                )}
               </div>
-              <p className="mt-3 text-sm text-subtle">{t(r.step2Note)}</p>
             </li>
 
-            {/* Step 3 — Application (Atticus for now; the full application + agreement is next) */}
+            {/* Step 3 — Application + enrollment agreement, in an on-page
+                modal. This is FIDA's own flow, so unlike QuickBooks it can be
+                embedded and the visitor never leaves /register. */}
             <li className="card bg-white p-8 md:p-10 flex flex-col">
-              <div className="text-xs font-semibold tracking-[0.12em] uppercase text-teal">
-                {t(r.step1Label)}
+              <div className="flex items-center justify-between gap-3">
+                <div className="text-xs font-semibold tracking-[0.12em] uppercase text-teal">
+                  {t(r.step1Label)}
+                </div>
+                <span className="rounded-full bg-navy/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.08em] text-navy">
+                  {t(r.paidBadge)}
+                </span>
               </div>
-              <h2 className="mt-3 font-display text-2xl md:text-3xl text-navy leading-tight">
+              <h3 className="mt-3 font-display text-2xl md:text-3xl text-navy leading-tight">
                 {t(r.step1Title)}
-              </h2>
+              </h3>
               <p className="mt-4 text-muted leading-relaxed flex-1">{t(r.step1Body)}</p>
               <div className="mt-6">
-                <Link href="/atticus" className="btn-ghost">
+                <button
+                  type="button"
+                  onClick={() => setAppOpen(true)}
+                  className="btn-primary w-full justify-center"
+                >
                   {t(r.step1Cta)} <span aria-hidden="true">→</span>
-                </Link>
+                </button>
+                <p className="mt-3 text-sm text-subtle min-h-[2.75rem]">
+                  {feePaid ? t(r.qboPaidNote) : t(r.step1Done)}
+                </p>
               </div>
-              <p className="mt-3 text-sm text-subtle">{t(r.step1Done)}</p>
             </li>
           </ol>
         </section>

@@ -36,12 +36,47 @@ export const register = {
 
   step1Label: b("Step 3", "Paso 3"),
   step1Title: b("Complete your application", "Completa tu solicitud"),
+  /* Was "with Atticus" — that stopped being true when step 3 became the
+     on-page application + agreement modal. */
   step1Body: b(
-    "Once your registration fee is in, finish the online application and enrollment agreement with Atticus — about five minutes. Your seat deposit comes after that.",
-    "Con tu cuota de inscripción recibida, completa la solicitud en línea y el acuerdo de inscripción con Atticus: unos cinco minutos. El depósito de cupo viene después.",
+    "Your application and enrollment agreement open right here on this page — read it, initial it, sign it. About five minutes. Your seat deposit comes after that.",
+    "Tu solicitud y tu acuerdo de inscripción se abren aquí mismo en esta página: léelo, pon tus iniciales y fírmalo. Unos cinco minutos. El depósito de cupo viene después.",
   ),
   step1Cta: b("Start my application", "Iniciar mi solicitud"),
   step1Done: b("Use the same name and email you used to pay.", "Usa el mismo nombre y correo con los que pagaste."),
+
+  /* --- Application + e-sign modal. This is FIDA's own flow, so unlike the
+     QuickBooks page it can be embedded — the visitor never leaves /register. --- */
+  modal: {
+    title: b("Your application", "Tu solicitud"),
+    close: b("Close", "Cerrar"),
+    introHeading: b("First, who are you?", "Primero, ¿quién eres?"),
+    introBody: b(
+      "Four details, then your enrollment agreement opens right here to read, initial and sign.",
+      "Cuatro datos y tu acuerdo de inscripción se abre aquí mismo para leer, poner iniciales y firmar.",
+    ),
+    fullName: b("Full legal name", "Nombre legal completo"),
+    email: b("Email", "Correo electrónico"),
+    phone: b("Phone", "Teléfono"),
+    cohort: b("Which class are you aiming for?", "¿A qué clase te diriges?"),
+    cohortAny: b("Not sure yet", "Aún no estoy seguro"),
+    submit: b("Continue to my agreement", "Continuar a mi acuerdo"),
+    working: b("One moment…", "Un momento…"),
+    errorGeneric: b(
+      "Something went wrong on our end. Please try again, or call us and we'll finish this with you.",
+      "Algo falló de nuestro lado. Inténtalo de nuevo o llámanos y lo completamos contigo.",
+    ),
+    errorEmail: b("Please enter a valid email address.", "Ingresa un correo electrónico válido."),
+    errorName: b("Please enter your full legal name.", "Ingresa tu nombre legal completo."),
+    alreadySigned: b(
+      "Our records show this agreement is already signed. Call us and we'll sort it out.",
+      "Según nuestros registros este acuerdo ya está firmado. Llámanos y lo resolvemos.",
+    ),
+    leaveWarning: b(
+      "Close the application? Anything you've typed will be lost.",
+      "¿Cerrar la solicitud? Se perderá lo que hayas escrito.",
+    ),
+  },
 
   step2Label: b("Step 2", "Paso 2"),
   step2Title: b(
@@ -52,13 +87,41 @@ export const register = {
     "After your tour, when you've decided to enroll. Non-refundable, and it counts toward your $750 seat deposit. Paid securely through QuickBooks — card, ACH, PayPal, or Venmo; opens in a new tab and QuickBooks emails your receipt.",
     "Después de tu recorrido, cuando hayas decidido inscribirte. No reembolsable, y se acredita a tu depósito de cupo de $750. Se paga de forma segura a través de QuickBooks: tarjeta, ACH, PayPal o Venmo; se abre en una pestaña nueva y QuickBooks te envía el recibo.",
   ),
-  step2Cta: b(
-    "Secure My Seat – Pay Registration Fee",
-    "Asegura mi cupo – Pagar cuota de inscripción",
-  ),
+  /* Short label on purpose. The old "Secure My Seat – Pay Registration Fee"
+     wrapped to two lines, which made this card's button taller than the other
+     two and threw the whole row out of alignment. The $150 is shown as its own
+     price badge on the card, so the button doesn't need to carry it. */
+  step2Cta: b("Secure My Seat", "Asegura mi cupo"),
+  /* Kept to two lines at card width. The longer explanation is in step2Body;
+     a third line here made this card's footer taller than its neighbours and
+     lifted the button out of line with them. */
   step2Note: b(
-    "Use the same name and email on your application so we can match the payment to you.",
-    "Usa el mismo nombre y correo en tu solicitud para que podamos vincular el pago contigo.",
+    "Use the same name and email as your application.",
+    "Usa el mismo nombre y correo de tu solicitud.",
+  ),
+
+  /* --- Easy as 1-2-3 framing + the free/paid split --- */
+  easyHeading: b("Easy as 1-2-3", "Fácil como 1-2-3"),
+  easySub: b(
+    "One free visit, then two short steps. No surprises, and nothing is owed until you've seen the school.",
+    "Una visita gratis y luego dos pasos breves. Sin sorpresas, y no pagas nada hasta conocer la escuela.",
+  ),
+  freeBadge: b("Free", "Gratis"),
+  paidBadge: b("Paid step", "Paso con pago"),
+
+  /* --- QuickBooks handoff. Intuit sends x-frame-options SAMEORIGIN, so their
+     pay page cannot be embedded here; it has to open in its own tab. This
+     panel keeps the visitor oriented on /register while that tab is open. --- */
+  qboOpenedTitle: b("Finish your payment in the QuickBooks tab", "Completa tu pago en la pestaña de QuickBooks"),
+  qboOpenedBody: b(
+    "We opened QuickBooks in a new tab — card, ACH, PayPal or Venmo. They'll email your receipt. Come back here when you're done.",
+    "Abrimos QuickBooks en una pestaña nueva: tarjeta, ACH, PayPal o Venmo. Te enviarán el recibo por correo. Vuelve aquí cuando termines.",
+  ),
+  qboPaidCta: b("I've paid — continue", "Ya pagué — continuar"),
+  qboReopen: b("Reopen the payment tab", "Volver a abrir la pestaña de pago"),
+  qboPaidNote: b(
+    "We'll match your payment to your application by name and email.",
+    "Vincularemos tu pago con tu solicitud por nombre y correo.",
   ),
 
   nextEyebrow: b("What happens next", "Qué sigue"),
