@@ -97,27 +97,37 @@ export const programsCopy = {
     credential: b("Credential", "Credencial"),
     tuition: b("Tuition", "Matrícula"),
     textbook: b("Textbook", "Libro de texto"),
-    apply: b("Enroll & Pay — PayPal", "Inscríbete y paga — PayPal"),
+    /* Button label IS the three steps — matches /tuition. See lib/i18n/tuition.ts. */
+    apply: b("Enroll · PayPal · Study", "Inscríbete · PayPal · Estudia"),
     /* `applyNoteLead` renders bold — the first of two deliberate emphases on
-       creating the account, matching /tuition. See lib/i18n/tuition.ts. */
+       creating the account, matching /tuition. */
     applyNoteLead: b("Create an Account", "Crea una Cuenta"),
     applyNote: b(
       "first, then pay · secure PayPal checkout",
       "primero, luego paga · pago seguro con PayPal",
     ),
     easyHeading: b("Easy as 1-2-3", "Fácil como 1-2-3"),
-    /* Step 1's `lead` renders bold — the second emphasis. */
+    /* Each step's `lead` renders bold and echoes one word of the button. */
     easySteps: [
       {
-        lead: b("Create an Account", "Crea una Cuenta"),
-        rest: b("— free, takes a minute", "— gratis, toma un minuto"),
+        lead: b("Enroll", "Inscríbete"),
+        rest: b(
+          "— create your free FIDA Moodle account",
+          "— crea tu cuenta gratis en FIDA Moodle",
+        ),
       },
-      { lead: null, rest: b("Pay with PayPal", "Paga con PayPal") },
       {
-        lead: null,
-        rest: b("Start the course immediately", "Comienza el curso de inmediato"),
+        lead: b("PayPal", "PayPal"),
+        rest: b("— pay for this course", "— paga este curso"),
+      },
+      {
+        lead: b("Study", "Estudia"),
+        rest: b("— start immediately", "— empieza de inmediato"),
       },
     ],
+    /* Returning students skip signup and go straight to the course's pay page. */
+    haveAccount: b("Already have an account?", "¿Ya tienes cuenta?"),
+    haveAccountLink: b("Pay & start", "Paga y empieza"),
     fullRequirements: b("Full requirements & cost", "Requisitos completos y costo"),
     beforeEnroll: b("Before you enroll", "Antes de inscribirte"),
     breakdown: b("Course breakdown", "Desglose del curso"),

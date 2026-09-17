@@ -104,9 +104,11 @@ export const tuition = {
       },
     ],
     courseDetails: b("Course details", "Detalles del curso"),
-    enroll: b("Enroll & Pay — PayPal", "Inscríbete y paga — PayPal"),
+    /* The button label IS the three steps, so the CTA and the 1-2-3 box below
+       it say the same thing in the same words. */
+    enroll: b("Enroll · PayPal · Study", "Inscríbete · PayPal · Estudia"),
     /* The note under the button. `enrollNoteLead` renders bold — the first of
-       two deliberate emphases on creating the account. Moodle's login screen
+       two deliberate emphases on creating the account. Moodle's signup screen
        is the first thing a student sees after clicking, and it reads as a
        dead end unless we've told them twice that it is step one. */
     enrollNoteLead: b("Create an Account", "Crea una Cuenta"),
@@ -115,18 +117,27 @@ export const tuition = {
       "primero, luego paga · pago seguro con PayPal",
     ),
     easyHeading: b("Easy as 1-2-3", "Fácil como 1-2-3"),
-    /* Step 1's `lead` renders bold — the second emphasis. */
+    /* Each step's `lead` renders bold and echoes one word of the button. */
     easySteps: [
       {
-        lead: b("Create an Account", "Crea una Cuenta"),
-        rest: b("— free, takes a minute", "— gratis, toma un minuto"),
+        lead: b("Enroll", "Inscríbete"),
+        rest: b(
+          "— create your free FIDA Moodle account",
+          "— crea tu cuenta gratis en FIDA Moodle",
+        ),
       },
-      { lead: null, rest: b("Pay with PayPal", "Paga con PayPal") },
       {
-        lead: null,
-        rest: b("Start the course immediately", "Comienza el curso de inmediato"),
+        lead: b("PayPal", "PayPal"),
+        rest: b("— pay for this course", "— paga este curso"),
+      },
+      {
+        lead: b("Study", "Estudia"),
+        rest: b("— start immediately", "— empieza de inmediato"),
       },
     ],
+    /* Returning students skip signup and go straight to the course's pay page. */
+    haveAccount: b("Already have an account?", "¿Ya tienes cuenta?"),
+    haveAccountLink: b("Pay & start", "Paga y empieza"),
   },
 
   /* --- Real outcome (photo) --- */

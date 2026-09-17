@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
 import { useLang } from "@/lib/i18n/LanguageProvider";
-import { CE_ENROLL } from "@/lib/ce-enroll";
+import { CE_ENROLL, CE_SIGNUP } from "@/lib/ce-enroll";
 import { tuition as tu } from "@/lib/i18n/tuition";
 import { COHORTS } from "@/lib/cohort";
 import { PaymentStructure } from "@/components/landing/PaymentStructure";
@@ -136,8 +136,10 @@ export function TuitionContent() {
                   </div>
                   <div className="mt-1 text-sm text-muted">{t(card.detail)}</div>
                   <div className="mt-6">
+                    {/* Step 1 of Enroll · PayPal · Study — new students create
+                        the Moodle account first. See lib/ce-enroll.ts. */}
                     <a
-                      href={CE_ENROLL[card.course]}
+                      href={CE_SIGNUP}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="btn-enroll w-full"
@@ -170,6 +172,18 @@ export function TuitionContent() {
                         ))}
                       </ol>
                     </div>
+                    {/* Returning students skip signup and pay directly. */}
+                    <p className="mt-3 text-center text-sm text-muted">
+                      {t(tu.ce.haveAccount)}{" "}
+                      <a
+                        href={CE_ENROLL[card.course]}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-semibold text-teal hover:underline"
+                      >
+                        {t(tu.ce.haveAccountLink)} <span aria-hidden="true">→</span>
+                      </a>
+                    </p>
                     <Link
                       href={card.href}
                       className="block mt-3 text-center text-sm font-semibold text-teal hover:underline"

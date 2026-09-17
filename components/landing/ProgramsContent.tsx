@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { CE_ENROLL } from "@/lib/ce-enroll";
+import { CE_ENROLL, CE_SIGNUP } from "@/lib/ce-enroll";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
 import { useLang, type Bilingual } from "@/lib/i18n/LanguageProvider";
@@ -206,8 +206,10 @@ export function ProgramsContent() {
                     <MetaRow label={t(c.detail.textbook)} value={t(p.textbook)} />
                   </dl>
 
+                  {/* Step 1 of Enroll · PayPal · Study — new students create
+                      the Moodle account first. See lib/ce-enroll.ts. */}
                   <a
-                    href={p.id === "efda" ? CE_ENROLL.efda : CE_ENROLL.radiography}
+                    href={CE_SIGNUP}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn-enroll mt-8 w-full"
@@ -241,6 +243,19 @@ export function ProgramsContent() {
                       ))}
                     </ol>
                   </div>
+
+                  {/* Returning students skip signup and pay directly. */}
+                  <p className="mt-3 text-center text-sm text-muted">
+                    {t(c.detail.haveAccount)}{" "}
+                    <a
+                      href={p.id === "efda" ? CE_ENROLL.efda : CE_ENROLL.radiography}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-semibold text-teal hover:underline"
+                    >
+                      {t(c.detail.haveAccountLink)} <span aria-hidden="true">→</span>
+                    </a>
+                  </p>
 
                   <Link
                     href={
