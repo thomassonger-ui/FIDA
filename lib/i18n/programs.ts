@@ -98,15 +98,25 @@ export const programsCopy = {
     tuition: b("Tuition", "Matrícula"),
     textbook: b("Textbook", "Libro de texto"),
     apply: b("Enroll & Pay — PayPal", "Inscríbete y paga — PayPal"),
+    /* `applyNoteLead` renders bold — the first of two deliberate emphases on
+       creating the account, matching /tuition. See lib/i18n/tuition.ts. */
+    applyNoteLead: b("Create an Account", "Crea una Cuenta"),
     applyNote: b(
-      "Secure PayPal checkout · instant access after payment",
-      "Pago seguro con PayPal · acceso inmediato tras el pago",
+      "first, then pay · secure PayPal checkout",
+      "primero, luego paga · pago seguro con PayPal",
     ),
     easyHeading: b("Easy as 1-2-3", "Fácil como 1-2-3"),
+    /* Step 1's `lead` renders bold — the second emphasis. */
     easySteps: [
-      b("Create your free student account", "Crea tu cuenta de estudiante gratis"),
-      b("Pay with PayPal", "Paga con PayPal"),
-      b("Start the course immediately", "Comienza el curso de inmediato"),
+      {
+        lead: b("Create an Account", "Crea una Cuenta"),
+        rest: b("— free, takes a minute", "— gratis, toma un minuto"),
+      },
+      { lead: null, rest: b("Pay with PayPal", "Paga con PayPal") },
+      {
+        lead: null,
+        rest: b("Start the course immediately", "Comienza el curso de inmediato"),
+      },
     ],
     fullRequirements: b("Full requirements & cost", "Requisitos completos y costo"),
     beforeEnroll: b("Before you enroll", "Antes de inscribirte"),

@@ -214,8 +214,11 @@ export function ProgramsContent() {
                   >
                     {t(c.detail.apply)} <span aria-hidden="true">→</span>
                   </a>
-                  <p className="mt-2 text-xs text-subtle italic text-center">
-                    {t(c.detail.applyNote)}
+                  <p className="mt-2 text-xs text-subtle text-center">
+                    <strong className="font-bold text-navy not-italic">
+                      {t(c.detail.applyNoteLead)}
+                    </strong>{" "}
+                    <span className="italic">{t(c.detail.applyNote)}</span>
                   </p>
 
                   <div className="mt-4 rounded-md bg-paper-subtle px-4 py-3">
@@ -226,7 +229,14 @@ export function ProgramsContent() {
                       {c.detail.easySteps.map((step, i) => (
                         <li key={i}>
                           <span className="font-semibold text-navy">{i + 1}.</span>{" "}
-                          {t(step)}
+                          {step.lead ? (
+                            <>
+                              <strong className="font-bold text-navy">
+                                {t(step.lead)}
+                              </strong>{" "}
+                            </>
+                          ) : null}
+                          {t(step.rest)}
                         </li>
                       ))}
                     </ol>

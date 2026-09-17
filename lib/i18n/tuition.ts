@@ -105,15 +105,27 @@ export const tuition = {
     ],
     courseDetails: b("Course details", "Detalles del curso"),
     enroll: b("Enroll & Pay — PayPal", "Inscríbete y paga — PayPal"),
+    /* The note under the button. `enrollNoteLead` renders bold — the first of
+       two deliberate emphases on creating the account. Moodle's login screen
+       is the first thing a student sees after clicking, and it reads as a
+       dead end unless we've told them twice that it is step one. */
+    enrollNoteLead: b("Create an Account", "Crea una Cuenta"),
     enrollNote: b(
-      "Secure PayPal checkout · instant access after payment",
-      "Pago seguro con PayPal · acceso inmediato tras el pago",
+      "first, then pay · secure PayPal checkout",
+      "primero, luego paga · pago seguro con PayPal",
     ),
     easyHeading: b("Easy as 1-2-3", "Fácil como 1-2-3"),
+    /* Step 1's `lead` renders bold — the second emphasis. */
     easySteps: [
-      b("Create your free student account", "Crea tu cuenta de estudiante gratis"),
-      b("Pay with PayPal", "Paga con PayPal"),
-      b("Start the course immediately", "Comienza el curso de inmediato"),
+      {
+        lead: b("Create an Account", "Crea una Cuenta"),
+        rest: b("— free, takes a minute", "— gratis, toma un minuto"),
+      },
+      { lead: null, rest: b("Pay with PayPal", "Paga con PayPal") },
+      {
+        lead: null,
+        rest: b("Start the course immediately", "Comienza el curso de inmediato"),
+      },
     ],
   },
 
