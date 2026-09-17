@@ -22,10 +22,13 @@
  * Returning students use CE_ENROLL directly — after login it lands them on that
  * course's payment page.
  *
- * Course IDs (Professional Development category, ongoing/open enrolment — NOT
- * the Summer 2026 cohorts 21/22, which run out with their current students):
+ * Course IDs (Professional Development category, ongoing/open enrolment).
+ * Course 22 is the Radiography Summer 2026 cohort and is NOT sold here — it
+ * runs out with its current students:
  *   23 = Radiography for Dental Personnel    (RDP-CE,  $499)
- *   24 = Expanded Functions Dental Assisting (EFDA-CE, $1,049)
+ *   21 = Expanded Functions Dental Assisting (EFDA-CE, $1,049) — converted in
+ *        place from the Summer 2026 cohort on 2026-09-17 (no copy); its one
+ *        student stayed enrolled throughout.
  */
 
 const MOODLE = "https://fldentalassisting.moodlecloud.com";
@@ -36,7 +39,7 @@ export const CE_SIGNUP = `${MOODLE}/login/signup.php`;
 /** Step 2 — pay for one specific course. For students who already have an account. */
 export const CE_ENROLL = {
   radiography: `${MOODLE}/enrol/index.php?id=23`,
-  efda: `${MOODLE}/enrol/index.php?id=24`,
+  efda: `${MOODLE}/enrol/index.php?id=21`,
 } as const;
 
 /** Storefront of all CE courses — used where we aren't pointing at one course. */
