@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { CE_ENROLL } from "@/lib/ce-enroll";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
 import { useLang, type Bilingual } from "@/lib/i18n/LanguageProvider";
@@ -206,13 +207,30 @@ export function ProgramsContent() {
                   </dl>
 
                   <a
-                    href="https://fldentalassisting.moodlecloud.com/"
+                    href={p.id === "efda" ? CE_ENROLL.efda : CE_ENROLL.radiography}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn-primary mt-8 w-full"
+                    className="btn-enroll mt-8 w-full"
                   >
                     {t(c.detail.apply)} <span aria-hidden="true">→</span>
                   </a>
+                  <p className="mt-2 text-xs text-subtle italic text-center">
+                    {t(c.detail.applyNote)}
+                  </p>
+
+                  <div className="mt-4 rounded-md bg-paper-subtle px-4 py-3">
+                    <div className="text-xs font-bold uppercase tracking-[0.1em] text-navy">
+                      {t(c.detail.easyHeading)}
+                    </div>
+                    <ol className="mt-1.5 text-xs text-muted space-y-0.5">
+                      {c.detail.easySteps.map((step, i) => (
+                        <li key={i}>
+                          <span className="font-semibold text-navy">{i + 1}.</span>{" "}
+                          {t(step)}
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
 
                   <Link
                     href={

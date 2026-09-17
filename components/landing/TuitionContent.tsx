@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
 import { useLang } from "@/lib/i18n/LanguageProvider";
-import { APPLY_URL } from "@/lib/i18n/courseDetail";
+import { CE_ENROLL } from "@/lib/ce-enroll";
 import { tuition as tu } from "@/lib/i18n/tuition";
 import { COHORTS } from "@/lib/cohort";
 import { PaymentStructure } from "@/components/landing/PaymentStructure";
@@ -135,16 +135,35 @@ export function TuitionContent() {
                     {card.price}
                   </div>
                   <div className="mt-1 text-sm text-muted">{t(card.detail)}</div>
-                  <div className="mt-6 flex flex-col sm:flex-row gap-3">
+                  <div className="mt-6">
                     <a
-                      href={APPLY_URL}
+                      href={CE_ENROLL[card.course]}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="btn-primary"
+                      className="btn-enroll w-full"
                     >
                       {t(tu.ce.enroll)} <span aria-hidden="true">→</span>
                     </a>
-                    <Link href={card.href} className="btn-ghost">
+                    <p className="mt-2 text-xs text-subtle italic text-center">
+                      {t(tu.ce.enrollNote)}
+                    </p>
+                    <div className="mt-4 rounded-md bg-paper-subtle px-4 py-3">
+                      <div className="text-xs font-bold uppercase tracking-[0.1em] text-navy">
+                        {t(tu.ce.easyHeading)}
+                      </div>
+                      <ol className="mt-1.5 text-xs text-muted space-y-0.5">
+                        {tu.ce.easySteps.map((step, i) => (
+                          <li key={i}>
+                            <span className="font-semibold text-navy">{i + 1}.</span>{" "}
+                            {t(step)}
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+                    <Link
+                      href={card.href}
+                      className="block mt-3 text-center text-sm font-semibold text-teal hover:underline"
+                    >
                       {t(tu.ce.courseDetails)}
                     </Link>
                   </div>

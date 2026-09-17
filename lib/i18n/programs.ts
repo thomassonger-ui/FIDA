@@ -97,7 +97,17 @@ export const programsCopy = {
     credential: b("Credential", "Credencial"),
     tuition: b("Tuition", "Matrícula"),
     textbook: b("Textbook", "Libro de texto"),
-    apply: b("Apply to this course", "Inscribirse en este curso"),
+    apply: b("Enroll & Pay — PayPal", "Inscríbete y paga — PayPal"),
+    applyNote: b(
+      "Secure PayPal checkout · instant access after payment",
+      "Pago seguro con PayPal · acceso inmediato tras el pago",
+    ),
+    easyHeading: b("Easy as 1-2-3", "Fácil como 1-2-3"),
+    easySteps: [
+      b("Create your free student account", "Crea tu cuenta de estudiante gratis"),
+      b("Pay with PayPal", "Paga con PayPal"),
+      b("Start the course immediately", "Comienza el curso de inmediato"),
+    ],
     fullRequirements: b("Full requirements & cost", "Requisitos completos y costo"),
     beforeEnroll: b("Before you enroll", "Antes de inscribirte"),
     breakdown: b("Course breakdown", "Desglose del curso"),
