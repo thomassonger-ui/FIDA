@@ -48,6 +48,44 @@ export function Board({
   const [track, setTrack] = useState<Track>(defaultTrack);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // Replied dialog
+  const [replyFor, setReplyFor] = useState<Prospect | null>(null);
+  const [replyText, setReplyText] = useState("");
+  const [draft, setDraft] = useState("");
+  const [drafting, setDrafting] = useState(false);
+  const [draftError, setDraftError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  function openReply(p: Prospect) {
+    setReplyFor(p);
+    setReplyText("");
+    setDraft("");
+    setDraftError(null);
+    setCopied(false);
+  }
+
+  async function draftResponse() {
+    if (!replyFor || !replyText.trim()) return;
+    setDrafting(true);
+    setDraftError(null);
+    try {
+      const res = await fetch(`/api/admin/prospects/${replyFor.id}/reply-draft`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reply: replyText }),
+      });
+      const json = await res.json();
+      if (!json.ok) setDraftError(json.error ?? "Could not draft a response.");
+      else {
+        setDraft(json.draft);
+        setCopied(false);
+      }
+    } catch {
+      setDraftError("Network error — no draft.");
+    } finally {
+      setDrafting(false);
+    }
+  }
 
   const STAGES = TRACK_STAGES[track];
   const byStage: Record<string, Prospect[]> = {};
@@ -99,21 +137,34 @@ export function Board({
     }
   }
 
-  /** Logs the reply as a touch. Dentists who reply are Interested by definition. */
-  async function replied(p: Prospect) {
+  /**
+   * Logs the reply as a touch (with their words, if pasted), pauses a running
+   * drip, and moves a dentist to Interested — a reply is what Interested means.
+   */
+  async function replied(p: Prospect, theirReply: string) {
     setBusyId(p.id);
     setError(null);
     try {
       const res = await fetch(`/api/admin/prospects/${p.id}/touch`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ kind: "email", outcome: "replied" }),
+        body: JSON.stringify({
+          kind: "email",
+          outcome: "replied",
+          body: theirReply.trim() || undefined,
+        }),
       });
       const json = await res.json();
       if (!json.ok) {
         setError(json.error ?? "Could not log the reply.");
         return;
       }
+      if (p.drip_status === "active")
+        await fetch("/api/admin/prospects/drip", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "pause", ids: [p.id] }),
+        });
       if (track === "employer" && (p.stage === "identified" || p.stage === "nurture"))
         await move(p.id, "applied");
       else startTransition(() => router.refresh());
@@ -188,9 +239,8 @@ export function Board({
           <button
             type="button"
             disabled={busyId === p.id}
-            onClick={() => replied(p)}
+            onClick={() => openReply(p)}
             className="text-xs font-semibold text-teal underline disabled:opacity-40"
-            title="Logs the reply as a touch"
           >
             Replied
           </button>
@@ -241,6 +291,122 @@ export function Board({
 
   return (
     <>
+      {replyFor && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Replied — ${name(replyFor)}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setReplyFor(null);
+          }}
+        >
+          <div className="w-full max-w-xl max-h-[90vh] overflow-y-auto bg-paper rounded-lg shadow-xl p-6">
+            <div className="flex items-start justify-between gap-4">
+              <h2 className="font-display text-2xl leading-snug">
+                Replied — {name(replyFor)}
+              </h2>
+              <button
+                type="button"
+                onClick={() => setReplyFor(null)}
+                aria-label="Close"
+                className="text-muted hover:text-ink text-xl leading-none"
+              >
+                ×
+              </button>
+            </div>
+            <p className="mt-3 text-sm text-muted">
+              Marks them replied and ends any remaining drip emails
+              {track === "employer"
+                ? `, and moves the card to ${stageLabel(track, "applied")} (unless it's already further along)`
+                : ""}
+              . Paste their reply to save it on the card — and to let Claude
+              draft your response. Nothing sends automatically; you copy the
+              draft into Gmail.
+            </p>
+
+            <label className="block mt-4 text-[10px] uppercase tracking-wider text-muted">
+              Their reply (optional, needed for a draft)
+            </label>
+            <textarea
+              value={replyText}
+              onChange={(e) => setReplyText(e.target.value)}
+              rows={5}
+              placeholder="Paste what they wrote…"
+              className="mt-1 w-full border border-rule rounded-md bg-paper p-3 text-sm"
+            />
+
+            {draft && (
+              <>
+                <label className="block mt-4 text-[10px] uppercase tracking-wider text-muted">
+                  Draft response — edit before you send
+                </label>
+                <textarea
+                  value={draft}
+                  onChange={(e) => setDraft(e.target.value)}
+                  rows={10}
+                  className="mt-1 w-full border border-rule rounded-md bg-paper p-3 text-sm"
+                />
+                <div className="mt-2 flex gap-3 text-xs">
+                  <button
+                    type="button"
+                    className="text-teal underline font-semibold"
+                    onClick={async () => {
+                      try {
+                        await navigator.clipboard.writeText(draft);
+                        setCopied(true);
+                      } catch {
+                        setDraftError("Could not copy — select the text and copy it by hand.");
+                      }
+                    }}
+                  >
+                    {copied ? "Copied" : "Copy draft"}
+                  </button>
+                  {replyFor.email && (
+                    <a
+                      className="text-teal underline font-semibold"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
+                        replyFor.email
+                      )}&body=${encodeURIComponent(draft)}`}
+                    >
+                      Open in Gmail
+                    </a>
+                  )}
+                </div>
+              </>
+            )}
+            {draftError && <p className="mt-2 text-xs text-amber-800">{draftError}</p>}
+
+            <div className="mt-5 flex justify-end gap-2">
+              <button type="button" className="btn-outline" onClick={() => setReplyFor(null)}>
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="btn-outline disabled:opacity-40"
+                disabled={drafting || !replyText.trim()}
+                onClick={draftResponse}
+              >
+                {drafting ? "Drafting…" : draft ? "Redraft" : "Draft response"}
+              </button>
+              <button
+                type="button"
+                className="px-4 py-2 rounded-md bg-ink text-paper text-sm font-medium disabled:opacity-40"
+                disabled={busyId === replyFor.id}
+                onClick={async () => {
+                  const p = replyFor;
+                  await replied(p, replyText);
+                  setReplyFor(null);
+                }}
+              >
+                Mark replied
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="mt-8 flex items-center gap-2 flex-wrap">
         {(["employer", "student"] as Track[]).map((t) => (
           <button
