@@ -4,6 +4,7 @@ import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
 import { AtticusChat } from "@/components/admissions/AtticusChat";
 import { COHORTS } from "@/lib/cohort";
+import { REGISTRATION_FEE, SEAT_DEPOSIT, SEAT_DEPOSIT_DUE } from "@/lib/payment";
 
 export const metadata = {
   title: "Admissions",
@@ -19,9 +20,13 @@ const steps = [
     body: "Everything starts with a visit. See the classroom and lab, meet Debbie and Ashley, and decide if FIDA is right for you. Free, no commitment.",
   },
   {
+    /* The old wording named $150 and $750 but never $600, leaving the reader
+       to subtract to find what they actually owe. Both figures a student pays
+       are now stated outright. Amounts come from lib/payment.ts rather than
+       being typed in, which is how they drifted from the rest of the site. */
     n: "02",
     title: "Register and apply",
-    body: "Once you've decided: pay the $150 registration fee online, complete your application and enrollment agreement, then the rest of the $750 seat deposit reserves your seat.",
+    body: `Once you've decided: pay the ${REGISTRATION_FEE} registration fee online, complete your application and enrollment agreement, then pay the ${SEAT_DEPOSIT_DUE} balance of your ${SEAT_DEPOSIT} seat deposit — that's what reserves your seat.`,
   },
   {
     n: "03",
