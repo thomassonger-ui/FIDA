@@ -58,7 +58,10 @@ const STAGE_TONE: Record<string, string> = {
   lost: "bg-paper-subtle text-subtle border-rule",
 };
 
-const DRIP_STEPS = 3;
+/** Emails in the sequence: dentists get the 5-step CE drip, students 3. */
+function dripSteps(p: Prospect): number {
+  return trackOf(p) === "employer" ? 5 : 3;
+}
 
 const DRIP_LABELS: Record<string, string> = {
   not_started: "Off",
@@ -68,9 +71,9 @@ const DRIP_LABELS: Record<string, string> = {
 };
 
 const DRIP_TONE: Record<string, string> = {
-  not_started: "bg-paper-subtle text-subtle border-rule",
-  active: "bg-teal/10 text-teal-deep border-teal/30",
-  paused: "bg-amber-50 text-amber-800 border-amber-200",
+  not_started: "bg-teal/10 text-teal-deep border-teal/30",
+  active: "bg-yellow-300 text-yellow-950 border-yellow-400",
+  paused: "bg-orange-400 text-white border-orange-500",
   finished: "bg-navy/10 text-navy border-navy/20",
 };
 
@@ -642,7 +645,7 @@ export function ProspectsTable({
                       }
                     >
                       {DRIP_LABELS[p.drip_status] ?? p.drip_status}
-                      {p.drip_step > 0 ? ` · ${p.drip_step}/${DRIP_STEPS}` : ""}
+                      {p.drip_step > 0 ? ` · ${p.drip_step}/${dripSteps(p)}` : ""}
                     </span>
                   </td>
                   <td className="px-3 py-3">
