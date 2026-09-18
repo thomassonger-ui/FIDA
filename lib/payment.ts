@@ -242,6 +242,10 @@ export const paymentCopy = {
   /* Named as financing, not as a question. Around 60% of registrations use a
      payment plan, so both routes carry the word "financing" and sit together
      as a pair of options rather than one being a footnote to the other. */
+  /* Names the category above the brand. "TFC" means nothing to a reader who
+     hasn't heard of it; "third-party financing" tells them immediately that
+     this is the outside option, as opposed to the in-house plans above. */
+  thirdPartyLabel: b("Third-party financing", "Financiamiento de terceros"),
   tfcLabel: b("TFC financing · 18 months", "Financiamiento TFC · 18 meses"),
   /* The APR was missing, which let TFC read as a free alternative to the
      in-house plans. It isn't: the enrollment agreement discloses 3% for the

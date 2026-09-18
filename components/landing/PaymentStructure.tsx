@@ -21,6 +21,7 @@ import { VideoModal } from "@/components/landing/VideoModal";
  * new type every render and would drop focus and state.
  */
 function PayCard({
+  eyebrow,
   title,
   badge,
   price,
@@ -34,6 +35,12 @@ function PayCard({
   footnote,
   link,
 }: {
+  /* A category label above the card's own name — "Third-party financing" over
+     "TFC financing · 18 months". It answers what kind of thing this is before
+     the reader has to recognise a brand they may never have heard of, and it
+     mirrors the IN-HOUSE FINANCING label inside the tuition cards so the two
+     routes read as a matched pair. */
+  eyebrow?: string;
   title: string;
   badge?: string;
   price?: string;
@@ -51,6 +58,11 @@ function PayCard({
 }) {
   return (
     <div className="card bg-white p-6 md:p-8 flex flex-col border-teal/40">
+      {eyebrow ? (
+        <div className="mb-2 text-xs font-bold uppercase tracking-[0.1em] text-teal">
+          {eyebrow}
+        </div>
+      ) : null}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <div className="font-display text-xl text-navy">{title}</div>
         {badge ? (
@@ -207,6 +219,7 @@ export function PaymentStructure({ showHeading = true }: { showHeading?: boolean
       <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
         {/* TFC. States its APR, so the contrast with interest-free is honest. */}
         <PayCard
+          eyebrow={t(p.thirdPartyLabel)}
           title={t(p.tfcLabel)}
           body={t(p.tfcBody)}
           link={{ href: TFC_URL, label: t(p.tfcCta) }}
