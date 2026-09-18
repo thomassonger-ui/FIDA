@@ -120,11 +120,14 @@ export const home = {
       "Florida Institute of Dental Assisting trains the next generation of dental assistants — radiography-certified, EFDA-credentialed, and clinic-ready. One licensed diploma program for new dental assistants. Two Board-approved CE courses for working ones. Find your next step.",
       "El Florida Institute of Dental Assisting forma a la próxima generación de asistentes dentales: certificados en radiografía, acreditados como EFDA y listos para la clínica. Un programa de diploma con licencia para nuevos asistentes dentales. Dos cursos de educación continua aprobados por la Junta para quienes ya trabajan. Decide tu próximo paso.",
     ),
-    ctaPrimary: b("See the diploma program & CE courses", "Ver el programa de diploma y los cursos de EC"),
-    ctaSecondary: b("I’m already a student", "Ya soy estudiante"),
+    /* Short enough to hold one line at every width. The old labels wrapped to
+       two lines inside the buttons, which made the row ragged and the primary
+       CTA read as a sentence rather than a destination. */
+    ctaPrimary: b("See Programs", "Ver programas"),
+    ctaSecondary: b("I’m a Student", "Soy estudiante"),
     /* The third hero CTA: the one that asks nothing of the visitor — no
        program to choose, no account to already have. Plays in a modal. */
-    ctaVirtualTour: b("Take a virtual tour", "Haz un recorrido virtual"),
+    ctaVirtualTour: b("Take a Virtual Tour", "Recorrido virtual"),
     virtualTourTitle: b("A virtual tour of FIDA", "Un recorrido virtual por FIDA"),
     virtualTourClose: b("Close", "Cerrar"),
     // LOCKED — English strings are Dr. Angely's exact wording.

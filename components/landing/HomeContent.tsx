@@ -64,10 +64,10 @@ export function HomeContent() {
             </p>
 
             <div className="mt-10 flex flex-col sm:flex-row gap-3">
-              <Link href="/programs" className="btn-primary">
+              <Link href="/programs" className="btn-primary whitespace-nowrap">
                 {t(home.hero.ctaPrimary)} <span aria-hidden="true">→</span>
               </Link>
-              <Link href="/portal/login" className="btn-secondary">
+              <Link href="/portal/login" className="btn-secondary whitespace-nowrap">
                 {t(home.hero.ctaSecondary)}
               </Link>
               {/* The only CTA here that asks nothing of the visitor — no
@@ -79,7 +79,7 @@ export function HomeContent() {
               <button
                 type="button"
                 onClick={() => setTour(true)}
-                className="btn-secondary"
+                className="btn-secondary whitespace-nowrap"
               >
                 <span aria-hidden="true">▶</span> {t(home.hero.ctaVirtualTour)}
               </button>
