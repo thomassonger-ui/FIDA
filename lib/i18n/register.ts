@@ -4,13 +4,20 @@ import { REGISTRATION_FEE, SEAT_DEPOSIT, BALANCE_AFTER_DEPOSIT } from "@/lib/pay
 /**
  * EN/ES copy for /register — the Entry Level Dental Assisting enrollment hub.
  *
- * Flow agreed with Ashley for 2026-08-25:
- *   Website Apply → Atticus registration → $150 QuickBooks payment →
- *   Confirmation → student record / admissions
+ * Current flow — "Easy as 1-2-3", updated 2026-09-17:
+ *   1. Free campus tour (Calendly)
+ *   2. $150 registration fee (QuickBooks, opens in its own tab — Intuit
+ *      sends x-frame-options SAMEORIGIN so it cannot be embedded here)
+ *   3. Application + enrollment agreement, in an on-page modal
+ *      (ApplicationModal → POST /api/register/start → the CIE 2024
+ *      agreement rendered inline; the visitor never leaves this page)
  *
- * This page closes the old dead end (Apply → Atticus → nothing). Step 1 sends
- * the student to Atticus; Step 2 is the QBO Buy Button; "What happens next"
- * is the confirmation content, since QuickBooks issues the receipt.
+ * Step 3 used to hand off to Atticus, which is why some earlier copy said
+ * "with Atticus". It doesn't any more. The only Atticus link left on the page
+ * is "Questions? Ask Atticus" at the bottom, which is still what he's for.
+ *
+ * "What happens next" remains the confirmation content, since QuickBooks
+ * issues the receipt for the registration fee.
  *
  * Numbers come from lib/payment.ts. Do not hard-code dollar amounts here.
  */

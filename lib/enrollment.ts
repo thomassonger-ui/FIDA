@@ -22,6 +22,7 @@ import { renderAgreementPdf, type AgreementFields } from "./enrollment-pdf";
 import { AGREEMENT_VERSION, INITIAL_KEYS, SCHOOL, planLabel, type InitialKey, type PaymentPlan } from "./enrollment-agreement-text";
 import { scheduleFor } from "./enrollment-schedule";
 import { SEAT_DEPOSIT_DUE, SEAT_DEPOSIT, REGISTRATION_FEE } from "./payment";
+import { sendMail } from "@/lib/mail";
 
 export type AgreementStatus = "sent" | "signed" | "void";
 
@@ -540,31 +541,3 @@ async function fileInVault(input: {
 // Mail — transactional (no List-Unsubscribe; these aren't marketing)
 // ------------------------------------------------------------
 
-async function sendMail(opts: {
-  to: string;
-  subject: string;
-  text: string;
-  attachments?: { filename: string; content: string }[]; // content = base64
-}): Promise<{ ok: true } | { ok: false; error: string }> {
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) return { ok: false, error: "RESEND_API_KEY is not set." };
-  const from = process.env.ENROLLMENT_FROM || process.env.DRIP_FROM || process.env.RESEND_FROM || "FIDA Admissions <reply@fldentalassisting.com>";
-  const payload: Record<string, unknown> = { from, to: [opts.to], subject: opts.subject, text: opts.text };
-  if (opts.attachments?.length) payload.attachments = opts.attachments;
-  const rt = process.env.DRIP_REPLY_TO;
-  if (rt) payload.reply_to = rt;
-  try {
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) {
-      const j = (await res.json().catch(() => ({}))) as { message?: string };
-      return { ok: false, error: j.message || `HTTP ${res.status}` };
-    }
-    return { ok: true };
-  } catch (err) {
-    return { ok: false, error: err instanceof Error ? err.message : "fetch failed" };
-  }
-}

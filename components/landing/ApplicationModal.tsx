@@ -17,7 +17,18 @@ import { SignForm } from "@/app/enroll/[token]/sign-form";
  * QuickBooks payment cannot: Intuit sends x-frame-options SAMEORIGIN, so their
  * page has to open in its own tab (see RegisterContent).
  */
-export function ApplicationModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+export function ApplicationModal({
+  open,
+  onClose,
+  feePaid = false,
+}: {
+  open: boolean;
+  onClose: () => void;
+  /* The visitor already clicked "I've paid" on the QuickBooks step. Passed
+     through so the staff notice arrives attached to a real name instead of as
+     an anonymous ping. It is a claim, not a confirmation. */
+  feePaid?: boolean;
+}) {
   const { t } = useLang();
   const m = r.modal;
 
@@ -81,7 +92,7 @@ export function ApplicationModal({ open, onClose }: { open: boolean; onClose: ()
       const res = await fetch("/api/register/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(f),
+        body: JSON.stringify({ ...f, fee_paid: feePaid }),
       });
       const data = (await res.json()) as { token?: string | null; error?: string };
 

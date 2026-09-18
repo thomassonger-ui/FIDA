@@ -11,9 +11,18 @@ import { COHORTS } from "@/lib/cohort";
 import { CALENDLY_TOUR_URL, QBO_REGISTRATION_URL, REGISTRATION_FEE } from "@/lib/payment";
 
 /**
- * /register body — Entry Level Dental Assisting enrollment hub.
- * Step 1: Atticus application. Step 2: $150 registration fee (QuickBooks
- * Buy Button, new tab). Then "what happens next" as the confirmation content.
+ * /register body — Entry Level Dental Assisting enrollment hub, framed as
+ * "Easy as 1-2-3".
+ *
+ *   Step 1  Free campus tour (Calendly). Visibly free — tinted card, teal
+ *           border, FREE badge — so it never reads as a paid step.
+ *   Step 2  $150 registration fee. QuickBooks Buy Button, opens in its own
+ *           tab because Intuit refuses to be framed; the card then shows a
+ *           handoff panel with "I've paid — continue".
+ *   Step 3  Application + enrollment agreement in an on-page modal. FIDA's
+ *           own flow, so it can be embedded — the visitor stays here.
+ *
+ * Then "what happens next" as the confirmation content.
  */
 export function RegisterContent() {
   const { t } = useLang();
@@ -28,7 +37,7 @@ export function RegisterContent() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <ApplicationModal open={appOpen} onClose={() => setAppOpen(false)} />
+      <ApplicationModal open={appOpen} onClose={() => setAppOpen(false)} feePaid={feePaid} />
       <Nav />
 
       {/* WCAG 1.3.1 / 2.4.1 — named landmark, and the skip link target. */}
@@ -132,9 +141,16 @@ export function RegisterContent() {
                   <div className="rounded-md border border-teal/40 bg-teal/[0.06] p-4">
                     <div className="font-semibold text-navy text-sm">{t(r.qboOpenedTitle)}</div>
                     <p className="mt-1.5 text-sm text-muted leading-relaxed">{t(r.qboOpenedBody)}</p>
+                    {/* Goes straight into step 3 rather than just flipping a
+                        flag. That way the payment claim reaches Ashley
+                        attached to a name and email, instead of as an
+                        anonymous "someone says they paid" ping. */}
                     <button
                       type="button"
-                      onClick={() => setFeePaid(true)}
+                      onClick={() => {
+                        setFeePaid(true);
+                        setAppOpen(true);
+                      }}
                       className="btn-primary mt-4 w-full justify-center"
                     >
                       {t(r.qboPaidCta)} <span aria-hidden="true">→</span>
