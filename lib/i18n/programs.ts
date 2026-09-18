@@ -44,6 +44,11 @@ export const programsCopy = {
   ),
   ctaAdmissions: b("Get started", "Comenzar"),
   ctaCompare: b("Compare programs", "Comparar programas"),
+  /* The no-commitment option in the hero: see the school without picking a
+     program or talking to anyone. Plays in a modal, not on youtube.com. */
+  ctaVirtualTour: b("Take a virtual tour", "Haz un recorrido virtual"),
+  virtualTourTitle: b("A virtual tour of FIDA", "Un recorrido virtual por FIDA"),
+  virtualTourClose: b("Close", "Cerrar"),
 
   /* --- Entry Level diploma feature (facts come from entryLevelDetail) --- */
   diploma: {

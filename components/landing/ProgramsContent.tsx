@@ -1,10 +1,13 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 import Link from "next/link";
 import { CE_ENROLL, CE_SIGNUP } from "@/lib/ce-enroll";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
+import { VideoModal } from "@/components/landing/VideoModal";
+import { VIRTUAL_TOUR_YOUTUBE_ID } from "@/lib/payment";
 import { useLang, type Bilingual } from "@/lib/i18n/LanguageProvider";
 import { programs, programsCopy as c } from "@/lib/i18n/programs";
 import { entryLevelDetail as d } from "@/lib/i18n/entryLevelDetail";
@@ -16,9 +19,17 @@ import { COHORTS } from "@/lib/cohort";
  */
 export function ProgramsContent() {
   const { t } = useLang();
+  const [tour, setTour] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col">
+      <VideoModal
+        open={tour}
+        onClose={() => setTour(false)}
+        youtubeId={VIRTUAL_TOUR_YOUTUBE_ID}
+        title={t(c.virtualTourTitle)}
+        closeLabel={t(c.virtualTourClose)}
+      />
       <Nav />
 
       {/* WCAG 1.3.1 / 2.4.1 — named landmark, and the skip link target. */}
@@ -41,6 +52,17 @@ export function ProgramsContent() {
                 <a href="#compare" className="btn-ghost">
                   {t(c.ctaCompare)}
                 </a>
+                {/* Third CTA, and the only one that costs the visitor nothing
+                    and takes them nowhere. It plays in a modal rather than
+                    linking out to youtube.com, where the next thing on screen
+                    is somebody else's video. */}
+                <button
+                  type="button"
+                  onClick={() => setTour(true)}
+                  className="btn-ghost"
+                >
+                  <span aria-hidden="true">▶</span> {t(c.ctaVirtualTour)}
+                </button>
               </div>
             </div>
           </div>
