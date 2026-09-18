@@ -101,12 +101,20 @@ export const paymentCopy = {
       ),
     },
     {
+      /* The figure shown is what you actually PAY here, not the deposit's face
+         value. This card used to read $750 while the body explained that only
+         $600 was due, which contradicted the section's own promise that you
+         always know what's due. $750 still appears, in the title, where it
+         belongs. */
       step: "3",
-      amount: SEAT_DEPOSIT,
-      title: b("Seat deposit", "Depósito de cupo"),
+      amount: SEAT_DEPOSIT_DUE,
+      title: b(
+        `Seat deposit (${SEAT_DEPOSIT})`,
+        `Depósito de cupo (${SEAT_DEPOSIT})`,
+      ),
       body: b(
-        "Due once your online application and enrollment agreement are in — this is what reserves your seat in a specific class. Your $150 registration fee counts toward it, so $600 is due at this step.",
-        "Se paga cuando tu solicitud en línea y tu acuerdo de inscripción estén completos: es lo que reserva tu cupo en una clase específica. Tu cuota de inscripción de $150 se acredita al depósito, así que en esta etapa se pagan $600.",
+        `Due once your online application and enrollment agreement are in — this is what reserves your seat in a specific class. Your ${REGISTRATION_FEE} registration counts toward the ${SEAT_DEPOSIT}, so ${SEAT_DEPOSIT_DUE} is due here.`,
+        `Se paga cuando tu solicitud en línea y tu acuerdo de inscripción estén completos: es lo que reserva tu cupo en una clase específica. Tu inscripción de ${REGISTRATION_FEE} se acredita al depósito de ${SEAT_DEPOSIT}, así que aquí se pagan ${SEAT_DEPOSIT_DUE}.`,
       ),
     },
     {
