@@ -25,6 +25,9 @@ function PayCard({
   priceNote,
   lead,
   bullets,
+  bulletsLabel,
+  bulletsBadge,
+  chips,
   body,
   footnote,
   link,
@@ -35,6 +38,11 @@ function PayCard({
   priceNote?: string;
   lead?: string;
   bullets?: string[];
+  /* When set, the bullets render inside a tinted, labelled block instead of a
+     bare list — that is how the in-house financing gets named and seen. */
+  bulletsLabel?: string;
+  bulletsBadge?: string;
+  chips?: string[];
   body?: string;
   footnote?: string;
   link?: { href: string; label: string };
@@ -60,14 +68,56 @@ function PayCard({
       {lead ? <div className="mt-5 text-navy font-semibold">{lead}</div> : null}
 
       {bullets?.length ? (
-        <ul className="mt-3 space-y-1.5">
-          {bullets.map((bl) => (
-            <li key={bl} className="flex items-start gap-3 text-navy">
-              <span className="mt-2 w-1.5 h-1.5 rounded-full bg-teal flex-shrink-0" />
-              <span>{bl}</span>
-            </li>
+        bulletsLabel ? (
+          /* Tinted, bordered, labelled — so in-house financing reads as a
+             named offer rather than two bullets nobody notices. Term on the
+             left, money on the right at display size: the monthly figure is
+             what people actually compare, and ~60% of registrations finance. */
+          <div className="mt-4 rounded-lg border border-teal/30 bg-teal/[0.06] p-4">
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+              <span className="text-xs font-bold uppercase tracking-[0.1em] text-teal">
+                {bulletsLabel}
+              </span>
+              {bulletsBadge ? (
+                <span className="rounded-full bg-teal px-2.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-[0.06em] text-white">
+                  {bulletsBadge}
+                </span>
+              ) : null}
+            </div>
+            <ul className="mt-3 space-y-2">
+              {bullets.map((bl) => (
+                <li key={bl} className="flex items-baseline justify-between gap-3">
+                  <span className="text-sm text-muted">{bl.split(" · ")[0]}</span>
+                  <span className="font-display text-xl text-navy">
+                    {bl.split(" · ")[1] ?? ""}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <ul className="mt-3 space-y-1.5">
+            {bullets.map((bl) => (
+              <li key={bl} className="flex items-start gap-3 text-navy">
+                <span className="mt-2 w-1.5 h-1.5 rounded-full bg-teal flex-shrink-0" />
+                <span>{bl}</span>
+              </li>
+            ))}
+          </ul>
+        )
+      ) : null}
+
+      {chips?.length ? (
+        <div className="mt-4 flex flex-wrap gap-2">
+          {chips.map((c) => (
+            <span
+              key={c}
+              className="rounded-full border border-teal/30 bg-teal/[0.06] px-4 py-2 text-sm font-semibold text-navy"
+            >
+              {c}
+            </span>
           ))}
-        </ul>
+        </div>
       ) : null}
 
       {body ? <p className="mt-4 text-navy leading-relaxed">{body}</p> : null}
@@ -122,12 +172,12 @@ export function PaymentStructure({ showHeading = true }: { showHeading?: boolean
         {/* Standard tuition. Interest-free is the headline, not a footnote. */}
         <PayCard
           title={t(p.tiers.standard.title)}
-          badge={t(p.interestFreeBadge)}
           price={p.tiers.standard.total}
           priceNote={t(p.tiers.standard.totalNote)}
           lead={t(p.tiers.standard.balance)}
           bullets={p.tiers.standard.plans.map((pl) => t(pl))}
-          footnote={t(p.tiers.standard.plansNote)}
+          bulletsLabel={t(p.inHouseLabel)}
+          bulletsBadge={t(p.inHouseBadge)}
         />
 
         {/* Military & first responder. Identical card, different numbers. */}
@@ -138,6 +188,8 @@ export function PaymentStructure({ showHeading = true }: { showHeading?: boolean
           priceNote={t(p.tiers.military.totalNote)}
           lead={t(p.tiers.military.balance)}
           bullets={p.tiers.military.plans.map((pl) => t(pl))}
+          bulletsLabel={t(p.inHouseLabel)}
+          bulletsBadge={t(p.inHouseBadge)}
           footnote={t(p.tiers.military.plansNote)}
         />
       </div>
@@ -151,7 +203,10 @@ export function PaymentStructure({ showHeading = true }: { showHeading?: boolean
         />
 
         {/* Accepted payment methods. */}
-        <PayCard title={t(p.methodsLabel)} body={t(p.methods)} />
+        <PayCard
+          title={t(p.methodsLabel)}
+          chips={p.methodsList.map((m) => t(m))}
+        />
       </div>
 
       {/* HOW THE PAYMENTS FALL — the sequence, after the prices. */}

@@ -178,13 +178,31 @@ export const paymentCopy = {
     },
   },
 
+  /* Named at last. The 6- and 8-month plans ARE the in-house financing, but
+     the page never called them that — they were bullets under a grey footnote.
+     It is the option most students use, so it gets a heading of its own inside
+     each tuition card, directly above its own numbers. */
+  inHouseLabel: b("In-house financing", "Financiamiento interno"),
+  inHouseBadge: b("0% interest", "0% de interés"),
+
   methodsLabel: b("Accepted payment methods", "Métodos de pago aceptados"),
+  /* A list, not a run-on line, so each method renders as its own chip. A wall
+     of text separated by middots does not scan. */
+  methodsList: [
+    b("Credit or debit card", "Tarjeta de crédito o débito"),
+    b("Bank transfer (ACH)", "Transferencia bancaria (ACH)"),
+    b("Check", "Cheque"),
+    b("Cash", "Efectivo"),
+  ],
   methods: b(
     "Credit or debit card · Bank transfer (ACH) · Check · Cash",
     "Tarjeta de crédito o débito · Transferencia bancaria (ACH) · Cheque · Efectivo",
   ),
 
-  tfcLabel: b("Need longer than 8 months?", "¿Necesitas más de 8 meses?"),
+  /* Named as financing, not as a question. Around 60% of registrations use a
+     payment plan, so both routes carry the word "financing" and sit together
+     as a pair of options rather than one being a footnote to the other. */
+  tfcLabel: b("TFC financing · 18 months", "Financiamiento TFC · 18 meses"),
   /* The APR was missing, which let TFC read as a free alternative to the
      in-house plans. It isn't: the enrollment agreement discloses 3% for the
      first six months, then 8% for the remaining twelve. Stating it here is
