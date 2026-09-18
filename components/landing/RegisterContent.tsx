@@ -209,14 +209,28 @@ export function RegisterContent() {
                 {t(r.nextHeading)}
               </h2>
             </div>
-            <ol className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Scannable, not readable: a numbered chip, a short title, then
+                bullets. The step number sits in a filled circle so the eye can
+                follow 1-2-3-4 across without reading a word. */}
+            <ol className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch">
               {r.next.map((s, i) => (
-                <li key={s.title.en} className="card bg-white p-6">
-                  <div className="font-mono text-xs text-teal">0{i + 1}</div>
-                  <div className="mt-2 font-display text-lg text-navy leading-tight">
-                    {t(s.title)}
+                <li key={s.title.en} className="card bg-white p-6 flex flex-col">
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-teal text-xs font-bold text-white">
+                      {i + 1}
+                    </span>
+                    <span className="font-display text-lg text-navy leading-tight">
+                      {t(s.title)}
+                    </span>
                   </div>
-                  <p className="mt-2 text-sm text-muted leading-relaxed">{t(s.body)}</p>
+                  <ul className="mt-4 space-y-2">
+                    {s.bullets.map((bl) => (
+                      <li key={bl.en} className="flex items-start gap-2.5 text-sm text-navy">
+                        <span className="mt-[0.45rem] h-1.5 w-1.5 flex-shrink-0 rounded-full bg-teal" />
+                        <span>{t(bl)}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </li>
               ))}
             </ol>

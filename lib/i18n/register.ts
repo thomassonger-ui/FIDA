@@ -140,34 +140,44 @@ export const register = {
      3% then 8% APR (see THIRD_PARTY_LOAN). The old line implied it covered
      all three. Naming the three term lengths without the claim is accurate. */
   nextHeading: b("From application to first day.", "De la solicitud al primer día."),
+  /* Bullets, not sentences. Nobody reads a paragraph in a card on a web page —
+     they scan for the number, the noun and the amount. Each step is now 2-3
+     fragments a person can take in at a glance, with the money first where
+     money is the point. */
   next: [
     {
       title: b(`${SEAT_DEPOSIT} seat deposit`, `Depósito de cupo de ${SEAT_DEPOSIT}`),
-      body: b(
-        "Reserves your seat in a specific class. Your $150 counts toward it, so $600 is due. Card, ACH, check or cash.",
-        "Reserva tu cupo en una clase específica. Tus $150 se acreditan, así que se pagan $600. Tarjeta, ACH, cheque o efectivo.",
-      ),
+      bullets: [
+        b("$600 due here", "Aquí se pagan $600"),
+        b("Your $150 counts toward it", "Tus $150 se acreditan"),
+        b("Card, ACH, check or cash", "Tarjeta, ACH, cheque o efectivo"),
+      ],
     },
     {
       title: b("We review", "Revisamos"),
-      body: b(
-        "A real advisor checks your application, agreement and payments — not a form.",
-        "Un asesor real revisa tu solicitud, tu acuerdo y tus pagos; no un formulario.",
-      ),
+      bullets: [
+        b("Application & agreement", "Solicitud y acuerdo"),
+        b("Payments confirmed", "Pagos confirmados"),
+        b("A real advisor, not a form", "Un asesor real, no un formulario"),
+      ],
     },
     {
       title: b("Acceptance email", "Correo de aceptación"),
-      body: b(
-        `Your acceptance letter, the catalog, orientation details and start date. The ${BALANCE_AFTER_DEPOSIT} balance goes on a 6-, 8-, or 18-month plan.`,
-        `Tu carta de aceptación, el catálogo, los detalles de orientación y tu fecha de inicio. El saldo de ${BALANCE_AFTER_DEPOSIT} se paga en un plan de 6, 8 o 18 meses.`,
-      ),
+      bullets: [
+        b("Acceptance letter & catalog", "Carta de aceptación y catálogo"),
+        b("Orientation date & start date", "Fecha de orientación e inicio"),
+        b(
+          `${BALANCE_AFTER_DEPOSIT} on a 6, 8 or 18-month plan`,
+          `${BALANCE_AFTER_DEPOSIT} en un plan de 6, 8 o 18 meses`,
+        ),
+      ],
     },
     {
       title: b("Orientation & first day", "Orientación y primer día"),
-      body: b(
-        "Scrubs, clinical kit, and access to your course.",
-        "Uniformes, kit clínico y acceso a tu curso.",
-      ),
+      bullets: [
+        b("Scrubs & clinical kit", "Uniformes y kit clínico"),
+        b("Course access", "Acceso al curso"),
+      ],
     },
   ],
 
