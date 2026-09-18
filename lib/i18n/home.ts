@@ -122,6 +122,11 @@ export const home = {
     ),
     ctaPrimary: b("See the diploma program & CE courses", "Ver el programa de diploma y los cursos de EC"),
     ctaSecondary: b("I’m already a student", "Ya soy estudiante"),
+    /* The third hero CTA: the one that asks nothing of the visitor — no
+       program to choose, no account to already have. Plays in a modal. */
+    ctaVirtualTour: b("Take a virtual tour", "Haz un recorrido virtual"),
+    virtualTourTitle: b("A virtual tour of FIDA", "Un recorrido virtual por FIDA"),
+    virtualTourClose: b("Close", "Cerrar"),
     // LOCKED — English strings are Dr. Angely's exact wording.
     trust1: b(
       "Dental Assisting Program licensed by the Commission for Independent Education.",

@@ -1,9 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
+import { VideoModal } from "@/components/landing/VideoModal";
+import { VIRTUAL_TOUR_YOUTUBE_ID } from "@/lib/payment";
 import { RotatingHeadline } from "@/components/landing/RotatingHeadline";
 import { AtticusChat } from "@/components/admissions/AtticusChat";
 import { useLang } from "@/lib/i18n/LanguageProvider";
@@ -18,9 +21,17 @@ import { atticus as atticusCopy } from "@/lib/i18n/atticus";
  */
 export function HomeContent() {
   const { t } = useLang();
+  const [tour, setTour] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col">
+      <VideoModal
+        open={tour}
+        onClose={() => setTour(false)}
+        youtubeId={VIRTUAL_TOUR_YOUTUBE_ID}
+        title={t(home.hero.virtualTourTitle)}
+        closeLabel={t(home.hero.virtualTourClose)}
+      />
       <Nav />
 
       {/* WCAG 1.3.1 / 2.4.1 — named landmark, and the skip link target. */}
@@ -58,6 +69,19 @@ export function HomeContent() {
               <Link href="/portal/login" className="btn-secondary">
                 {t(home.hero.ctaSecondary)}
               </Link>
+              {/* The only CTA here that asks nothing of the visitor — no
+                  program to choose, no account to have. btn-secondary is the
+                  dark-context outline button, so it matches the one beside it
+                  over the photo. Plays in a modal rather than handing them to
+                  youtube.com, where the next thing on screen is somebody
+                  else's video. */}
+              <button
+                type="button"
+                onClick={() => setTour(true)}
+                className="btn-secondary"
+              >
+                <span aria-hidden="true">▶</span> {t(home.hero.ctaVirtualTour)}
+              </button>
             </div>
 
             <div className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-3 text-xs text-navy-200">
