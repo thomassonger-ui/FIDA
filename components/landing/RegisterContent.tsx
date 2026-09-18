@@ -5,10 +5,16 @@ import Link from "next/link";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
 import { ApplicationModal } from "@/components/landing/ApplicationModal";
+import { VideoModal } from "@/components/landing/VideoModal";
 import { useLang } from "@/lib/i18n/LanguageProvider";
 import { register as r } from "@/lib/i18n/register";
 import { COHORTS } from "@/lib/cohort";
-import { CALENDLY_TOUR_URL, QBO_REGISTRATION_URL, REGISTRATION_FEE } from "@/lib/payment";
+import {
+  CALENDLY_TOUR_URL,
+  QBO_REGISTRATION_URL,
+  REGISTRATION_FEE,
+  VIRTUAL_TOUR_YOUTUBE_ID,
+} from "@/lib/payment";
 
 /**
  * /register body — Entry Level Dental Assisting enrollment hub, framed as
@@ -34,10 +40,18 @@ export function RegisterContent() {
   const [qboOpened, setQboOpened] = useState(false);
   const [feePaid, setFeePaid] = useState(false);
   const [appOpen, setAppOpen] = useState(false);
+  const [tour, setTour] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col">
       <ApplicationModal open={appOpen} onClose={() => setAppOpen(false)} feePaid={feePaid} />
+      <VideoModal
+        open={tour}
+        onClose={() => setTour(false)}
+        youtubeId={VIRTUAL_TOUR_YOUTUBE_ID}
+        title={t(r.step0VideoTitle)}
+        closeLabel={t(r.step0VideoClose)}
+      />
       <Nav />
 
       {/* WCAG 1.3.1 / 2.4.1 — named landmark, and the skip link target. */}
@@ -96,6 +110,22 @@ export function RegisterContent() {
                 >
                   {t(r.step0Cta)} <span aria-hidden="true">↗</span>
                 </a>
+
+                {/* Second door on the free step. Booking a time is a
+                    commitment; watching the walkthrough isn't, and someone not
+                    ready for the first will often take the second. Outlined,
+                    not solid, so it doesn't compete with "Book my tour" — and
+                    it opens in a modal rather than handing the visitor to
+                    youtube.com, where the next thing on screen is somebody
+                    else's video. */}
+                <button
+                  type="button"
+                  onClick={() => setTour(true)}
+                  className="mt-2 w-full justify-center rounded-md border border-teal/40 px-4 py-2.5 text-sm font-semibold text-teal transition hover:bg-teal/[0.08] focus:outline-none focus:ring-2 focus:ring-teal/50"
+                >
+                  <span aria-hidden="true">▶</span> {t(r.step0VideoCta)}
+                </button>
+
                 <p className="mt-3 text-sm text-subtle min-h-[2.75rem]">{t(r.step0Done)}</p>
               </div>
             </li>

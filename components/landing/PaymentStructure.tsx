@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useLang } from "@/lib/i18n/LanguageProvider";
 import { paymentCopy as p, TFC_URL } from "@/lib/payment";
+import { VideoModal } from "@/components/landing/VideoModal";
 
 /**
  * Entry Level Dental Assisting payment structure — registration fee → seat
@@ -140,8 +142,13 @@ function PayCard({
   );
 }
 
+/* Pulled from the stage list rather than hard-coded, so the id and title stay
+   in lib/payment.ts with the rest of the copy. */
+const tourCta = p.stages.find((s) => "videoCta" in s && s.videoCta)?.videoCta;
+
 export function PaymentStructure({ showHeading = true }: { showHeading?: boolean }) {
   const { t } = useLang();
+  const [tour, setTour] = useState(false);
 
   return (
     <div>
@@ -237,9 +244,32 @@ export function PaymentStructure({ showHeading = true }: { showHeading?: boolean
                 {t(s.cta.label)} <span aria-hidden="true">↗</span>
               </a>
             )}
+
+            {/* Second, lighter door on the same step — outlined rather than
+                solid, so it reads as the alternative to booking, not as a
+                competing primary action. */}
+            {"videoCta" in s && s.videoCta && (
+              <button
+                type="button"
+                onClick={() => setTour(true)}
+                className="mt-2 w-fit rounded-md border border-teal/40 px-4 py-2 text-sm font-semibold text-teal transition hover:bg-teal/[0.08] focus:outline-none focus:ring-2 focus:ring-teal/50"
+              >
+                <span aria-hidden="true">▶</span> {t(s.videoCta.label)}
+              </button>
+            )}
           </li>
         ))}
       </ol>
+
+      {tourCta && (
+        <VideoModal
+          open={tour}
+          onClose={() => setTour(false)}
+          youtubeId={tourCta.youtubeId}
+          title={t(tourCta.title)}
+          closeLabel={t(p.videoModalClose)}
+        />
+      )}
     </div>
   );
 }

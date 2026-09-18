@@ -41,6 +41,11 @@ export const CALENDLY_TOUR_URL = "https://calendly.com/fldentalassisting";
 /** TFC Tuition Financing — third-party 18-month plan. */
 export const TFC_URL = "https://www.tfctuition.com/";
 
+/** FIDA walkthrough video. Opens in a modal beside "Book my tour", so someone
+ *  not yet ready to put a time on the calendar can still see the school. Same
+ *  video as the one embedded on /about. */
+export const VIRTUAL_TOUR_YOUTUBE_ID = "mPyxc7PWOvY";
+
 /* ---- Amounts (display strings; keep formatting consistent site-wide) ---- */
 
 export const REGISTRATION_FEE = "$150";
@@ -90,6 +95,16 @@ export const paymentCopy = {
         "Todo empieza con una visita. Elige una hora en nuestro calendario, conoce el aula y el laboratorio, conoce a Debbie y Ashley, y decide si FIDA es para ti. Todavía no se paga nada.",
       ),
       cta: { label: b("Book my tour", "Reservar mi recorrido"), href: CALENDLY_TOUR_URL },
+      /* The second door on step 1. Booking a time is a commitment; watching a
+         two-minute walkthrough is not, and someone who isn't ready for the
+         first will often take the second. It opens in a modal rather than
+         sending them to youtube.com, where the next thing on screen is
+         somebody else's video. */
+      videoCta: {
+        label: b("Take a virtual tour", "Haz un recorrido virtual"),
+        youtubeId: VIRTUAL_TOUR_YOUTUBE_ID,
+        title: b("A virtual tour of FIDA", "Un recorrido virtual por FIDA"),
+      },
     },
     {
       step: "2",
@@ -220,6 +235,8 @@ export const paymentCopy = {
     "TFC Tuition Financing distribuye el saldo en 18 meses. Sin verificación de crédito, pero a diferencia de nuestros planes internos sí genera intereses: 3% APR los primeros 6 meses y 8% los 12 restantes. La aprobación está sujeta a los términos de TFC.",
   ),
   tfcCta: b("Learn about TFC", "Conoce TFC"),
+
+  videoModalClose: b("Close", "Cerrar"),
 
   registerCta: b(
     "Secure My Seat – Pay Registration Fee",

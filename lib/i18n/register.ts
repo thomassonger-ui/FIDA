@@ -44,6 +44,11 @@ export const register = {
     "Todo empieza con una visita. Elige una hora en nuestro calendario, conoce el aula y el laboratorio, conoce a Debbie y Ashley y pregunta lo que quieras. Gratis, sin compromiso.",
   ),
   step0Cta: b("Book my tour", "Reservar mi recorrido"),
+  /* The second door on the free step: a walkthrough for someone who wants to
+     see the school before putting a time on anyone's calendar. */
+  step0VideoCta: b("Take a virtual tour", "Haz un recorrido virtual"),
+  step0VideoTitle: b("A virtual tour of FIDA", "Un recorrido virtual por FIDA"),
+  step0VideoClose: b("Close", "Cerrar"),
   step0Done: b("Already toured? Go to Step 2.", "¿Ya hiciste el recorrido? Pasa al Paso 2."),
 
   step1Label: b("Step 3", "Paso 3"),
