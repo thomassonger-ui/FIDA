@@ -131,37 +131,42 @@ export const register = {
   ),
 
   nextEyebrow: b("What happens next", "Qué sigue"),
-  nextHeading: b(
-    "After your application is in, here's the path to your first day.",
-    "Una vez enviada tu solicitud, este es el camino hasta tu primer día.",
-  ),
+  /* Tightened 2026-09-18 — roughly half the previous words, same facts. The
+     cards ARE the path, so the heading no longer says so; "FIDA" and
+     "enrollment" came out where the context already supplies them.
+
+     "Interest-free" was dropped from card 03 deliberately: it is true of the
+     6- and 8-month in-house plans but NOT of TFC's 18 months, which carries
+     3% then 8% APR (see THIRD_PARTY_LOAN). The old line implied it covered
+     all three. Naming the three term lengths without the claim is accurate. */
+  nextHeading: b("From application to first day.", "De la solicitud al primer día."),
   next: [
     {
       title: b(`${SEAT_DEPOSIT} seat deposit`, `Depósito de cupo de ${SEAT_DEPOSIT}`),
       body: b(
-        "Reserves your seat in a specific class. Your $150 registration counts toward it, so $600 is due here. Card, ACH, check, or cash.",
-        "Reserva tu cupo en una clase específica. Tu inscripción de $150 se acredita, así que aquí se pagan $600. Tarjeta, ACH, cheque o efectivo.",
+        "Reserves your seat in a specific class. Your $150 counts toward it, so $600 is due. Card, ACH, check or cash.",
+        "Reserva tu cupo en una clase específica. Tus $150 se acreditan, así que se pagan $600. Tarjeta, ACH, cheque o efectivo.",
       ),
     },
     {
-      title: b("We review & verify", "Revisamos y verificamos"),
+      title: b("We review", "Revisamos"),
       body: b(
-        "FIDA reviews your application, enrollment agreement, and payments. Questions come from a real advisor, not a form.",
-        "FIDA revisa tu solicitud, tu acuerdo de inscripción y tus pagos. Cualquier pregunta viene de un asesor real, no de un formulario.",
+        "A real advisor checks your application, agreement and payments — not a form.",
+        "Un asesor real revisa tu solicitud, tu acuerdo y tus pagos; no un formulario.",
       ),
     },
     {
-      title: b("Your acceptance email", "Tu correo de aceptación"),
+      title: b("Acceptance email", "Correo de aceptación"),
       body: b(
-        `Once approved: your acceptance letter, the school catalog, orientation details, and your class start date. The ${BALANCE_AFTER_DEPOSIT} balance goes on an interest-free 6- or 8-month plan, or 18 months through TFC.`,
-        `Una vez aprobado: tu carta de aceptación, el catálogo de la escuela, los detalles de orientación y tu fecha de inicio. El saldo de ${BALANCE_AFTER_DEPOSIT} se paga en un plan sin intereses de 6 u 8 meses, o en 18 meses a través de TFC.`,
+        `Your acceptance letter, the catalog, orientation details and start date. The ${BALANCE_AFTER_DEPOSIT} balance goes on a 6-, 8-, or 18-month plan.`,
+        `Tu carta de aceptación, el catálogo, los detalles de orientación y tu fecha de inicio. El saldo de ${BALANCE_AFTER_DEPOSIT} se paga en un plan de 6, 8 o 18 meses.`,
       ),
     },
     {
       title: b("Orientation & first day", "Orientación y primer día"),
       body: b(
-        "Attend orientation, get your scrubs and clinical kit details, and receive access to your course for the class start.",
-        "Asiste a la orientación, recibe tus uniformes y los detalles del kit clínico, y obtén acceso a tu curso para el inicio de clases.",
+        "Scrubs, clinical kit, and access to your course.",
+        "Uniformes, kit clínico y acceso a tu curso.",
       ),
     },
   ],
