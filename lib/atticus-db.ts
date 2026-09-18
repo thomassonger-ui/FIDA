@@ -25,9 +25,57 @@ export function hashIp(ip: string | null | undefined) {
   return crypto.createHash("sha256").update(ip).digest("hex").slice(0, 32);
 }
 
-/** Extract lead fields from the most recent user messages with best-effort regex. */
-export function extractLeadFields(userText: string): LeadFields {
+/* What Atticus just asked for. A bare reply like "Tom Songer" or "904 555
+   0101" carries no grammar to match on — the only thing that tells us what it
+   IS, is the question it answers. This is why leads were landing in /admin as
+   "Unknown" with no phone: the patterns below only fired on "my name is X",
+   and nobody types that when they've just been asked their name. */
+function lastQuestionAsked(assistantText?: string | null):
+  | "name"
+  | "email"
+  | "phone"
+  | null {
+  if (!assistantText) return null;
+  const t = assistantText.toLowerCase();
+  /* Order matters: the phone ask often repeats the word "email" ("we can do
+     it all over email if you'd rather"), so phone is tested first. */
+  if (/(phone|number to (?:call|reach)|best number|cell)/.test(t)) return "phone";
+  if (/(e-?mail)/.test(t)) return "email";
+  if (/(your name|what should i call you|who am i (?:speaking|chatting) with|first name)/.test(t))
+    return "name";
+  return null;
+}
+
+/** A reply that is plausibly just a person's name — two or three words, no
+ *  digits, no @, not a sentence. Deliberately strict: a wrong name in the CRM
+ *  is worse than a blank one, because staff will read it out loud on a call. */
+function looksLikeBareName(text: string): string | null {
+  const t = text.trim().replace(/^(?:it(?:'|’)s|this is|i(?:'|’)m|i am)\s+/i, "").replace(/[.!]$/, "");
+  if (t.length < 2 || t.length > 60) return null;
+  if (/[@\d]/.test(t)) return null;
+  const words = t.split(/\s+/);
+  if (words.length > 3) return null;
+  if (!words.every((w) => /^[\p{L}][\p{L}'’.-]*$/u.test(w))) return null;
+  /* Common one-word replies that are not names. */
+  if (/^(yes|no|yeah|yep|nope|sure|ok|okay|thanks|hi|hello|hey|maybe|none|nothing|skip|later)$/i.test(t))
+    return null;
+  return t;
+}
+
+/**
+ * Extract lead fields from the latest user message.
+ *
+ * `priorAssistant` is the message Atticus sent immediately before — pass it
+ * whenever it's available. Without it, only self-describing replies ("my name
+ * is …", a string containing an @) can be captured, which is how a lead ends
+ * up with an email and nothing else.
+ */
+export function extractLeadFields(
+  userText: string,
+  priorAssistant?: string | null
+): LeadFields {
   const out: LeadFields = {};
+  const asked = lastQuestionAsked(priorAssistant);
 
   const emailMatch = userText.match(
     /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i
@@ -40,11 +88,35 @@ export function extractLeadFields(userText: string): LeadFields {
   );
   if (phoneMatch) out.phone = phoneMatch[0];
 
+  /* Answering the phone question with bare digits — "9045550101", "904 555
+     0101" — after the formatted pattern above has had its chance. */
+  if (!out.phone && asked === "phone") {
+    const digits = userText.replace(/\D/g, "");
+    if (digits.length === 10 || (digits.length === 11 && digits.startsWith("1"))) {
+      out.phone = userText.trim().slice(0, 40);
+    }
+  }
+
   // Name: look for "my name is X" / "I'm X" / "I am X"
   const nameMatch = userText.match(
     /\b(?:my name is|i(?:'|’)m|i am)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})/i
   );
   if (nameMatch) out.name = nameMatch[1];
+
+  /* Answering the name question with just the name. This is the normal case
+     and it used to capture nothing at all. */
+  if (!out.name && asked === "name") {
+    const bare = looksLikeBareName(userText);
+    if (bare) out.name = bare;
+  }
+
+  /* A reply to the email question that carries a name too — "Tom Songer,
+     tom@example.com" — gives us the name for free. */
+  if (!out.name && out.email) {
+    const withoutEmail = userText.replace(out.email, " ").replace(/[,;|]/g, " ");
+    const bare = looksLikeBareName(withoutEmail);
+    if (bare) out.name = bare;
+  }
 
   // Program interest: FIDA-specific keywords (EFDA + RDP-CE).
   const programRegex =

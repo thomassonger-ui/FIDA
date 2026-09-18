@@ -45,14 +45,23 @@ async function fetchLeads(): Promise<{
   }
 }
 
+/* These pages render on the server, so without an explicit timeZone the
+   timestamp comes out in the SERVER's zone — UTC on Vercel. A lead that came
+   in at 9:45pm Jacksonville time was showing as 1:45 AM the next day, which
+   makes "did they contact us before or after hours" unanswerable and puts
+   some leads on the wrong date entirely. FIDA is in Jacksonville; the school
+   runs on Eastern, so the admin does too. timeZoneName prints ET/EDT so
+   nobody has to wonder which zone they're reading. */
 function fmtDate(iso: string | null) {
   if (!iso) return "—";
   const d = new Date(iso);
   return d.toLocaleString("en-US", {
+    timeZone: "America/New_York",
     month: "short",
     day: "numeric",
     hour: "numeric",
     minute: "2-digit",
+    timeZoneName: "short",
   });
 }
 

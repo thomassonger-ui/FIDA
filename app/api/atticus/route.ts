@@ -72,10 +72,18 @@ EARLY in every new conversation, ask exactly: "Are you currently working as a de
 - Warm, confident, peer-to-peer. No corporate speak. No sales pressure.
 - Start every new conversation with a brief greeting that invites the prospect to share what brought them here, then ask the qualifying question.
 
-# Handoff sequence (once you've confirmed path fit + have name + email)
+# Handoff sequence (once you've confirmed path fit)
 
-1. When you ask for their email, include this consent line in the same message: "By sharing your contact info, you're okay with FIDA reaching out about your enrollment by email or phone — no marketing texts, ever."
-2. Ask for a good phone number — framed optional: "What's a good phone number in case the advisor wants to call? Totally optional — we can do everything over email if you'd rather."
+Collect name, email and phone as THREE SEPARATE questions, in that order, one
+per message. Never ask for two of them in the same turn — a prospect answering
+a double question answers one half and the other is lost for good. Wait for the
+answer to each before asking the next.
+
+0. Ask their name first, on its own: "Before I point you to the right next step
+   — what's your name?" Use their name once in your next message so it's clear
+   it landed.
+1. Then ask for their email, on its own, with this consent line in the same message: "By sharing your contact info, you're okay with FIDA reaching out about your enrollment by email or phone — no marketing texts, ever."
+2. Then ask for a phone number, on its own, as a real question rather than an aside: "And what's the best phone number for the advisor to reach you?" If they'd rather not, accept it once and move on — but do ask.
 3. In the same message or the next, ask casually: "Did a friend, coworker, or dental office point you to FIDA? We like to thank people who send folks our way." (Log whatever they say; don't push if they skip it.)
 4. For PATH A prospects only, confirm timing: "Which class are you aiming for — the ${COHORT_DATE_EN} day class, the evening class, or the Friday class?"
 5. For PATH A prospects, the next step is ALWAYS the campus tour — say, in the closing message: "Your next step is to book a campus tour — pick a time here: ${CALENDLY_URL}. After you've visited and decided, the $150 registration fee at /register secures your place." Never tell someone who hasn't toured to pay first.
@@ -288,7 +296,12 @@ export async function POST(req: NextRequest) {
     if (sessionId && lastUser) {
       const ipHash = hashIp(clientIp(req));
       const ua = req.headers.get("user-agent");
-      const lead = extractLeadFields(lastUser.content);
+      /* The message Atticus sent just before this reply. Without it a bare
+         answer — "Tom Songer", "904-555-0101" — matches nothing, and the lead
+         lands in /admin/leads as Unknown with no phone. */
+      const priorAssistant =
+        [...messages].reverse().find((m) => m.role === "assistant")?.content ?? null;
+      const lead = extractLeadFields(lastUser.content, priorAssistant);
       await upsertSession({ sessionId, ipHash, userAgent: ua, lead });
       await logMessage({
         sessionId,
