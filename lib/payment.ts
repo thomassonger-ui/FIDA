@@ -211,15 +211,24 @@ export const paymentCopy = {
   methodsLabel: b("Accepted payment methods", "Métodos de pago aceptados"),
   /* A list, not a run-on line, so each method renders as its own chip. A wall
      of text separated by middots does not scan. */
+  /* Mirrors what the QuickBooks checkout actually offers (Tom, 2026-09-18:
+     debit, credit, bank, Apple Pay, PayPal, Venmo) — the page was listing
+     four when the checkout takes six, so people paying with PayPal or Venmo
+     had no way to know it was an option until they were already on Intuit's
+     page. Check and cash stay: they are the in-person routes for the tuition
+     balance, which QuickBooks never sees. */
   methodsList: [
     b("Credit or debit card", "Tarjeta de crédito o débito"),
     b("Bank transfer (ACH)", "Transferencia bancaria (ACH)"),
+    b("Apple Pay", "Apple Pay"),
+    b("PayPal", "PayPal"),
+    b("Venmo", "Venmo"),
     b("Check", "Cheque"),
     b("Cash", "Efectivo"),
   ],
   methods: b(
-    "Credit or debit card · Bank transfer (ACH) · Check · Cash",
-    "Tarjeta de crédito o débito · Transferencia bancaria (ACH) · Cheque · Efectivo",
+    "Credit or debit card · Bank transfer (ACH) · Apple Pay · PayPal · Venmo · Check · Cash",
+    "Tarjeta de crédito o débito · Transferencia bancaria (ACH) · Apple Pay · PayPal · Venmo · Cheque · Efectivo",
   ),
 
   /* Named as financing, not as a question. Around 60% of registrations use a
