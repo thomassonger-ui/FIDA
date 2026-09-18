@@ -8,7 +8,9 @@
  * warms up instead of getting filtered by Gmail.
  *
  * Who gets mail: drip_status = 'active', a usable email (email_ok, not
- * unsubscribed), stage Identified or Nurture, not removed. The cap counts
+ * unsubscribed), stage Identified or Nurture, not removed. Sending does NOT
+ * change the stage; a click on any link in the email does (→ nurture, drip
+ * paused — see /api/drip/click). The cap counts
  * rows in prospect_sends with status 'sent' since midnight UTC.
  *
  * Every message carries the CAN-SPAM postal address and a one-click
@@ -100,6 +102,55 @@ export function unsubscribeTokenValid(email: string, token: string): boolean {
   } catch {
     return false;
   }
+}
+
+// ------------------------------------------------------------
+// Click tracking. Every http(s) link in the HTML part (except unsubscribe)
+// is routed through /api/drip/click, which records the click, moves the
+// prospect into the pipeline and pauses their drip — a person who clicked
+// is a lead for a human, not a target for email 3. Signed so a link can't
+// be forged for someone else's row.
+// ------------------------------------------------------------
+
+export function clickToken(prospectId: string): string {
+  return createHmac("sha256", unsubscribeSecret())
+    .update(`click:${prospectId}`)
+    .digest("hex")
+    .slice(0, 32);
+}
+
+export function clickTokenValid(prospectId: string, token: string): boolean {
+  try {
+    const expected = Buffer.from(clickToken(prospectId));
+    const given = Buffer.from((token ?? "").trim());
+    return expected.length === given.length && timingSafeEqual(expected, given);
+  } catch {
+    return false;
+  }
+}
+
+/** Destinations a click link may redirect to. Anything else is dropped. */
+export function clickTargetAllowed(url: string): boolean {
+  try {
+    const u = new URL(url);
+    const site = new URL(siteOrigin()).host;
+    return (
+      u.protocol === "https:" &&
+      (u.host === site || u.host === "www.youtube.com" || u.host === "youtu.be")
+    );
+  } catch {
+    return false;
+  }
+}
+
+export function trackLinks(html: string, prospectId: string): string {
+  const origin = siteOrigin();
+  return html.replace(/href="(https?:\/\/[^"]+)"/g, (m, url: string) => {
+    if (url.includes("/unsubscribe") || url.includes("/api/unsubscribe")) return m;
+    if (!clickTargetAllowed(url)) return m;
+    const q = new URLSearchParams({ p: prospectId, t: clickToken(prospectId), u: url });
+    return `href="${origin}/api/drip/click?${q.toString()}"`;
+  });
 }
 
 export function unsubscribeUrl(email: string, oneClick = false): string {
@@ -361,7 +412,7 @@ export async function runDripBatch(opts: { dryRun?: boolean } = {}): Promise<Dri
       to,
       subject: msg.subject,
       text: msg.text,
-      html: msg.html,
+      html: msg.html ? trackLinks(msg.html, p.id) : undefined,
       unsubscribeMailto: mailto,
       unsubscribeUrl: unsubscribeUrl(to, true),
     });
@@ -384,7 +435,6 @@ export async function runDripBatch(opts: { dryRun?: boolean } = {}): Promise<Dri
           drip_step: nextStep,
           drip_last_sent_at: new Date().toISOString(),
           drip_status: nextStep >= stepCountFor(p) ? "finished" : "active",
-          ...(p.stage === "identified" ? { stage: "nurture" } : {}),
         })
         .eq("id", p.id);
       await logTouch(p.id, {
