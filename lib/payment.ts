@@ -64,8 +64,18 @@ export const MILITARY_PLAN_8_MONTHLY = "$950";
 /* ---- Copy blocks shared by /tuition and the ELDA program page ---- */
 
 export const paymentCopy = {
-  eyebrow: b("How payment works", "Cómo funciona el pago"),
+  /* The section now LEADS with tuition and plans, because that is what people
+     come to /tuition#payment for. "How payment works / Four steps" used to be
+     the section heading; it moved down to sit with the four stage cards it
+     actually describes (stagesEyebrow / stagesHeading below). */
+  eyebrow: b("Tuition & payment plans", "Matrícula y planes de pago"),
   heading: b(
+    "What it costs, and how you pay.",
+    "Cuánto cuesta y cómo se paga.",
+  ),
+
+  stagesEyebrow: b("How payment works", "Cómo funciona el pago"),
+  stagesHeading: b(
     "Four steps — you always know what's due and when.",
     "Cuatro pasos: siempre sabrás qué se debe y cuándo.",
   ),
@@ -111,6 +121,10 @@ export const paymentCopy = {
   ],
 
   tiersHeading: b("Tuition & payment plans", "Matrícula y planes de pago"),
+  /* Promoted from a grey footnote to a badge on the card. It is the strongest
+     thing on this page and only true of the in-house 6- and 8-month plans —
+     never of TFC, which is why the TFC card now states its APR. */
+  interestFreeBadge: b("Interest-free", "Sin intereses"),
   tiers: {
     standard: {
       title: b("Standard tuition", "Matrícula estándar"),
@@ -170,10 +184,14 @@ export const paymentCopy = {
     "Tarjeta de crédito o débito · Transferencia bancaria (ACH) · Cheque · Efectivo",
   ),
 
-  tfcLabel: b("Prefer a longer term?", "¿Prefieres un plazo más largo?"),
+  tfcLabel: b("Need longer than 8 months?", "¿Necesitas más de 8 meses?"),
+  /* The APR was missing, which let TFC read as a free alternative to the
+     in-house plans. It isn't: the enrollment agreement discloses 3% for the
+     first six months, then 8% for the remaining twelve. Stating it here is
+     both honest and what makes the interest-free in-house plans land. */
   tfcBody: b(
-    "FIDA partners with TFC Tuition Financing for an 18-month tuition payment plan. No credit check — approval is subject to TFC's program terms.",
-    "FIDA colabora con TFC Tuition Financing para un plan de pago de matrícula de 18 meses. Sin verificación de crédito: la aprobación está sujeta a los términos del programa de TFC.",
+    "TFC Tuition Financing spreads the balance over 18 months. No credit check — but unlike our in-house plans it carries interest: 3% APR for the first 6 months, then 8% for the remaining 12. Approval is subject to TFC's terms.",
+    "TFC Tuition Financing distribuye el saldo en 18 meses. Sin verificación de crédito, pero a diferencia de nuestros planes internos sí genera intereses: 3% APR los primeros 6 meses y 8% los 12 restantes. La aprobación está sujeta a los términos de TFC.",
   ),
   tfcCta: b("Learn about TFC", "Conoce TFC"),
 

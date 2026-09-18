@@ -38,8 +38,19 @@ export function TuitionContent() {
           </div>
         </section>
 
-        {/* DIPLOMA PRICING */}
-        <section className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-14 md:py-16">
+        {/* TUITION & PAYMENT PLANS — first thing after the heading.
+            People land on /tuition (and on /tuition#payment specifically) for
+            the price and the plans. This used to sit below the diploma card,
+            so the answer they came for was a scroll away. */}
+        <section
+          id="payment"
+          className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-14 md:py-16 scroll-mt-24"
+        >
+          <PaymentStructure />
+        </section>
+
+        {/* DIPLOMA PROGRAM DETAIL — what the price buys, after the price. */}
+        <section className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 pb-14 md:pb-16">
           <div className="card bg-white overflow-hidden">
             <div className="grid grid-cols-1 lg:grid-cols-2">
               <div className="p-8 md:p-10">
@@ -105,10 +116,6 @@ export function TuitionContent() {
             </div>
           </div>
 
-          {/* PAYMENT STRUCTURE — registration fee → deposit → balance, tiers, TFC */}
-          <div id="payment" className="mt-14 md:mt-16 scroll-mt-24">
-            <PaymentStructure />
-          </div>
         </section>
 
         {/* CE COURSES */}
