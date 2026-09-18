@@ -83,7 +83,7 @@ export function RegisterContent() {
                   {t(r.freeBadge)}
                 </span>
               </div>
-              <h3 className="mt-3 font-display text-2xl md:text-3xl text-navy leading-tight">
+              <h3 className="mt-3 font-display text-2xl md:text-3xl text-navy leading-tight whitespace-pre-line">
                 {t(r.step0Title)}
               </h3>
               <p className="mt-4 text-muted leading-relaxed flex-1">{t(r.step0Body)}</p>

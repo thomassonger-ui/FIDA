@@ -33,7 +33,12 @@ export const register = {
   ),
 
   step0Label: b("Step 1", "Paso 1"),
-  step0Title: b("Book a campus tour", "Reserva un recorrido del campus"),
+  /* The \n is an intentional line break, rendered via whitespace-pre-line.
+     "Book a campus tour" fitted on one line while "Complete your application"
+     took two, so card 1's title block was shorter than card 3's and the row
+     looked uneven. Breaking before "tour" gives all three titles two lines.
+     Spanish already wraps to two lines on its own, so it carries no \n. */
+  step0Title: b("Book a campus\ntour", "Reserva un recorrido del campus"),
   step0Body: b(
     "Everything starts with a visit. Pick a time on our calendar, see the classroom and lab, meet Debbie and Ashley, and ask anything. Free, no commitment.",
     "Todo empieza con una visita. Elige una hora en nuestro calendario, conoce el aula y el laboratorio, conoce a Debbie y Ashley y pregunta lo que quieras. Gratis, sin compromiso.",
