@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
 import { VideoModal } from "@/components/landing/VideoModal";
+import { Reveal } from "@/components/landing/Reveal";
 import { VIRTUAL_TOUR_YOUTUBE_ID } from "@/lib/payment";
 import { RotatingHeadline } from "@/components/landing/RotatingHeadline";
 import { AtticusChat } from "@/components/admissions/AtticusChat";
@@ -144,12 +145,23 @@ export function HomeContent() {
       {/* AUDIENCE-PICKER BAND — two enrollment paths + student portal */}
       <section className="bg-white border-b border-rule">
         <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-12 py-10 md:py-14">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/*
+            items-stretch + each card a flex column pins the CTA to the bottom
+            with mt-auto, so the three links sit on one line however much body
+            copy each card carries.
+
+            The header row is a fixed h-14 because card 2's eyebrow wraps to
+            two lines and card 1's and 3's don't — which used to push card 2's
+            title a line lower than its neighbours'. Fixing the row height
+            makes the three titles start on the same baseline.
+          */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch">
+            <Reveal className="h-full">
             <Link
               href="/programs/entry-level-dental-assisting"
-              className="card card-hover block p-6"
+              className="card card-hover flex h-full flex-col p-6"
             >
-              <div className="flex items-center gap-3 mb-3">
+              <div className="flex h-14 items-center gap-3 mb-3">
                 <span className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-teal/10 border border-teal/30 font-display text-teal text-lg">
                   01
                 </span>
@@ -161,16 +173,18 @@ export function HomeContent() {
               <p className="text-sm text-muted leading-relaxed">
                 {t(home.audience.card1.body)}
               </p>
-              <div className="mt-4 text-sm font-semibold text-teal">
+              <div className="mt-auto pt-4 text-sm font-semibold text-teal">
                 {t(home.audience.card1.cta)} <span aria-hidden="true">&rarr;</span>
               </div>
             </Link>
+            </Reveal>
 
+            <Reveal delay={90} className="h-full">
             <Link
               href="/programs#professional-development"
-              className="card card-hover block p-6"
+              className="card card-hover flex h-full flex-col p-6"
             >
-              <div className="flex items-center gap-3 mb-3">
+              <div className="flex h-14 items-center gap-3 mb-3">
                 <span className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-teal/10 border border-teal/30 font-display text-teal text-lg">
                   02
                 </span>
@@ -182,13 +196,15 @@ export function HomeContent() {
               <p className="text-sm text-muted leading-relaxed">
                 {t(home.audience.card2.body)}
               </p>
-              <div className="mt-4 text-sm font-semibold text-teal">
+              <div className="mt-auto pt-4 text-sm font-semibold text-teal">
                 {t(home.audience.card2.cta)} <span aria-hidden="true">&rarr;</span>
               </div>
             </Link>
+            </Reveal>
 
-            <Link href="/portal/login" className="card card-hover block p-6">
-              <div className="flex items-center gap-3 mb-3">
+            <Reveal delay={180} className="h-full">
+            <Link href="/portal/login" className="card card-hover flex h-full flex-col p-6">
+              <div className="flex h-14 items-center gap-3 mb-3">
                 <span className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-teal/10 border border-teal/30 font-display text-teal text-lg">
                   03
                 </span>
@@ -200,10 +216,11 @@ export function HomeContent() {
               <p className="text-sm text-muted leading-relaxed">
                 {t(home.audience.card3.body)}
               </p>
-              <div className="mt-4 text-sm font-semibold text-teal">
+              <div className="mt-auto pt-4 text-sm font-semibold text-teal">
                 {t(home.audience.card3.cta)} <span aria-hidden="true">→</span>
               </div>
             </Link>
+            </Reveal>
           </div>
         </div>
       </section>
