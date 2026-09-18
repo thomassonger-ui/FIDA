@@ -69,10 +69,25 @@ export const IN_HOUSE_PLANS: string[] = [
 export const THIRD_PARTY_LOAN =
   "Florida Institute of Dental Assisting partners with TFC (Tuition Finance Company) to offer flexible payment plans. Students may finance their tuition over an 18-month term with a tiered interest rate structure. Students will benefit from a low introductory interest rate of 3% APR for the first 6 months, which then adjusts to 8% APR for the remaining 12-month balance.";
 
+/**
+ * Placeholder for the TILA cells Debbie completes by hand at signing.
+ *
+ * On the paper CIE form these sit blank, because the figures depend on what the
+ * student actually finances. Blank works on paper. It does not work online: the
+ * student signs, and the filed PDF carries a lending disclosure that discloses
+ * nothing, with no indication the gap was intentional. This makes the gap
+ * explicit and tells staff the cell is theirs to complete.
+ *
+ * Deliberately NOT computed. Finance charge and payment schedule are regulated
+ * figures on a signed credit contract — they need Debbie or counsel to approve
+ * the math, not code that infers it.
+ */
+export const TILA_BLANK = "To be completed by FIDA at signing.";
+
 /** Truth-in-Lending style box on page 3 of the form. */
 export const TILA_BOX: { head: string; body: string }[] = [
   { head: "Annual Percentage Rate:", body: "3% for the first 6 months, then increasing to 8% for the remaining 12 months" },
-  { head: "Finance Charge:", body: "" },
+  { head: "Finance Charge:", body: TILA_BLANK },
   { head: "Amount financed:", body: "the dollar amount of credit provided to you on or on your behalf." },
   { head: "Total of Payments:", body: "The amount you will have paid after you have made all payments as scheduled." },
   { head: "Total Sales Price:", body: "The total cost of your purchase on credit including your down payment of $750." },

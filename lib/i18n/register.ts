@@ -86,10 +86,9 @@ export const register = {
   },
 
   step2Label: b("Step 2", "Paso 2"),
-  step2Title: b(
-    `Pay the ${REGISTRATION_FEE} registration fee`,
-    `Paga la cuota de inscripción de ${REGISTRATION_FEE}`,
-  ),
+  /* The amount is already the big price figure directly above this heading,
+     so repeating it here was redundant and pushed the title onto two lines. */
+  step2Title: b("Registration fee", "Cuota de inscripción"),
   step2Body: b(
     "After your tour, when you've decided to enroll. Non-refundable, and it counts toward your $750 seat deposit. Paid securely through QuickBooks — card, ACH, PayPal, or Venmo; opens in a new tab and QuickBooks emails your receipt.",
     "Después de tu recorrido, cuando hayas decidido inscribirte. No reembolsable, y se acredita a tu depósito de cupo de $750. Se paga de forma segura a través de QuickBooks: tarjeta, ACH, PayPal o Venmo; se abre en una pestaña nueva y QuickBooks te envía el recibo.",

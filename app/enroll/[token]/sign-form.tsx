@@ -209,6 +209,19 @@ export function SignForm({
         </ol>
         <p className="font-semibold">Third party loan program:</p>
         <p>{T.THIRD_PARTY_LOAN}</p>
+        {/* The TFC disclosure stays visible for every student, because it is
+            part of the CIE-filed form and the form wins. What changed: it now
+            says who it applies to, and the blank cells say who fills them
+            rather than sitting empty on a signed contract. */}
+        {f.payment_plan === "tfc" ? (
+          <p className="text-xs font-semibold text-navy">
+            You have selected TFC. FIDA completes the figures below with you before countersigning.
+          </p>
+        ) : (
+          <p className="text-xs italic text-subtle">
+            These figures apply only if you choose the 18-month TFC plan below.
+          </p>
+        )}
         <div className="overflow-x-auto">
           <table className="w-full text-xs border border-rule">
             <thead><tr>{T.TILA_BOX.map((b) => <th key={b.head} className="border border-rule p-2 text-left align-top font-semibold">{b.head}</th>)}</tr></thead>
@@ -219,7 +232,7 @@ export function SignForm({
         <div className="overflow-x-auto">
           <table className="w-full text-xs border border-rule">
             <thead><tr>{T.TILA_SCHEDULE_COLS.map((c) => <th key={c} className="border border-rule p-2 text-left font-semibold">{c}</th>)}</tr></thead>
-            <tbody><tr>{T.TILA_SCHEDULE_COLS.map((c) => <td key={c} className="border border-rule p-3">&nbsp;</td>)}</tr></tbody>
+            <tbody><tr>{T.TILA_SCHEDULE_COLS.map((c) => <td key={c} className="border border-rule p-3 align-top text-muted">{T.TILA_BLANK}</td>)}</tr></tbody>
           </table>
         </div>
         <p>{T.NO_CARRYING_CHARGES}</p>

@@ -314,7 +314,13 @@ export async function renderAgreementPdf(fields: AgreementFields, sig: Signature
     [96, 96, 100, 100, 100]
   );
   w.para(T.TILA_SCHEDULE_HEAD, { bold: true, after: 2 });
-  w.table(T.TILA_SCHEDULE_COLS, [["", "", ""]], [150, 171, 171]);
+  /* Staff-completed cells say so, rather than reaching the filed PDF as three
+     empty boxes on a lending disclosure. See TILA_BLANK. */
+  w.table(
+    T.TILA_SCHEDULE_COLS,
+    [[T.TILA_BLANK, T.TILA_BLANK, T.TILA_BLANK]],
+    [150, 171, 171]
+  );
   w.para(T.NO_CARRYING_CHARGES);
 
   w.heading("NON-DISCRIMINATION POLICY:");
