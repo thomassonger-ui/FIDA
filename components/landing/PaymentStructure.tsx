@@ -158,6 +158,9 @@ export function PaymentStructure({ showHeading = true }: { showHeading?: boolean
           <h2 className="mt-3 font-display text-3xl md:text-4xl text-navy tracking-tight">
             {t(p.heading)}
           </h2>
+          <p className="mt-2 font-display text-xl md:text-2xl text-muted tracking-tight">
+            {t(p.subheading)}
+          </p>
         </div>
       )}
 

@@ -74,7 +74,15 @@ export const paymentCopy = {
      the section heading; it moved down to sit with the four stage cards it
      actually describes (stagesEyebrow / stagesHeading below). */
   eyebrow: b("Tuition & payment plans", "Matrícula y planes de pago"),
+  /* The program name is now the heading, at display size, because the section
+     never said which program these numbers belong to. FIDA also runs EFDA and
+     Radiography, so "What it costs" on its own left the reader to assume. The
+     old heading kept its words as the line underneath. */
   heading: b(
+    "Entry Level Dental Assisting Program",
+    "Programa de Asistente Dental de Nivel Inicial",
+  ),
+  subheading: b(
     "What it costs, and how you pay.",
     "Cuánto cuesta y cómo se paga.",
   ),
