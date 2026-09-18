@@ -321,12 +321,16 @@ export function ProspectsTable({
   }
 
   function sendTest() {
-    const to = window.prompt("Send a sample of email #1 to which address?");
+    const to = window.prompt("Send a sample email to which address?");
     if (!to) return;
     const employer = window.confirm(
-      "OK = dentist/employer version. Cancel = student version."
+      "OK = dentist CE version (5 emails). Cancel = student version (3 emails)."
     );
-    drip({ action: "test", to, step: 0, track: employer ? "employer" : "student" });
+    const max = employer ? 5 : 3;
+    const raw = window.prompt(`Which email, 1–${max}?`, "1");
+    if (raw === null) return;
+    const step = Math.min(Math.max(parseInt(raw, 10) || 1, 1), max) - 1;
+    drip({ action: "test", to, step, track: employer ? "employer" : "student" });
   }
 
   return (
@@ -472,7 +476,7 @@ export function ProspectsTable({
           onClick={() => drip({ action: "start", ids: [...selected] })}
           className="btn-outline text-xs disabled:opacity-40"
         >
-          Start drip ({selected.size})
+          {selectionTrack === "employer" ? "CE Drip" : "Start drip"} ({selected.size})
         </button>
         <button
           type="button"
@@ -495,7 +499,7 @@ export function ProspectsTable({
           Send today&rsquo;s batch
         </button>
         <span className="text-xs text-muted">
-          <span className="tabular-nums">{emailRemaining}</span> of {limits.email} emails left today
+          <span className="tabular-nums">{emailRemaining}</span> of {limits.email} new today · follow-ups always send
         </span>
         <button
           type="button"

@@ -228,7 +228,11 @@ export async function pipelineStats(): Promise<
   }
 }
 
-/** Emails dispatched since local midnight — checked against currentLimits().email. */
+/**
+ * FIRST emails (step 0) dispatched since local midnight — checked against
+ * currentLimits().email. The cap is an intake cap: follow-ups to people
+ * already in a sequence always send and are not counted here.
+ */
 export async function sentToday(): Promise<number> {
   try {
     const supabase = getServerClient();
@@ -238,6 +242,7 @@ export async function sentToday(): Promise<number> {
       .from("prospect_sends")
       .select("id", { count: "exact", head: true })
       .eq("status", "sent")
+      .eq("step", 0)
       .gte("created_at", since.toISOString());
     if (error) return 0;
     return count ?? 0;

@@ -6,7 +6,7 @@ import {
   sentToday,
 } from "@/lib/prospects-db";
 import { currentLimits, RAMP, MAILING_ADDRESS } from "@/lib/prospects-shared";
-import { SCHEDULE_LABEL, STEP_COUNT, dripStats } from "@/lib/drip";
+import { SCHEDULE_LABEL, dripStats } from "@/lib/drip";
 import { ProspectsTable } from "./prospects-table";
 
 const DRIP_SENDER =
@@ -120,14 +120,14 @@ export default async function ProspectsPage() {
           sub={`${drip.dueNow.toLocaleString()} due now · ${drip.paused.toLocaleString()} paused`}
         />
         <Stat
-          label="Sent today"
+          label="New today"
           value={`${drip.sentToday} / ${drip.limit}`}
-          sub={`${Math.max(0, drip.limit - drip.sentToday)} left today`}
+          sub={`${Math.max(0, drip.limit - drip.sentToday)} first emails left · follow-ups always send`}
         />
         <Stat
           label="Completed"
           value={drip.completed.toLocaleString()}
-          sub={`all ${STEP_COUNT} touches`}
+          sub="every email in their sequence"
         />
         <Stat
           label="Unsubscribed"
@@ -214,8 +214,9 @@ export default async function ProspectsPage() {
           <li>
             <strong className="text-ink">Drip email</strong> — {SCHEDULE_LABEL},
             sent from {DRIP_SENDER}. Select prospects and press{" "}
-            <em>Start drip</em>; a scheduled job sends whatever is due every
-            weekday morning, up to {limits.email}/day. Use{" "}
+            <em>CE Drip</em> (dentists) or <em>Start drip</em> (students); a
+            scheduled job sends whatever is due Tuesday–Thursday mornings,
+            starting up to {limits.email} new people a day. Use{" "}
             <em>Send me a test</em> to check the sending domain is verified in
             Resend before turning anyone on.
           </li>

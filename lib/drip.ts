@@ -1,7 +1,8 @@
 /**
  * Drip campaign engine — prospects only.
  *
- * Three emails per prospect: day 0, +3 days, +7 days. Sends go out through
+ * Students: three emails (day 0, +3, +7). Dentists: the five-email CE
+ * sequence in lib/drip-ce.ts (weekly). Sends go out through
  * Resend from DRIP_FROM (reply@fldentalassisting.com), capped per day by
  * PROSPECT_DAILY_EMAIL_LIMIT (default 10) so a brand-new sending domain
  * warms up instead of getting filtered by Gmail.
@@ -30,6 +31,7 @@ import {
 } from "./prospects-shared";
 import { COHORTS } from "./cohort";
 import { siteOrigin } from "./site-url";
+import { CE_SCHEDULE_LABEL, CE_STEP_COUNT, CE_STEP_DELAYS_DAYS, renderCeDrip } from "./drip-ce";
 
 // ------------------------------------------------------------
 // Configuration
@@ -37,11 +39,23 @@ import { siteOrigin } from "./site-url";
 
 const RESEND_API_URL = "https://api.resend.com/emails";
 
-/** Days to wait after the previous step. Index 0 is the first email. */
+/** Student track: days to wait after the previous step. Index 0 is the first email. */
 export const STEP_DELAYS_DAYS = [0, 3, 4]; // day 0, +3, +7 cumulative
-export const STEP_COUNT = STEP_DELAYS_DAYS.length;
+/** Longest sequence of any track — the API clamps test steps against this. */
+export const STEP_COUNT = Math.max(STEP_DELAYS_DAYS.length, CE_STEP_COUNT);
 
-export const SCHEDULE_LABEL = "3 emails — day 0, day 3, day 7";
+export const SCHEDULE_LABEL = `dentists: ${CE_SCHEDULE_LABEL} · students: 3 emails — day 0, day 3, day 7`;
+
+function isEmployer(p: Prospect): boolean {
+  return p.segment === "dentist_employer";
+}
+/** Number of steps in this prospect's sequence. */
+export function stepCountFor(p: Prospect): number {
+  return isEmployer(p) ? CE_STEP_COUNT : STEP_DELAYS_DAYS.length;
+}
+function stepDelaysFor(p: Prospect): number[] {
+  return isEmployer(p) ? CE_STEP_DELAYS_DAYS : STEP_DELAYS_DAYS;
+}
 
 function fromAddress(): string {
   return (
@@ -100,7 +114,7 @@ export function unsubscribeUrl(email: string, oneClick = false): string {
 // actually type. Keep each under ~120 words.
 // ------------------------------------------------------------
 
-export type DripMessage = { subject: string; text: string };
+export type DripMessage = { subject: string; text: string; html?: string };
 
 function firstName(p: Prospect): string {
   if (p.first_name?.trim()) return p.first_name.trim();
@@ -139,71 +153,8 @@ function footer(p: Prospect): string {
   ].join("\n");
 }
 
-/**
- * Dentist / employer track — for the FL DOH licensed-dentist list. The buyer
- * is the practice owner; the product is Radiography + EFDA for their
- * assistants, online, no time away from the chair.
- */
-function renderEmployerDrip(step: number, p: Prospect): DripMessage {
-  const origin = siteOrigin();
-  const last = p.last_name?.trim();
-  const greeting = last ? `Dr. ${last},` : "Doctor,";
-  const body: Record<number, DripMessage> = {
-    0: {
-      subject: "Radiography certification for your assistants — without losing chair time",
-      text: [
-        greeting,
-        "",
-        "We're the Florida Institute of Dental Assisting in Jacksonville. Two things we hear from practice owners every week: an assistant who still can't take x-rays, and one who could be doing expanded functions but isn't certified.",
-        "",
-        "We fix both without pulling anyone out of your office:",
-        "",
-        "• Radiography for Dental Personnel — $499, fully online, capstone signed off by you as the supervising dentist.",
-        "• Expanded Functions (EFDA) — $1,049, online theory plus clinical hours in your own operatory.",
-        "",
-        "Both are open enrollment — an assistant can start this week. Reply with how many assistants you'd want certified and I'll send the enrollment link and answer any questions.",
-        signature(),
-        footer(p),
-      ].join("\n"),
-    },
-    1: {
-      subject: "What an EFDA actually does for your schedule",
-      text: [
-        greeting,
-        "",
-        "Quick follow-up. A Florida-certified expanded functions assistant can place and finish restorations and take on the chairside tasks that currently wait on you — which is the difference between a full column and a backed-up one.",
-        "",
-        "The course is $1,049 per assistant, online theory at their own pace, and the clinical component happens chairside in your office under your supervision — so the training is on your patients, your materials, your standards.",
-        "",
-        `Course details: ${origin}/programs`,
-        "",
-        "If you'd rather talk it through, reply with a good time and one of us will call.",
-        signature(),
-        footer(p),
-      ].join("\n"),
-    },
-    2: {
-      subject: "Last note — the x-ray gap",
-      text: [
-        greeting,
-        "",
-        "I'll leave you alone after this one.",
-        "",
-        "If nothing else, get every assistant in the office radiography-certified. It's $499, it's online, and Florida requires it before an assistant can expose radiographs. It is the single credential that lets your team handle imaging without waiting on a hygienist or on you.",
-        "",
-        `Enroll an assistant here: ${origin}/programs`,
-        "",
-        "Or reply with a question. Thanks for reading — and thanks for what you do for your patients.",
-        signature(),
-        footer(p),
-      ].join("\n"),
-    },
-  };
-  return body[step] ?? body[STEP_COUNT - 1];
-}
-
 export function renderDrip(step: number, p: Prospect): DripMessage {
-  if (p.segment === "dentist_employer") return renderEmployerDrip(step, p);
+  if (isEmployer(p)) return renderCeDrip(step, p, unsubscribeUrl(p.email!));
   const origin = siteOrigin();
   const name = firstName(p);
   const body: Record<number, DripMessage> = {
@@ -258,7 +209,7 @@ export function renderDrip(step: number, p: Prospect): DripMessage {
       ].join("\n"),
     },
   };
-  return body[step] ?? body[STEP_COUNT - 1];
+  return body[step] ?? body[STEP_DELAYS_DAYS.length - 1];
 }
 
 // ------------------------------------------------------------
@@ -269,6 +220,7 @@ async function sendViaResend(opts: {
   to: string;
   subject: string;
   text: string;
+  html?: string;
   unsubscribeMailto: string;
   unsubscribeUrl: string;
 }): Promise<{ ok: true; id: string } | { ok: false; error: string }> {
@@ -280,6 +232,7 @@ async function sendViaResend(opts: {
     to: [opts.to],
     subject: opts.subject,
     text: opts.text,
+    ...(opts.html ? { html: opts.html } : {}),
     headers: {
       "List-Unsubscribe": `<${opts.unsubscribeUrl}>, <mailto:${opts.unsubscribeMailto}?subject=unsubscribe>`,
       "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
@@ -320,7 +273,7 @@ export function dripEligible(p: Prospect): boolean {
     !p.removed_at &&
     !emailBlocked(p) &&
     DRIP_STAGES.includes(p.stage) &&
-    p.drip_step < STEP_COUNT
+    p.drip_step < stepCountFor(p)
   );
 }
 
@@ -328,7 +281,7 @@ export function dripEligible(p: Prospect): boolean {
 export function dripDue(p: Prospect, now = Date.now()): boolean {
   if (!dripEligible(p)) return false;
   if (p.drip_step === 0 || !p.drip_last_sent_at) return true;
-  const waitDays = STEP_DELAYS_DAYS[p.drip_step] ?? 0;
+  const waitDays = stepDelaysFor(p)[p.drip_step] ?? 0;
   const last = new Date(p.drip_last_sent_at).getTime();
   return now - last >= waitDays * 24 * 60 * 60 * 1000;
 }
@@ -381,8 +334,13 @@ export async function runDripBatch(opts: { dryRun?: boolean } = {}): Promise<Dri
   const due = ((data as Prospect[]) ?? []).filter((p) => dripDue(p, now));
   result.due = due.length;
 
-  const batch = due.slice(0, remaining);
-  result.skipped = due.length - batch.length;
+  // The daily cap is an INTAKE cap: it limits how many new dentists get
+  // their first email today. Follow-ups to people already in the sequence
+  // always go out, so the intake never shrinks as the sequence fills up.
+  const followUps = due.filter((p) => p.drip_step > 0);
+  const intros = due.filter((p) => p.drip_step === 0);
+  const batch = [...followUps, ...intros.slice(0, remaining)];
+  result.skipped = intros.length - Math.min(intros.length, remaining);
   if (opts.dryRun) {
     result.details = batch.map((p) => ({
       prospect: displayName(p),
@@ -403,6 +361,7 @@ export async function runDripBatch(opts: { dryRun?: boolean } = {}): Promise<Dri
       to,
       subject: msg.subject,
       text: msg.text,
+      html: msg.html,
       unsubscribeMailto: mailto,
       unsubscribeUrl: unsubscribeUrl(to, true),
     });
@@ -424,14 +383,14 @@ export async function runDripBatch(opts: { dryRun?: boolean } = {}): Promise<Dri
         .update({
           drip_step: nextStep,
           drip_last_sent_at: new Date().toISOString(),
-          drip_status: nextStep >= STEP_COUNT ? "finished" : "active",
+          drip_status: nextStep >= stepCountFor(p) ? "finished" : "active",
           ...(p.stage === "identified" ? { stage: "nurture" } : {}),
         })
         .eq("id", p.id);
       await logTouch(p.id, {
         kind: "email",
         outcome: "sent",
-        body: `Drip ${step + 1}/${STEP_COUNT}: ${msg.subject}`,
+        body: `Drip ${step + 1}/${stepCountFor(p)}: ${msg.subject}`,
         actor: "drip",
       });
       result.sent++;
@@ -533,6 +492,7 @@ export async function sendDripTest(
     to,
     subject: `[TEST] ${msg.subject}`,
     text: msg.text,
+    html: msg.html,
     unsubscribeMailto: bareAddress(fromAddress()),
     unsubscribeUrl: unsubscribeUrl(to, true),
   });
@@ -556,7 +516,7 @@ export async function setDrip(
     }
     const patch: Record<string, unknown> = { drip_status: status };
     // Re-starting someone who finished restarts from the top.
-    if (status === "active" && p.drip_step >= STEP_COUNT) {
+    if (status === "active" && p.drip_step >= stepCountFor(p)) {
       patch.drip_step = 0;
       patch.drip_last_sent_at = null;
     }
