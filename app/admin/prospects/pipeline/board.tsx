@@ -99,6 +99,31 @@ export function Board({
     }
   }
 
+  /** Logs the reply as a touch. Dentists who reply are Interested by definition. */
+  async function replied(p: Prospect) {
+    setBusyId(p.id);
+    setError(null);
+    try {
+      const res = await fetch(`/api/admin/prospects/${p.id}/touch`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kind: "email", outcome: "replied" }),
+      });
+      const json = await res.json();
+      if (!json.ok) {
+        setError(json.error ?? "Could not log the reply.");
+        return;
+      }
+      if (track === "employer" && (p.stage === "identified" || p.stage === "nurture"))
+        await move(p.id, "applied");
+      else startTransition(() => router.refresh());
+    } catch {
+      setError("Network error — the reply was not logged.");
+    } finally {
+      setBusyId(null);
+    }
+  }
+
   const Card = ({ p }: { p: Prospect }) => {
     const stale = daysSinceTouch(p);
     const idx = STAGES.indexOf(p.stage as (typeof STAGES)[number]);
@@ -111,8 +136,21 @@ export function Board({
       >
         <div className="font-medium text-navy leading-tight">{name(p)}</div>
         <div className="text-xs text-muted mt-0.5 truncate">
-          {p.current_employer || p.city || p.email || "—"}
+          {p.current_employer || p.city || "—"}
         </div>
+        {p.email && (
+          <a
+            href={`mailto:${p.email}`}
+            className="block mt-1 text-xs text-teal underline truncate"
+          >
+            {p.email}
+          </a>
+        )}
+        {p.phone && (
+          <a href={`tel:${p.phone}`} className="block text-xs text-ink tabular-nums">
+            {p.phone}
+          </a>
+        )}
         <div className="mt-2 flex items-center justify-between gap-2">
           <span className="text-[10px] uppercase tracking-wider text-subtle tabular-nums">
             {stale === null
@@ -125,6 +163,46 @@ export function Board({
             <span className="text-[10px] uppercase tracking-wider text-red-700 font-semibold">
               overdue
             </span>
+          )}
+        </div>
+        <div className="mt-2 flex flex-wrap items-center gap-1.5">
+          <select
+            aria-label="Stage"
+            value={p.stage}
+            disabled={busyId === p.id}
+            onChange={(e) => {
+              const s = e.target.value as Stage;
+              if (s === p.stage) return;
+              if (s === "registered" && track === "student") promote(p.id);
+              else move(p.id, s);
+            }}
+            className="text-xs border border-rule rounded-sm bg-paper px-1.5 py-1 text-ink"
+          >
+            {STAGES.filter((s) => s !== "identified").map((s) => (
+              <option key={s} value={s}>
+                {stageLabel(track, s)}
+              </option>
+            ))}
+            <option value="lost">Lost</option>
+          </select>
+          <button
+            type="button"
+            disabled={busyId === p.id}
+            onClick={() => replied(p)}
+            className="text-xs font-semibold text-teal underline disabled:opacity-40"
+            title="Logs the reply as a touch"
+          >
+            Replied
+          </button>
+          {p.email && (
+            <a
+              href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(p.email)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-sm border border-rule text-muted hover:border-teal hover:text-teal"
+            >
+              Gmail
+            </a>
           )}
         </div>
         <div className="mt-2 flex gap-1.5">
