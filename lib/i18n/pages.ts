@@ -129,6 +129,20 @@ export const about = {
     "Próximo inicio. Hay clases de día, vespertinas y de viernes (día completo) programadas: los cupos son limitados y las solicitudes se revisan al recibirse.",
   ),
 
+  /* FIDA story video, bottom of /about. Starts muted on scroll with a sound
+     control — browsers block sound-on autoplay. See ScrollAutoplayVideo. */
+  videoEyebrow: b("Watch", "Mira"),
+  videoHeading: b("See FIDA for yourself.", "Conoce FIDA por ti mismo."),
+  videoBody: b(
+    "A short look at the school, the people who teach here, and what a week of training actually looks like.",
+    "Un vistazo breve a la escuela, a quienes enseñan aquí y a cómo es de verdad una semana de formación.",
+  ),
+  videoTitle: b(
+    "About Florida Institute of Dental Assisting",
+    "Sobre el Florida Institute of Dental Assisting",
+  ),
+  videoYoutubeId: "mPyxc7PWOvY",
+
   ctaHeading: b("See if FIDA is a fit.", "Descubre si FIDA es para ti."),
   ctaBody: b(
     "Send us a note and a FIDA advisor will follow up within one business day.",
