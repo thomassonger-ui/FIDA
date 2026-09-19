@@ -69,7 +69,11 @@ export function Nav() {
             <Link
               key={l.href}
               href={l.href}
-              className="text-navy/70 hover:text-teal transition-colors"
+              // Blog joins the bar at lg — between md and lg the row is already
+              // full, and the link is still in the footer and the mobile menu.
+              className={`text-navy/70 hover:text-teal transition-colors ${
+                l.href === "/blog" ? "hidden lg:inline" : ""
+              }`}
             >
               {t(l.label)}
             </Link>

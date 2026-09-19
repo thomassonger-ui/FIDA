@@ -64,6 +64,7 @@ export function Footer() {
               <li><Link href="/programs" className="hover:text-teal-soft transition-colors">{t(footer.programs)}</Link></li>
               <li><Link href="/tuition" className="hover:text-teal-soft transition-colors">{t(footer.tuition)}</Link></li>
               <li><Link href="/about" className="hover:text-teal-soft transition-colors">{t(footer.about)}</Link></li>
+              <li><Link href="/blog" className="hover:text-teal-soft transition-colors">{t(footer.blog)}</Link></li>
               <li><Link href="/contact" className="hover:text-teal-soft transition-colors">{t(footer.contact)}</Link></li>
             </ul>
           </div>

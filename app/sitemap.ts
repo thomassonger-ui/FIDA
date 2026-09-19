@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { POSTS, TAGS } from "@/lib/blog";
 
 // Branded production domain — the canonical site we want indexed.
 const SITE_URL = "https://fldentalassisting.com";
@@ -30,10 +31,31 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/refund-policy", priority: 0.3, changeFrequency: "yearly" },
   ];
 
-  return routes.map((r) => ({
-    url: `${SITE_URL}${r.path}`,
-    lastModified,
-    changeFrequency: r.changeFrequency,
-    priority: r.priority,
-  }));
+  const blog: MetadataRoute.Sitemap = [
+    { url: `${SITE_URL}/blog`, lastModified, changeFrequency: "weekly", priority: 0.8 },
+    ...TAGS.map((t) => ({
+      url: `${SITE_URL}/blog/tag/${t.slug}`,
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.6,
+    })),
+    // Articles report the date their citations were last reviewed, not the
+    // deploy date — a truthful lastmod is the only kind search engines trust.
+    ...POSTS.map((p) => ({
+      url: `${SITE_URL}/blog/${p.slug}`,
+      lastModified: new Date(`${p.reviewed}T12:00:00Z`),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    })),
+  ];
+
+  return [
+    ...routes.map((r) => ({
+      url: `${SITE_URL}${r.path}`,
+      lastModified,
+      changeFrequency: r.changeFrequency,
+      priority: r.priority,
+    })),
+    ...blog,
+  ];
 }

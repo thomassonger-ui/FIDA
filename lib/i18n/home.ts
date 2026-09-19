@@ -25,6 +25,7 @@ export const nav = {
     { href: "/programs", label: b("Programs & Courses", "Programas y Cursos") },
     { href: "/tuition", label: b("Tuition", "Matrícula") },
     { href: "/about", label: b("About", "Nosotros") },
+    { href: "/blog", label: b("Blog", "Blog") },
     { href: "/contact", label: b("Contact", "Contacto") },
   ],
   // Primary intake CTA — sits in the nav so every page has a one-click path
@@ -86,6 +87,7 @@ export const footer = {
   contact: b("Contact", "Contacto"),
   tour: b("Schedule a tour", "Agenda una visita"),
   about: b("About", "Nosotros"),
+  blog: b("Blog", "Blog"),
   submitTicket: b("Submit a Ticket", "Enviar un ticket"),
   policiesHeading: b("Policies", "Políticas"),
   privacy: b("Privacy Policy", "Política de Privacidad"),
