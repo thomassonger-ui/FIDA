@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
 import { Inline } from "@/components/blog/Inline";
+import { ShareButtons } from "@/components/blog/ShareButtons";
 import {
   POSTS,
   SITE_URL,
@@ -149,6 +150,7 @@ export default async function BlogPostPage({
                     </li>
                   ))}
                 </ul>
+                <ShareButtons url={url} title={p.title} summary={p.description} className="mt-6" />
               </div>
             </div>
           </header>
@@ -340,6 +342,13 @@ export default async function BlogPostPage({
                   .
                 </p>
               </section>
+
+              <div className="mt-12 pt-6 border-t border-rule">
+                <p className="text-sm text-muted">
+                  Know an assistant or a dentist who should read this? Send it to them.
+                </p>
+                <ShareButtons url={url} title={p.title} summary={p.description} className="mt-3" />
+              </div>
 
               {related.length > 0 && (
                 <section aria-labelledby="related" className="mt-14">
