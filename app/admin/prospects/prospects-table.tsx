@@ -52,6 +52,8 @@ const STAGE_TONE: Record<string, string> = {
   identified: "bg-paper-subtle text-muted border-rule",
   nurture: "bg-amber-50 text-amber-800 border-amber-200",
   applied: "bg-teal/10 text-teal-deep border-teal/30",
+  meeting_set: "bg-teal/10 text-teal-deep border-teal/30",
+  proposal: "bg-teal/10 text-teal-deep border-teal/30",
   registered: "bg-emerald-50 text-emerald-800 border-emerald-200",
   enrolled: "bg-emerald-50 text-emerald-800 border-emerald-200",
   graduated: "bg-navy/10 text-navy border-navy/20",
@@ -401,7 +403,7 @@ export function ProspectsTable({
               {STAGE_LABELS[s]}
             </option>
           ))}
-          <option value="lost">Lost</option>
+          <option value="lost">Passed</option>
         </select>
         <label className="text-sm text-muted flex items-center gap-2">
           <input
@@ -470,7 +472,7 @@ export function ProspectsTable({
               {stageLabel(selectionTrack, s)}
             </option>
           ))}
-          <option value="lost">Lost</option>
+          <option value="lost">Passed</option>
         </select>
 
         <button
@@ -630,7 +632,7 @@ export function ProspectsTable({
                       {!TRACK_STAGES[trackOf(p)].includes(p.stage) && p.stage !== "lost" && (
                         <option value={p.stage}>{STAGE_LABELS[p.stage]}</option>
                       )}
-                      <option value="lost">Lost</option>
+                      <option value="lost">Passed</option>
                     </select>
                   </td>
                   <td className="px-3 py-3">

@@ -88,10 +88,12 @@ export function Board({
   }
 
   const STAGES = TRACK_STAGES[track];
+  /** Board columns: the funnel, then Passed (stage key "lost") at the end. */
+  const COLUMNS: readonly Stage[] = [...STAGES, "lost"];
   const byStage: Record<string, Prospect[]> = {};
-  for (const s of STAGES) byStage[s] = [];
+  for (const s of COLUMNS) byStage[s] = [];
   for (const p of prospects) {
-    if (p.removed_at || p.stage === "lost" || trackOf(p) !== track) continue;
+    if (p.removed_at || trackOf(p) !== track) continue;
     if (byStage[p.stage]) byStage[p.stage].push(p);
   }
 
@@ -234,7 +236,7 @@ export function Board({
                 {stageLabel(track, s)}
               </option>
             ))}
-            <option value="lost">Lost</option>
+            <option value="lost">{stageLabel(track, "lost")}</option>
           </select>
           <button
             type="button"
@@ -256,15 +258,15 @@ export function Board({
           )}
         </div>
         <div className="mt-2 flex gap-1.5">
-          {p.stage === "applied" && track === "student" ? (
+          {next === "registered" && track === "student" ? (
             <button
               type="button"
               disabled={busyId === p.id}
               onClick={() => promote(p.id)}
               className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-sm bg-teal text-white hover:bg-teal-deep disabled:opacity-40"
-              title="Marks Registered and creates the student record"
+              title="Marks Closed Won ($150 paid) and creates the student record"
             >
-              Registered → Student
+              Closed Won → Student
             </button>
           ) : next ? (
             <button
@@ -276,14 +278,14 @@ export function Board({
               → {stageLabel(track, next)}
             </button>
           ) : null}
-          <button
+          {p.stage !== "lost" && <button
             type="button"
             disabled={busyId === p.id}
             onClick={() => move(p.id, "lost")}
             className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-sm border border-rule text-subtle hover:border-red-300 hover:text-red-700 disabled:opacity-40"
           >
-            Lost
-          </button>
+            {stageLabel(track, "lost")}
+          </button>}
         </div>
       </div>
     );
@@ -451,7 +453,7 @@ export function Board({
 
       {view === "board" ? (
         <div className="mt-6 flex gap-3 overflow-x-auto pb-4">
-          {STAGES.map((s) => (
+          {COLUMNS.map((s) => (
             <div key={s} className="w-64 shrink-0">
               <div className="flex items-baseline justify-between px-1 mb-1">
                 <span className="text-[10px] uppercase tracking-wider text-muted">
@@ -495,7 +497,7 @@ export function Board({
               </tr>
             </thead>
             <tbody>
-              {STAGES.flatMap((s) => byStage[s]).map((p) => {
+              {COLUMNS.flatMap((s) => byStage[s]).map((p) => {
                 const stale = daysSinceTouch(p);
                 return (
                   <tr

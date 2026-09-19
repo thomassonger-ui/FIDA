@@ -15,6 +15,8 @@ export const STAGES = [
   "identified",
   "nurture",
   "applied",
+  "meeting_set",
+  "proposal",
   "registered",
   "enrolled",
   "graduated",
@@ -26,10 +28,12 @@ export const STAGE_LABELS: Record<string, string> = {
   identified: "Identified",
   nurture: "Nurture",
   applied: "Applied",
-  registered: "Registered",
+  meeting_set: "Meeting Set",
+  proposal: "Proposal",
+  registered: "Closed Won",
   enrolled: "Enrolled",
   graduated: "Graduated",
-  lost: "Lost",
+  lost: "Passed",
 };
 
 /** One line of plain-English help per stage, shown on the board. */
@@ -37,6 +41,8 @@ export const STAGE_HELP: Record<string, string> = {
   identified: "On the list. Nobody has reached out yet.",
   nurture: "Drip is running or a call has gone out. No application yet.",
   applied: "Finished the Atticus application. Advisor follow-up due.",
+  meeting_set: "A call, tour or visit is on the calendar.",
+  proposal: "Has the tuition and financing details. Waiting on a decision.",
   registered: "Paid the $150 registration fee. Seat is held.",
   enrolled: "In a Moodle course. Also lives in Students.",
   graduated: "Completed the program.",
@@ -64,21 +70,25 @@ export const TRACK_LABELS: Record<Track, string> = {
 /** Stage keys each track uses, in funnel order (lost sits outside). */
 export const TRACK_STAGES: Record<Track, readonly Stage[]> = {
   student: STAGES,
-  employer: ["identified", "nurture", "applied", "registered"],
+  employer: ["identified", "nurture", "applied", "meeting_set", "proposal", "registered"],
 };
 
 const EMPLOYER_STAGE_LABELS: Record<string, string> = {
   identified: "New",
   nurture: "In outreach",
   applied: "Interested",
-  registered: "Staff enrolled",
-  lost: "Lost",
+  meeting_set: "Meeting Set",
+  proposal: "Proposal",
+  registered: "Closed Won",
+  lost: "Passed",
 };
 
 const EMPLOYER_STAGE_HELP: Record<string, string> = {
   identified: "On the list. Nobody has reached out yet.",
   nurture: "Drip is running or a call has gone out.",
   applied: "Replied, asked a question, or wants the enrollment link.",
+  meeting_set: "A call or office visit is on the calendar.",
+  proposal: "Has the course details and pricing for their staff. Waiting on a decision.",
   registered: "At least one of their assistants has registered for a course.",
   lost: "Not interested. Kept for the record.",
 };

@@ -46,9 +46,9 @@ export default async function PipelinePage() {
       <p className="mt-3 text-muted max-w-2xl text-sm">
         Shared between Tom, Debbie and Ashley. Two funnels: <strong className="text-ink">Dentists</strong>{" "}
         (practice owners buying Radiography/EFDA for their assistants — New →
-        In outreach → Interested → Staff enrolled) and{" "}
+        In outreach → Interested → Meeting Set → Proposal → Closed Won) and{" "}
         <strong className="text-ink">Students</strong> (Identified → Nurture →
-        Applied → Registered → Enrolled → Graduated, where Registered means the
+        Applied → Meeting Set → Proposal → Closed Won → Enrolled → Graduated, where Closed Won means the
         $150 fee is paid and promotes them into Students).
       </p>
 
@@ -72,7 +72,7 @@ export default async function PipelinePage() {
           </div>
         </div>
         <div className="card p-5">
-          <div className="eyebrow text-muted">Registered</div>
+          <div className="eyebrow text-muted">Closed Won</div>
           <div className="font-display text-4xl tabular-nums mt-2 text-teal">
             {stats.registered}
           </div>
