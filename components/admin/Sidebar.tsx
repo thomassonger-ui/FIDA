@@ -25,6 +25,8 @@ type NavItem = {
   label: string;
   tag?: ModuleTag;
   hidden?: boolean;
+  /** Small "New" pill for recently added pages. */
+  isNew?: boolean;
 };
 
 const nav: NavItem[] = [
@@ -39,6 +41,7 @@ const nav: NavItem[] = [
   { href: "/admin/interventions", label: "Interventions", tag: "CE" },
   { href: "/admin/sap", label: "SAP", tag: "CE" },
   { href: "/admin/ledger", label: "Ledger", tag: "OS", hidden: true },
+  { href: "/admin/payments", label: "Payments", tag: "OS", isNew: true },
   { href: "/admin/placement", label: "Placement", tag: "WP", hidden: true },
   { href: "/admin/documents", label: "Documents", tag: "LMS" },
   { href: "/admin/compliance", label: "Compliance", tag: "LLS" },
@@ -120,6 +123,11 @@ export async function Sidebar() {
               >
                 <span className="truncate">{item.label}</span>
                 <span className="flex items-center gap-1.5 shrink-0">
+                  {item.isNew && (
+                    <span className="inline-block text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0 rounded-full bg-yellow-300 text-yellow-950 border border-yellow-400">
+                      New
+                    </span>
+                  )}
                   {isTickets && openTickets > 0 && (
                     <span className="inline-flex items-center justify-center min-w-[18px] h-4 px-1 text-[10px] font-semibold rounded-full bg-teal text-white">
                       {openTickets > 99 ? "99+" : openTickets}
