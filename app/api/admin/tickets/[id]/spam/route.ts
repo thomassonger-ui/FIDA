@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTicket, setTicketStatus } from "@/lib/tickets-db";
-import { blockSender } from "@/lib/spam-guard";
+import { blockSender, unblockSender } from "@/lib/spam-guard";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -10,7 +10,8 @@ export const dynamic = "force-dynamic";
  *   { action: "block" }     → status "spam" + sender added to blocked_senders
  *                             (whole domain for company mail, exact address
  *                             for Gmail/Yahoo/etc.)
- *   { action: "not_spam" }  → back to "open"
+ *   { action: "not_spam" }  → back to "open" + sender removed from
+ *                             blocked_senders (address and domain)
  */
 export async function POST(
   req: NextRequest,
@@ -26,6 +27,8 @@ export async function POST(
   if (!ticket) return NextResponse.json({ ok: false, error: "Not found" }, { status: 404 });
 
   if (action === "not_spam") {
+    const u = await unblockSender(ticket.email);
+    if (!u.ok) return NextResponse.json({ ok: false, error: u.error }, { status: 500 });
     const r = await setTicketStatus(id, "open");
     return NextResponse.json({ ok: r.ok, error: r.error }, { status: r.ok ? 200 : 500 });
   }

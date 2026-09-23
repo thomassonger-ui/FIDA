@@ -9,7 +9,7 @@ const FREE_MAIL = /@(gmail|googlemail|yahoo|hotmail|outlook|live|icloud|aol|msn|
  * Spam actions on a message thread.
  *  - Not spam yet → "Spam + block sender": quarantines this thread and blocks
  *    the sender so future submissions skip the inbox.
- *  - Already spam → "Not spam" puts it back in Open.
+ *  - Already spam → "Not spam" puts it back in Open and unblocks the sender.
  */
 export function SpamControls({
   ticketId,
@@ -56,6 +56,7 @@ export function SpamControls({
             onClick={() => run("not_spam")}
             disabled={busy}
             className="text-sm px-3 py-1.5 rounded-md border border-teal text-teal-deep bg-white hover:bg-teal/5 disabled:opacity-50"
+            title="Moves this back to Open and unblocks the sender"
           >
             Not spam
           </button>

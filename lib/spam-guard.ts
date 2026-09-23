@@ -217,6 +217,22 @@ export async function blockSender(
   }
 }
 
+/**
+ * Unblock a sender (used by "Not spam"): removes both the exact address and
+ * its domain, so a real person rescued from Spam can reach the inbox again.
+ */
+export async function unblockSender(email: string): Promise<{ ok: boolean; error?: string }> {
+  const e = email.trim().toLowerCase();
+  const d = emailDomain(e);
+  try {
+    const supabase = getServerClient();
+    const { error } = await supabase.from("blocked_senders").delete().in("value", [e, d]);
+    return { ok: !error, error: error?.message };
+  } catch (err) {
+    return { ok: false, error: err instanceof Error ? err.message : "err" };
+  }
+}
+
 // ------------------------------------------------------------
 // Per-IP rate limit for the contact form. In-memory per worker (same
 // trade-off as lib/rate-limit.ts); the Vercel firewall rule is the
