@@ -10,6 +10,7 @@ const VALID: TicketStatus[] = [
   "awaiting_student",
   "resolved",
   "closed",
+  "spam",
 ];
 
 export async function POST(

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useLang } from "@/lib/i18n/LanguageProvider";
 import { ticketForm as f } from "@/lib/i18n/pages";
+import { SpamTrap } from "@/components/SpamTrap";
 
 
 export function NewTicketForm() {
@@ -49,7 +50,8 @@ export function NewTicketForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
+    <form onSubmit={handleSubmit} className="space-y-5 relative">
+      <SpamTrap />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Field label={t(f.fullName)} htmlFor="student_name">
           <input

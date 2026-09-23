@@ -4,6 +4,13 @@ import {
   isValidCategory,
   type TicketCategory,
 } from "@/lib/tickets-db";
+import {
+  botCheck,
+  clientIp,
+  contactRateLimited,
+  contentCheck,
+  isBlockedSender,
+} from "@/lib/spam-guard";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -38,6 +45,16 @@ export async function POST(req: NextRequest) {
     return bad("Could not parse form data");
   }
 
+  // Bots: answer "ok" so they don't retry, save nothing.
+  const bot = botCheck(form);
+  if (bot.action === "drop") {
+    console.warn(`[tickets] dropped bot submission (${bot.reason})`);
+    return NextResponse.json({ ok: true, ticketId: null });
+  }
+  if (contactRateLimited(clientIp(req))) {
+    return bad("Too many messages from this connection. Please call us instead.", 429);
+  }
+
   const email = String(form.get("email") ?? "").trim();
   const studentName = String(form.get("student_name") ?? "").trim();
   const program = String(form.get("program") ?? "").trim();
@@ -52,7 +69,17 @@ export async function POST(req: NextRequest) {
   if (body.length > 8000) return bad("Message must be 8,000 characters or fewer.");
   if (!isValidCategory(categoryRaw)) return bad("Please choose a category.");
 
+  // Pitches, gibberish, blocked senders: saved as "spam" (never in Open).
+  let spamReason: string | null = null;
+  if (await isBlockedSender(email)) spamReason = "blocked sender";
+  else {
+    const c = contentCheck(email, body);
+    if (c.action === "quarantine") spamReason = c.reason;
+  }
+
   const result = await createTicket({
+    status: spamReason ? "spam" : "open",
+    spamReason,
     email,
     studentName: studentName || null,
     program: program || null,

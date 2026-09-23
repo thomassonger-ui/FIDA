@@ -69,6 +69,7 @@ async function getTicketStats(): Promise<{
       supabase
         .from("tickets")
         .select("*")
+        .neq("status", "spam")
         .order("last_reply_at", { ascending: false })
         .limit(5),
     ]);

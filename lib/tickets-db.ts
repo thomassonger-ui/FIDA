@@ -12,7 +12,8 @@ export type TicketStatus =
   | "awaiting_staff"
   | "awaiting_student"
   | "resolved"
-  | "closed";
+  | "closed"
+  | "spam";
 
 export type TicketCategory =
   | "academics"
@@ -37,6 +38,7 @@ export const STATUS_LABELS: Record<TicketStatus, string> = {
   awaiting_student: "Awaiting you",
   resolved: "Resolved",
   closed: "Closed",
+  spam: "Spam",
 };
 
 export type Ticket = {
@@ -53,6 +55,7 @@ export type Ticket = {
   resolved_at: string | null;
   last_reply_at: string;
   last_reply_by: "student" | "staff" | "system";
+  spam_reason?: string | null;
 };
 
 export type TicketMessage = {
@@ -104,6 +107,9 @@ export async function createTicket(input: {
   category: TicketCategory;
   subject: string;
   body: string;
+  /** Defaults to "open". "spam" = quarantined by lib/spam-guard. */
+  status?: "open" | "spam";
+  spamReason?: string | null;
 }): Promise<{ ticket: Ticket; message: TicketMessage } | { error: string }> {
   try {
     const supabase = getServerClient();
@@ -117,7 +123,8 @@ export async function createTicket(input: {
         program: input.program ?? null,
         category: input.category,
         subject: input.subject.slice(0, 200),
-        status: "open",
+        status: input.status ?? "open",
+        spam_reason: input.spamReason ?? null,
         last_reply_by: "student",
       })
       .select("*")
@@ -175,6 +182,7 @@ export async function listAllTickets(filter?: {
     const supabase = getServerClient();
     let q = supabase.from("tickets").select("*").order("last_reply_at", { ascending: false });
     if (filter?.status?.length) q = q.in("status", filter.status);
+    else q = q.neq("status", "spam"); // "All" never includes quarantined spam
     if (filter?.category) q = q.eq("category", filter.category);
     if (filter?.program) q = q.eq("program", filter.program);
     const { data, error } = await q;
@@ -384,6 +392,7 @@ export function statusTone(status: TicketStatus): "open" | "warn" | "ok" | "mute
     case "resolved":
       return "ok";
     case "closed":
+    case "spam":
     default:
       return "muted";
   }

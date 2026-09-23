@@ -15,6 +15,7 @@ const STATUS_FILTERS: { key: string; label: string; values: TicketStatus[] }[] =
   { key: "awaiting_staff", label: "Awaiting staff", values: ["awaiting_staff", "open"] },
   { key: "resolved", label: "Resolved", values: ["resolved"] },
   { key: "all", label: "All", values: [] },
+  { key: "spam", label: "Spam", values: ["spam"] },
 ];
 
 function fmt(ts: string) {

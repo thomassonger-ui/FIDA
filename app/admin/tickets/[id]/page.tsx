@@ -15,6 +15,7 @@ import { getStudentByEmail } from "@/lib/students-db";
 import { AdminReplyForm } from "./admin-reply-form";
 import { ConvertToStudentButton } from "./convert-to-student-button";
 import { StatusControls } from "./status-controls";
+import { SpamControls } from "./spam-controls";
 
 export const dynamic = "force-dynamic";
 
@@ -53,6 +54,7 @@ const STATUS_OPTIONS: TicketStatus[] = [
   "awaiting_student",
   "resolved",
   "closed",
+  "spam",
 ];
 
 export default async function AdminTicketDetailPage({
@@ -88,6 +90,15 @@ export default async function AdminTicketDetailPage({
         </Link>
       </div>
 
+      {ticket.status === "spam" && (
+        <div className="mb-5 text-sm border border-rose-200 bg-rose-50 text-rose-800 rounded-md px-4 py-3">
+          <strong>Quarantined as spam</strong>
+          {ticket.spam_reason ? <> — {ticket.spam_reason}</> : null}. It is
+          hidden from Open and All. Click <em>Not spam</em> if this is a real
+          inquiry.
+        </div>
+      )}
+
       <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
         <div className="min-w-0">
           <div className="eyebrow">Message thread</div>
@@ -108,7 +119,14 @@ export default async function AdminTicketDetailPage({
           <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${tone}`}>
             {STATUS_LABELS[ticket.status]}
           </span>
-          {!student && <ConvertToStudentButton ticketId={ticket.id} />}
+          <SpamControls
+            ticketId={ticket.id}
+            email={ticket.email}
+            isSpam={ticket.status === "spam"}
+          />
+          {!student && ticket.status !== "spam" && (
+            <ConvertToStudentButton ticketId={ticket.id} />
+          )}
           <StatusControls
             ticketId={ticket.id}
             current={ticket.status}

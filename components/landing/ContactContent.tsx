@@ -8,6 +8,7 @@ import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
 import { useLang } from "@/lib/i18n/LanguageProvider";
 import { contact as c } from "@/lib/i18n/tourContact";
+import { SpamTrap } from "@/components/SpamTrap";
 
 /**
  * /contact body — client component (form state); the route keeps metadata.
@@ -35,7 +36,8 @@ export function ContactContent() {
     setError(null);
 
     try {
-      const fd = new FormData();
+      // Start from the form so the SpamTrap fields (honeypot + timestamp) ride along.
+      const fd = new FormData(e.currentTarget);
       fd.set("email", email);
       fd.set("student_name", name);
       fd.set("category", "other");
@@ -136,8 +138,9 @@ export function ContactContent() {
               ) : (
                 <form
                   onSubmit={onSubmit}
-                  className="card bg-white p-8 md:p-10"
+                  className="card bg-white p-8 md:p-10 relative"
                 >
+                  <SpamTrap />
                   <div className="eyebrow">{t(c.formEyebrow)}</div>
                   <h2 className="mt-2 font-display text-2xl md:text-3xl text-navy leading-tight">
                     {t(c.formHeading)}
