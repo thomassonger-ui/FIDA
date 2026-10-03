@@ -55,6 +55,41 @@ export function Board({
   const [drafting, setDrafting] = useState(false);
   const [draftError, setDraftError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  // Notes dialog + which cards have their notes expanded
+  const [notesFor, setNotesFor] = useState<Prospect | null>(null);
+  const [notesText, setNotesText] = useState("");
+  const [notesSaving, setNotesSaving] = useState(false);
+  const [notesError, setNotesError] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+
+  function openNotes(p: Prospect) {
+    setNotesFor(p);
+    setNotesText(p.notes ?? "");
+    setNotesError(null);
+  }
+
+  async function saveNotes() {
+    if (!notesFor) return;
+    setNotesSaving(true);
+    setNotesError(null);
+    try {
+      const res = await fetch(`/api/admin/prospects/${notesFor.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ notes: notesText.trim() }),
+      });
+      const json = await res.json();
+      if (!json.ok) setNotesError(json.error ?? "Could not save the notes.");
+      else {
+        setNotesFor(null);
+        startTransition(() => router.refresh());
+      }
+    } catch {
+      setNotesError("Network error — the notes were not saved.");
+    } finally {
+      setNotesSaving(false);
+    }
+  }
 
   function openReply(p: Prospect) {
     setReplyFor(p);
@@ -204,6 +239,29 @@ export function Board({
             {p.phone}
           </a>
         )}
+        {p.notes?.trim() && (
+          <button
+            type="button"
+            title={expanded.has(p.id) ? "Click to collapse" : "Click to expand"}
+            onClick={() =>
+              setExpanded((cur) => {
+                const n = new Set(cur);
+                if (n.has(p.id)) n.delete(p.id);
+                else n.add(p.id);
+                return n;
+              })
+            }
+            className="mt-2 block w-full text-left text-xs text-ink/80 leading-snug"
+          >
+            <span
+              className={`whitespace-pre-line break-words ${
+                expanded.has(p.id) ? "block" : "line-clamp-4"
+              }`}
+            >
+              {p.notes.trim()}
+            </span>
+          </button>
+        )}
         <div className="mt-2 flex items-center justify-between gap-2">
           <span className="text-[10px] uppercase tracking-wider text-subtle tabular-nums">
             {stale === null
@@ -286,6 +344,16 @@ export function Board({
           >
             {stageLabel(track, "lost")}
           </button>}
+          <button
+            type="button"
+            title="Notes"
+            aria-label="Notes"
+            disabled={busyId === p.id}
+            onClick={() => openNotes(p)}
+            className="ml-auto self-center text-sm leading-none px-1 py-0.5 rounded-sm hover:bg-ink/5 disabled:opacity-40"
+          >
+            📝
+          </button>
         </div>
       </div>
     );
@@ -293,6 +361,58 @@ export function Board({
 
   return (
     <>
+      {notesFor && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Notes — ${name(notesFor)}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setNotesFor(null);
+          }}
+        >
+          <div className="w-full max-w-xl max-h-[90vh] overflow-y-auto bg-paper rounded-lg shadow-xl p-6">
+            <div className="flex items-start justify-between gap-4">
+              <h2 className="font-display text-2xl leading-snug">
+                Notes — {name(notesFor)}
+              </h2>
+              <button
+                type="button"
+                onClick={() => setNotesFor(null)}
+                aria-label="Close"
+                className="text-muted hover:text-ink text-xl leading-none"
+              >
+                ×
+              </button>
+            </div>
+            <label className="block mt-4 text-[10px] uppercase tracking-wider text-muted">
+              Notes
+            </label>
+            <textarea
+              value={notesText}
+              onChange={(e) => setNotesText(e.target.value)}
+              rows={12}
+              autoFocus
+              placeholder="Calls, what they said, next step…"
+              className="mt-1 w-full border border-rule rounded-md bg-paper p-3 text-sm"
+            />
+            {notesError && <p className="mt-2 text-xs text-amber-800">{notesError}</p>}
+            <div className="mt-5 flex justify-end gap-2">
+              <button type="button" className="btn-outline" onClick={() => setNotesFor(null)}>
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="px-4 py-2 rounded-md bg-ink text-paper text-sm font-medium disabled:opacity-40"
+                disabled={notesSaving}
+                onClick={saveNotes}
+              >
+                {notesSaving ? "Saving…" : "Save notes"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {replyFor && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4"
