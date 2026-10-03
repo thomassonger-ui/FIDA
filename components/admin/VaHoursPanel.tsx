@@ -7,6 +7,7 @@
 
 import { ATTICUS_FIDA_STATEMENT } from "@/lib/atticus-va";
 import { VaAssignmentEditor, type VaAssignment } from "./VaAssignmentEditor";
+import { VaMessages, type VaMemo, type VaQuestion } from "./VaMessages";
 
 interface VaEntry {
   id: string;
@@ -24,6 +25,8 @@ interface VaStatement {
   unbilled: { entries: number; hours: number; amount: number };
   entries: VaEntry[];
   assignment?: VaAssignment | null;
+  memos?: VaMemo[];
+  questions?: VaQuestion[];
 }
 
 const TZ = "America/New_York";
@@ -72,6 +75,9 @@ export async function VaHoursPanel() {
       </div>
 
       {s.assignment && <VaAssignmentEditor assignment={s.assignment} vaName={vaName ?? "the VA"} />}
+      {s.memos && s.questions && (
+        <VaMessages memos={s.memos} questions={s.questions} vaName={vaName ?? "the VA"} endpoint="/api/admin/va-messages" />
+      )}
 
       <details open className="mt-4">
         <summary className="cursor-pointer text-sm font-semibold text-ink select-none">Sessions</summary>
