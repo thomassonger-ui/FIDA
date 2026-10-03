@@ -19,10 +19,22 @@ function name(p: Prospect) {
   return j || p.email || "—";
 }
 
+/** Calendar day (YYYY-MM-DD) in Eastern time — follow-ups are dates, not instants. */
+function etDay(d: Date): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York" }).format(d);
+}
+
+/** Days from today (ET) to the follow-up date; negative = overdue. Null = none set. */
+function followupDays(p: Prospect): number | null {
+  if (!p.next_followup_at) return null;
+  const [y1, m1, d1] = etDay(new Date()).split("-").map(Number);
+  const [y2, m2, d2] = etDay(new Date(p.next_followup_at)).split("-").map(Number);
+  return Math.round((Date.UTC(y2, m2 - 1, d2) - Date.UTC(y1, m1 - 1, d1)) / 86_400_000);
+}
+
 function overdue(p: Prospect) {
-  return Boolean(
-    p.next_followup_at && new Date(p.next_followup_at).getTime() < Date.now()
-  );
+  const d = followupDays(p);
+  return d !== null && d < 0;
 }
 
 function daysSinceTouch(p: Prospect): number | null {
@@ -61,6 +73,26 @@ export function Board({
   const [notesSaving, setNotesSaving] = useState(false);
   const [notesError, setNotesError] = useState<string | null>(null);
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
+
+  /** Sets (or clears, with "") the follow-up date. Stored as midday ET on that day. */
+  async function setFollowup(p: Prospect, day: string) {
+    setBusyId(p.id);
+    setError(null);
+    try {
+      const res = await fetch(`/api/admin/prospects/${p.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ next_followup_at: day ? `${day}T16:00:00.000Z` : null }),
+      });
+      const json = await res.json();
+      if (!json.ok) setError(json.error ?? "Could not change the follow-up date.");
+      else startTransition(() => router.refresh());
+    } catch {
+      setError("Network error — the follow-up date did not change.");
+    } finally {
+      setBusyId(null);
+    }
+  }
 
   function openNotes(p: Prospect) {
     setNotesFor(p);
@@ -214,6 +246,7 @@ export function Board({
 
   const Card = ({ p }: { p: Prospect }) => {
     const stale = daysSinceTouch(p);
+    const fu = followupDays(p);
     const idx = STAGES.indexOf(p.stage as (typeof STAGES)[number]);
     const next = idx >= 0 && idx < STAGES.length - 1 ? STAGES[idx + 1] : null;
     return (
@@ -262,19 +295,54 @@ export function Board({
             </span>
           </button>
         )}
-        <div className="mt-2 flex items-center justify-between gap-2">
-          <span className="text-[10px] uppercase tracking-wider text-subtle tabular-nums">
+        <div className="mt-2 flex items-center gap-2">
+          <label
+            title="Change follow-up date"
+            className={`relative cursor-pointer text-[11px] font-medium px-2 py-0.5 rounded-full tabular-nums ${
+              fu === null
+                ? "border border-dashed border-rule text-muted hover:border-teal hover:text-teal"
+                : fu < 0
+                  ? "bg-red-50 text-red-700"
+                  : fu === 0
+                    ? "bg-amber-50 text-amber-800"
+                    : "bg-emerald-50 text-emerald-800"
+            }`}
+            onClick={(e) => {
+              const input = e.currentTarget.querySelector("input");
+              try {
+                input?.showPicker();
+              } catch {
+                input?.focus();
+              }
+            }}
+          >
+            {fu === null
+              ? "Set follow-up"
+              : fu < 0
+                ? `Overdue ${-fu}d`
+                : fu === 0
+                  ? "Due today"
+                  : `Due in ${fu}d`}
+            <input
+              type="date"
+              aria-label="Follow-up date"
+              disabled={busyId === p.id}
+              value={p.next_followup_at ? etDay(new Date(p.next_followup_at)) : ""}
+              onChange={(e) => setFollowup(p, e.target.value)}
+              className="absolute inset-0 w-full h-full opacity-0 pointer-events-none"
+            />
+          </label>
+          <span
+            className={`text-[11px] tabular-nums ${
+              stale !== null && stale >= 7 ? "text-red-700" : "text-subtle"
+            }`}
+          >
             {stale === null
               ? "no touch yet"
               : stale === 0
                 ? "touched today"
-                : `${stale}d since touch`}
+                : `touched ${stale}d ago`}
           </span>
-          {overdue(p) && (
-            <span className="text-[10px] uppercase tracking-wider text-red-700 font-semibold">
-              overdue
-            </span>
-          )}
         </div>
         <div className="mt-2 flex flex-wrap items-center gap-1.5">
           <select
