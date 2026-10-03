@@ -1,6 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextRequest, NextResponse } from "next/server";
-import { getProspect, logTouch, updateProspect } from "@/lib/prospects-db";
+import { getProspect, logTouch, markVaCall, updateProspect } from "@/lib/prospects-db";
 import { displayName } from "@/lib/prospects-shared";
 import { CALL_OUTCOMES, teamMember } from "@/lib/pipeline-team";
 import { CALENDLY_TOUR_URL } from "@/lib/payment";
@@ -104,6 +104,7 @@ export async function POST(
       next_followup_at: callback ? `${callback}T16:00:00.000Z` : null,
     });
     if ("error" in upd) return bad(`Logged the call, but the card did not update: ${upd.error}`, 500);
+    await markVaCall(id, outcome);
 
     // 2) The briefing to the team.
     const subject = `VA call: ${who}${office ? ` — ${office}` : ""} · ${outcome}`;

@@ -197,6 +197,77 @@ export function Board({
     }
   }
 
+  // ⋯ menu + Edit contact dialog
+  const [menuFor, setMenuFor] = useState<string | null>(null);
+  const [contactFor, setContactFor] = useState<Prospect | null>(null);
+  const [contact, setContact] = useState({ first_name: "", last_name: "", contact_title: "", phone: "", email: "", contact2_name: "", contact2_title: "", contact2_phone: "", contact2_email: "" });
+  const [contactSaving, setContactSaving] = useState(false);
+  const [contactError, setContactError] = useState<string | null>(null);
+
+  function openContact(p: Prospect) {
+    setMenuFor(null);
+    setContactFor(p);
+    setContact({
+      first_name: p.first_name ?? "",
+      last_name: p.last_name ?? "",
+      contact_title: p.contact_title ?? "",
+      phone: p.phone ?? "",
+      email: p.email ?? "",
+      contact2_name: p.contact2_name ?? "",
+      contact2_title: p.contact2_title ?? "",
+      contact2_phone: p.contact2_phone ?? "",
+      contact2_email: p.contact2_email ?? "",
+    });
+    setContactError(null);
+  }
+
+  async function patchProspect(p: Prospect, patch: Record<string, unknown>, failMsg: string) {
+    setBusyId(p.id);
+    setError(null);
+    try {
+      const res = await fetch(`/api/admin/prospects/${p.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(patch),
+      });
+      const json = await res.json();
+      if (!json.ok) setError(json.error ?? failMsg);
+      else startTransition(() => router.refresh());
+    } catch {
+      setError(`Network error — ${failMsg}`);
+    } finally {
+      setBusyId(null);
+    }
+  }
+
+  async function saveContact() {
+    if (!contactFor) return;
+    setContactSaving(true);
+    setContactError(null);
+    try {
+      const res = await fetch(`/api/admin/prospects/${contactFor.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(contact),
+      });
+      const json = await res.json();
+      if (!json.ok) setContactError(json.error ?? "Could not save the contact.");
+      else {
+        setContactFor(null);
+        startTransition(() => router.refresh());
+      }
+    } catch {
+      setContactError("Network error — not saved.");
+    } finally {
+      setContactSaving(false);
+    }
+  }
+
+  function fmtShort(iso: string) {
+    const d = new Date(iso);
+    return new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", month: "numeric", day: "numeric" }).format(d);
+  }
+
   // Memo dialog
   const [memoFor, setMemoFor] = useState<Prospect | null>(null);
   const [memoFrom, setMemoFrom] = useState<TeamKey>("tom");
@@ -429,6 +500,11 @@ export function Board({
     if (p.removed_at || trackOf(p) !== track) continue;
     if (byStage[p.stage]) byStage[p.stage].push(p);
   }
+  for (const s of COLUMNS)
+    byStage[s].sort((a, b) => {
+      if (Boolean(a.pinned_at) !== Boolean(b.pinned_at)) return a.pinned_at ? -1 : 1;
+      return 0;
+    });
 
   async function move(id: string, stage: Stage) {
     setBusyId(id);
@@ -521,9 +597,53 @@ export function Board({
           overdue(p) ? "border-red-300" : "border-rule"
         } ${busyId === p.id ? "opacity-50" : ""}`}
       >
-        <div className="font-medium text-navy leading-tight">{name(p)}</div>
+        <div className="flex items-start gap-1">
+          <div className="font-medium text-navy leading-tight flex-1 min-w-0">{name(p)}</div>
+          <button
+            type="button"
+            title={p.pinned_at ? "Unpin" : "Pin to top"}
+            aria-label={p.pinned_at ? "Unpin" : "Pin to top"}
+            disabled={busyId === p.id}
+            onClick={() => patchProspect(p, { pinned_at: p.pinned_at ? null : new Date().toISOString() }, "the pin did not change.")}
+            className={`text-sm leading-none px-0.5 ${p.pinned_at ? "" : "opacity-30 hover:opacity-100"}`}
+          >
+            📌
+          </button>
+          <div className="relative">
+            <button
+              type="button"
+              title="More"
+              aria-label="More"
+              onClick={() => setMenuFor(menuFor === p.id ? null : p.id)}
+              className="text-sm leading-none px-1 text-muted hover:text-ink"
+            >
+              ⋯
+            </button>
+            {menuFor === p.id && (
+              <div className="absolute right-0 top-5 z-20 w-40 bg-paper border border-rule rounded-md shadow-lg py-1 text-xs">
+                <button type="button" className="block w-full text-left px-3 py-1.5 hover:bg-ink/5" onClick={() => openContact(p)}>
+                  Edit contact
+                </button>
+                <button
+                  type="button"
+                  className="block w-full text-left px-3 py-1.5 hover:bg-ink/5"
+                  onClick={() => { setMenuFor(null); patchProspect(p, { pinned_at: p.pinned_at ? null : new Date().toISOString() }, "the pin did not change."); }}
+                >
+                  {p.pinned_at ? "Unpin" : "Pin to top"}
+                </button>
+                <button
+                  type="button"
+                  className="block w-full text-left px-3 py-1.5 hover:bg-ink/5"
+                  onClick={() => { setMenuFor(null); openNotes(p); }}
+                >
+                  Notes
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
         <div className="text-xs text-muted mt-0.5 truncate">
-          {p.current_employer || p.city || "—"}
+          {[p.contact_title, p.current_employer || p.city].filter(Boolean).join(" · ") || "—"}
         </div>
         {p.email && (
           <a
@@ -537,6 +657,38 @@ export function Board({
           <a href={`tel:${p.phone}`} className="block text-xs text-ink tabular-nums">
             {p.phone}
           </a>
+        )}
+        {p.contact2_name && (
+          <div className="mt-1 text-xs">
+            <div className="text-ink">
+              {p.contact2_name}
+              {p.contact2_title ? <span className="text-muted"> · {p.contact2_title}</span> : null}
+            </div>
+            {p.contact2_email && (
+              <a href={`mailto:${p.contact2_email}`} className="block text-teal underline truncate">{p.contact2_email}</a>
+            )}
+            {p.contact2_phone && (
+              <a href={`tel:${p.contact2_phone}`} className="block text-ink tabular-nums">{p.contact2_phone}</a>
+            )}
+          </div>
+        )}
+        {(p.source || p.last_va_call_at || p.student_id || p.drip_status === "active") && (
+          <div className="mt-1.5 flex flex-wrap gap-1">
+            {p.source && (
+              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-amber-50 text-amber-800">{p.source}</span>
+            )}
+            {p.drip_status === "active" && (
+              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-sky-50 text-sky-800">drip running</span>
+            )}
+            {p.last_va_call_at && (
+              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-sky-50 text-sky-800">
+                VA call {fmtShort(p.last_va_call_at)}{p.last_va_outcome ? ` · ${p.last_va_outcome}` : ""}
+              </span>
+            )}
+            {p.student_id && (
+              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800">student</span>
+            )}
+          </div>
         )}
         {memoOpenBy[p.id] && (
           <div className="mt-1.5 flex flex-wrap gap-1">
@@ -685,7 +837,7 @@ export function Board({
             </a>
           )}
         </div>
-        <div className="mt-2 flex gap-1.5">
+        <div className="mt-2 flex items-center gap-1.5">
           {next === "registered" && track === "student" ? (
             <button
               type="button"
@@ -701,7 +853,7 @@ export function Board({
               type="button"
               disabled={busyId === p.id}
               onClick={() => move(p.id, next)}
-              className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-sm border border-rule text-muted hover:border-teal hover:text-teal disabled:opacity-40"
+              className="text-[10px] uppercase tracking-wider px-1.5 py-1 rounded-sm border border-rule text-muted hover:border-teal hover:text-teal disabled:opacity-40 whitespace-nowrap"
             >
               → {stageLabel(track, next)}
             </button>
@@ -710,20 +862,31 @@ export function Board({
             type="button"
             disabled={busyId === p.id}
             onClick={() => move(p.id, "lost")}
-            className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-sm border border-rule text-subtle hover:border-red-300 hover:text-red-700 disabled:opacity-40"
+            className="text-[10px] uppercase tracking-wider px-1.5 py-1 rounded-sm border border-rule text-subtle hover:border-red-300 hover:text-red-700 disabled:opacity-40"
           >
             {stageLabel(track, "lost")}
           </button>}
-          <button
-            type="button"
-            title="Notes"
-            aria-label="Notes"
-            disabled={busyId === p.id}
-            onClick={() => openNotes(p)}
-            className="ml-auto self-center text-sm leading-none px-1 py-0.5 rounded-sm hover:bg-ink/5 disabled:opacity-40"
-          >
-            📝
-          </button>
+          <span className="ml-auto flex items-center gap-0.5 shrink-0">
+            <button
+              type="button"
+              title="Notes"
+              aria-label="Notes"
+              disabled={busyId === p.id}
+              onClick={() => openNotes(p)}
+              className="text-sm leading-none px-0.5 rounded-sm hover:bg-ink/5 disabled:opacity-40"
+            >
+              📝
+            </button>
+            <a
+              href={CALENDLY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={`Calendly — ${CALENDLY_URL}`}
+              className="text-sm leading-none px-0.5 rounded-sm hover:bg-ink/5"
+            >
+              📅
+            </a>
+          </span>
         </div>
       </div>
     );
@@ -731,6 +894,58 @@ export function Board({
 
   return (
     <>
+      {contactFor && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Contact — ${name(contactFor)}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setContactFor(null);
+          }}
+        >
+          <div className="w-full max-w-xl max-h-[90vh] overflow-y-auto bg-paper rounded-lg shadow-xl p-6">
+            <div className="flex items-start justify-between gap-4">
+              <h2 className="font-display text-2xl leading-snug">Contact — {name(contactFor)}</h2>
+              <button type="button" onClick={() => setContactFor(null)} aria-label="Close" className="text-muted hover:text-ink text-xl leading-none">×</button>
+            </div>
+            {([
+              ["Contact 1 (primary)", [["first_name", "First name", "text", ""], ["last_name", "Last name", "text", ""], ["contact_title", "Title", "text", "Owner / Director"], ["phone", "Phone", "tel", ""], ["email", "Email", "email", ""]]],
+              ["Contact 2 (optional)", [["contact2_name", "Name", "text", ""], ["contact2_title", "Title", "text", "Admissions / Office manager"], ["contact2_phone", "Phone", "tel", "Direct line or cell"], ["contact2_email", "Email", "email", ""]]],
+            ] as const).map(([heading, fields]) => (
+              <div key={heading} className="mt-5">
+                <div className="text-[10px] uppercase tracking-wider text-muted font-semibold">{heading}</div>
+                <div className="mt-2 grid grid-cols-2 gap-3">
+                  {fields.map(([key, label, type, ph]) => (
+                    <label key={key} className="block text-xs text-muted">
+                      {label}
+                      <input
+                        type={type}
+                        value={contact[key]}
+                        placeholder={ph}
+                        onChange={(e) => setContact((c) => ({ ...c, [key]: e.target.value }))}
+                        className="mt-1 w-full border border-rule rounded-md bg-paper px-3 py-2 text-sm text-ink"
+                      />
+                    </label>
+                  ))}
+                </div>
+              </div>
+            ))}
+            {contactError && <p className="mt-2 text-xs text-amber-800">{contactError}</p>}
+            <div className="mt-5 flex justify-end gap-2">
+              <button type="button" className="btn-outline" onClick={() => setContactFor(null)}>Cancel</button>
+              <button
+                type="button"
+                className="px-4 py-2 rounded-md bg-ink text-paper text-sm font-medium disabled:opacity-40"
+                disabled={contactSaving}
+                onClick={saveContact}
+              >
+                {contactSaving ? "Saving…" : "Save contact"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {memoFor && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4"

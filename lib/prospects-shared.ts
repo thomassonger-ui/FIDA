@@ -137,6 +137,14 @@ export type Prospect = {
   skip_traced_at: string | null;
   removed_at: string | null;
   student_id: string | null;
+  pinned_at: string | null;
+  contact_title: string | null;
+  contact2_name: string | null;
+  contact2_title: string | null;
+  contact2_phone: string | null;
+  contact2_email: string | null;
+  last_va_call_at: string | null;
+  last_va_outcome: string | null;
   created_at: string;
   updated_at: string;
 };

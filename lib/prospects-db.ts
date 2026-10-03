@@ -335,6 +335,12 @@ const EDITABLE: (keyof Prospect)[] = [
   "score",
   "notes",
   "next_followup_at",
+  "pinned_at",
+  "contact_title",
+  "contact2_name",
+  "contact2_title",
+  "contact2_phone",
+  "contact2_email",
   "dnc",
   "email_ok",
   "sms_ok",
@@ -428,6 +434,19 @@ export async function logTouch(
     }
   } catch {
     // touch logging is best-effort — never block the action it describes
+  }
+}
+
+/** Stamps the last VA call on the card (drives the "VA sent" badge). */
+export async function markVaCall(id: string, outcome: string): Promise<void> {
+  try {
+    const supabase = getServerClient();
+    await supabase
+      .from("prospects")
+      .update({ last_va_call_at: new Date().toISOString(), last_va_outcome: outcome })
+      .eq("id", id);
+  } catch {
+    // best-effort
   }
 }
 
