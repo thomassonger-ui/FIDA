@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
   TRACK_LABELS,
@@ -12,6 +12,11 @@ import {
   type Stage,
   type Track,
 } from "@/lib/prospects-shared";
+import { CALL_OUTCOMES, PIPELINE_TEAM, type TeamKey } from "@/lib/pipeline-team";
+
+const CALENDLY_URL = "https://calendly.com/fldentalassisting";
+
+type Recog = { start(): void; stop(): void; onresult: ((e: { resultIndex: number; results: ArrayLike<ArrayLike<{ transcript: string }> & { isFinal: boolean }> }) => void) | null; onend: (() => void) | null; continuous: boolean; interimResults: boolean; lang: string };
 
 function name(p: Prospect) {
   if (p.full_name?.trim()) return p.full_name.trim();
@@ -73,6 +78,120 @@ export function Board({
   const [notesSaving, setNotesSaving] = useState(false);
   const [notesError, setNotesError] = useState<string | null>(null);
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
+
+  // VA call dialog
+  const [vaFor, setVaFor] = useState<Prospect | null>(null);
+  const [vaScript, setVaScript] = useState("");
+  const [vaScripting, setVaScripting] = useState(false);
+  const [vaSaid, setVaSaid] = useState("");
+  const [vaOutcome, setVaOutcome] = useState("");
+  const [vaCallback, setVaCallback] = useState("");
+  const [vaTo, setVaTo] = useState<Set<TeamKey>>(new Set());
+  const [vaFollowupContact, setVaFollowupContact] = useState(false);
+  const [vaSending, setVaSending] = useState(false);
+  const [vaError, setVaError] = useState<string | null>(null);
+  const [vaCopied, setVaCopied] = useState(false);
+  const [listening, setListening] = useState(false);
+  const recogRef = useRef<Recog | null>(null);
+
+  function openVa(p: Prospect) {
+    setVaFor(p);
+    setVaScript("");
+    setVaSaid("");
+    setVaOutcome("");
+    setVaCallback("");
+    setVaTo(new Set(PIPELINE_TEAM.filter((m) => m.defaultOn).map((m) => m.key)));
+    setVaFollowupContact(false);
+    setVaError(null);
+    setVaCopied(false);
+  }
+
+  async function getScript() {
+    if (!vaFor) return;
+    setVaScripting(true);
+    setVaError(null);
+    try {
+      const res = await fetch(`/api/admin/prospects/${vaFor.id}/va-call`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "script" }),
+      });
+      const json = await res.json();
+      if (!json.ok) setVaError(json.error ?? "Could not build a script.");
+      else setVaScript(json.script);
+    } catch {
+      setVaError("Network error — no script.");
+    } finally {
+      setVaScripting(false);
+    }
+  }
+
+  function toggleDictation() {
+    if (listening) {
+      recogRef.current?.stop();
+      return;
+    }
+    const w = window as unknown as { SpeechRecognition?: new () => Recog; webkitSpeechRecognition?: new () => Recog };
+    const Ctor = w.SpeechRecognition ?? w.webkitSpeechRecognition;
+    if (!Ctor) {
+      setVaError("Dictation needs Chrome or Safari.");
+      return;
+    }
+    const r = new Ctor();
+    r.lang = "en-US";
+    r.continuous = true;
+    r.interimResults = false;
+    r.onresult = (e) => {
+      let add = "";
+      for (let i = e.resultIndex; i < e.results.length; i++)
+        if (e.results[i].isFinal) add += e.results[i][0].transcript + " ";
+      if (add) setVaSaid((cur) => (cur ? cur.replace(/\s*$/, " ") : "") + add.trim());
+    };
+    r.onend = () => {
+      setListening(false);
+      recogRef.current = null;
+    };
+    recogRef.current = r;
+    setListening(true);
+    r.start();
+  }
+
+  async function sendBriefing() {
+    if (!vaFor) return;
+    if (!vaOutcome) {
+      setVaError("Pick an outcome.");
+      return;
+    }
+    setVaSending(true);
+    setVaError(null);
+    try {
+      const res = await fetch(`/api/admin/prospects/${vaFor.id}/va-call`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "briefing",
+          said: vaSaid,
+          outcome: vaOutcome,
+          callback: vaCallback,
+          to: [...vaTo],
+          followupContact: vaFollowupContact,
+        }),
+      });
+      const json = await res.json();
+      if (!json.ok) {
+        setVaError(json.error ?? "Could not send the briefing.");
+        return;
+      }
+      if (Array.isArray(json.failed) && json.failed.length)
+        setError(`Call logged. Email did not reach: ${json.failed.join(", ")}.`);
+      setVaFor(null);
+      startTransition(() => router.refresh());
+    } catch {
+      setVaError("Network error — nothing was sent.");
+    } finally {
+      setVaSending(false);
+    }
+  }
 
   // Log Touch dialog
   const [touchFor, setTouchFor] = useState<Prospect | null>(null);
@@ -422,6 +541,15 @@ export function Board({
           >
             Log Touch
           </button>
+          <button
+            type="button"
+            disabled={busyId === p.id}
+            onClick={() => openVa(p)}
+            className="text-xs font-semibold px-2.5 py-1 rounded-sm border border-teal text-teal hover:bg-teal hover:text-white disabled:opacity-40"
+            title="Script, call, send briefing"
+          >
+            ☎ VA call
+          </button>
           <select
             aria-label="Stage"
             value={p.stage}
@@ -506,6 +634,176 @@ export function Board({
 
   return (
     <>
+      {vaFor && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`VA call — ${name(vaFor)}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !vaSending) setVaFor(null);
+          }}
+        >
+          <div className="w-full max-w-xl max-h-[90vh] overflow-y-auto bg-paper rounded-lg shadow-xl p-6">
+            <div className="flex items-start justify-between gap-4">
+              <h2 className="font-display text-2xl leading-snug">
+                VA call — {name(vaFor)}
+              </h2>
+              <button
+                type="button"
+                onClick={() => setVaFor(null)}
+                aria-label="Close"
+                className="text-muted hover:text-ink text-xl leading-none"
+              >
+                ×
+              </button>
+            </div>
+            <p className="mt-3 text-sm text-muted">
+              1) Get the script — built from this card&apos;s notes. 2) Call{" "}
+              {name(vaFor)}
+              {vaFor.phone ? ` at ${vaFor.phone}` : ""}. 3) Record what they said and
+              send the briefing.
+            </p>
+
+            <div className="mt-4 border border-rule rounded-md p-3 bg-paper-subtle/40">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] uppercase tracking-wider text-muted">Call script</span>
+                <button
+                  type="button"
+                  disabled={vaScripting}
+                  onClick={getScript}
+                  className="text-xs font-semibold text-teal underline disabled:opacity-40"
+                >
+                  {vaScripting ? "Writing…" : vaScript ? "Rewrite" : "Get script"}
+                </button>
+              </div>
+              <textarea
+                value={vaScript}
+                onChange={(e) => setVaScript(e.target.value)}
+                rows={8}
+                placeholder="Press Get script — or type your own."
+                className="mt-2 w-full border border-rule rounded-md bg-paper p-3 text-sm"
+              />
+            </div>
+
+            <div className="mt-3 flex items-center gap-3 text-xs border border-rule rounded-md px-3 py-2">
+              <span className="font-semibold text-ink">Calendly</span>
+              <a href={CALENDLY_URL} target="_blank" rel="noopener noreferrer" className="text-teal underline truncate">
+                {CALENDLY_URL.replace("https://", "")}
+              </a>
+              <button
+                type="button"
+                className="ml-auto text-teal underline font-semibold"
+                onClick={async () => {
+                  try {
+                    await navigator.clipboard.writeText(CALENDLY_URL);
+                    setVaCopied(true);
+                  } catch {
+                    setVaError("Could not copy — select the link and copy it by hand.");
+                  }
+                }}
+              >
+                {vaCopied ? "Copied" : "Copy link"}
+              </button>
+            </div>
+
+            <label className="block mt-4 text-[10px] uppercase tracking-wider text-muted">
+              What they said — answers to the questions
+            </label>
+            <div className="relative">
+              <textarea
+                value={vaSaid}
+                onChange={(e) => setVaSaid(e.target.value)}
+                rows={4}
+                className="mt-1 w-full border border-rule rounded-md bg-paper p-3 pr-10 text-sm"
+              />
+              <button
+                type="button"
+                title={listening ? "Stop dictating" : "Dictate"}
+                onClick={toggleDictation}
+                className={`absolute right-2 bottom-2 text-base leading-none px-1.5 py-1 rounded-sm ${
+                  listening ? "bg-red-100 animate-pulse" : "hover:bg-ink/5"
+                }`}
+              >
+                🎤
+              </button>
+            </div>
+
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-[10px] uppercase tracking-wider text-muted">Outcome</label>
+                <select
+                  value={vaOutcome}
+                  onChange={(e) => setVaOutcome(e.target.value)}
+                  className="mt-1 w-full border border-rule rounded-md bg-paper px-2 py-2 text-sm"
+                >
+                  <option value="">Choose…</option>
+                  {CALL_OUTCOMES.map((o) => (
+                    <option key={o} value={o}>{o}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-[10px] uppercase tracking-wider text-muted">Callback / follow-up date</label>
+                <input
+                  type="date"
+                  value={vaCallback}
+                  onChange={(e) => setVaCallback(e.target.value)}
+                  className="mt-1 w-full border border-rule rounded-md bg-paper px-2 py-2 text-sm"
+                />
+              </div>
+            </div>
+
+            <label className="block mt-4 text-[10px] uppercase tracking-wider text-muted">Email the briefing to</label>
+            <div className="mt-1 space-y-1">
+              {PIPELINE_TEAM.map((m) => (
+                <label key={m.key} className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={vaTo.has(m.key)}
+                    onChange={(e) =>
+                      setVaTo((cur) => {
+                        const n = new Set(cur);
+                        if (e.target.checked) n.add(m.key);
+                        else n.delete(m.key);
+                        return n;
+                      })
+                    }
+                  />
+                  <span className="text-ink">{m.name}</span>
+                  <span className="text-xs text-muted">{m.email}</span>
+                </label>
+              ))}
+              {vaFor.email && (
+                <label className="flex items-center gap-2 text-sm pt-1">
+                  <input
+                    type="checkbox"
+                    checked={vaFollowupContact}
+                    onChange={(e) => setVaFollowupContact(e.target.checked)}
+                  />
+                  <span className="text-ink">Also send {name(vaFor)} a short follow-up with the Calendly link</span>
+                  <span className="text-xs text-muted">{vaFor.email}</span>
+                </label>
+              )}
+            </div>
+
+            {vaError && <p className="mt-2 text-xs text-amber-800">{vaError}</p>}
+            <div className="mt-5 flex justify-end gap-2">
+              <button type="button" className="btn-outline" onClick={() => setVaFor(null)}>
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="px-4 py-2 rounded-md bg-ink text-paper text-sm font-medium disabled:opacity-40"
+                disabled={vaSending}
+                onClick={sendBriefing}
+              >
+                {vaSending ? "Sending…" : "Send briefing"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {touchFor && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4"
