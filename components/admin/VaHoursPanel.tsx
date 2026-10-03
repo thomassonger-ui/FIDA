@@ -5,8 +5,8 @@
 // The statement token opens FIDA's VA hours on Atticus and nothing else.
 // Server-side only (this is a server component) — never sent to the browser.
 
-const ATTICUS_FIDA_STATEMENT =
-  "https://tryatticus.com/api/billing/90c40269bca5e2aa1dba4a2e777d466411fe430a8a95e91f";
+import { ATTICUS_FIDA_STATEMENT } from "@/lib/atticus-va";
+import { VaAssignmentEditor, type VaAssignment } from "./VaAssignmentEditor";
 
 interface VaEntry {
   id: string;
@@ -23,6 +23,7 @@ interface VaStatement {
   hourly_rate: number;
   unbilled: { entries: number; hours: number; amount: number };
   entries: VaEntry[];
+  assignment?: VaAssignment | null;
 }
 
 const TZ = "America/New_York";
@@ -69,6 +70,8 @@ export async function VaHoursPanel() {
         <Mini label="This month" value={monthHours.toFixed(2)} sub="hours" />
         <Mini label="All time" value={allHours.toFixed(2)} sub="hours" />
       </div>
+
+      {s.assignment && <VaAssignmentEditor assignment={s.assignment} vaName={vaName ?? "the VA"} />}
 
       <details open className="mt-4">
         <summary className="cursor-pointer text-sm font-semibold text-ink select-none">Sessions</summary>
