@@ -8,6 +8,7 @@ import {
 import { currentLimits, RAMP, MAILING_ADDRESS } from "@/lib/prospects-shared";
 import { SCHEDULE_LABEL, dripStats } from "@/lib/drip";
 import { ProspectsTable } from "./prospects-table";
+import { VaHoursPanel } from "@/components/admin/VaHoursPanel";
 
 const DRIP_SENDER =
   process.env.DRIP_FROM || process.env.RESEND_FROM || "reply@fldentalassisting.com";
@@ -145,6 +146,8 @@ export default async function ProspectsPage() {
           sub={drip.failed ? `all time · ${drip.failed} failed` : "all time"}
         />
       </div>
+
+      <VaHoursPanel />
 
       <ProspectsTable
         initial={prospects}
