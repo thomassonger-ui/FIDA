@@ -206,7 +206,7 @@ export const MAILING_ADDRESS =
 // Display helpers — pure, used on both sides
 // ------------------------------------------------------------
 
-export function displayName(p: Prospect): string {
+export function displayName(p: Pick<Prospect, "full_name" | "first_name" | "last_name" | "email">): string {
   if (p.full_name && p.full_name.trim()) return p.full_name.trim();
   const joined = [p.first_name, p.last_name].filter(Boolean).join(" ").trim();
   return joined || p.email || "—";

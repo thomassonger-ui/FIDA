@@ -12,7 +12,8 @@ import {
   type Stage,
   type Track,
 } from "@/lib/prospects-shared";
-import { CALL_OUTCOMES, PIPELINE_TEAM, type TeamKey } from "@/lib/pipeline-team";
+import { CALL_OUTCOMES, PIPELINE_TEAM, teamMember, type TeamKey } from "@/lib/pipeline-team";
+import type { MemoRow } from "@/lib/prospect-memos";
 
 const CALENDLY_URL = "https://calendly.com/fldentalassisting";
 
@@ -52,11 +53,14 @@ function daysSinceTouch(p: Prospect): number | null {
 export function Board({
   prospects,
   identified,
+  openMemos = [],
   defaultTrack = "employer",
 }: {
   prospects: Prospect[];
   /** Count of stage=identified rows per track — they are not loaded as cards. */
   identified: Record<Track, number>;
+  /** Unanswered memos — drives the "memo open" badge on cards. */
+  openMemos?: MemoRow[];
   defaultTrack?: Track;
 }) {
   const router = useRouter();
@@ -190,6 +194,81 @@ export function Board({
       setVaError("Network error — nothing was sent.");
     } finally {
       setVaSending(false);
+    }
+  }
+
+  // Memo dialog
+  const [memoFor, setMemoFor] = useState<Prospect | null>(null);
+  const [memoFrom, setMemoFrom] = useState<TeamKey>("tom");
+  const [memoTo, setMemoTo] = useState<TeamKey>("jessa");
+  const [memoGoal, setMemoGoal] = useState("");
+  const [memoDue, setMemoDue] = useState("");
+  const [memoBrief, setMemoBrief] = useState("");
+  const [memoSending, setMemoSending] = useState(false);
+  const [memoError, setMemoError] = useState<string | null>(null);
+  const memoOpenBy: Record<string, string[]> = {};
+  for (const m of openMemos)
+    (memoOpenBy[m.prospect_id] ??= []).push(teamMember(m.to_key)?.name ?? m.to_key);
+
+  function memoBriefFor(p: Prospect, to: TeamKey, from: TeamKey) {
+    const toName = teamMember(to)?.name ?? "there";
+    const fromName = teamMember(from)?.name ?? "";
+    const office = p.current_employer?.trim();
+    return [
+      `Hi ${toName.split(" ")[0]},`,
+      "",
+      `Please call ${name(p)}${office ? ` at ${office}` : ""}${p.city ? ` (${p.city})` : ""}.`,
+      "",
+      p.phone ? `Phone: ${p.phone}` : "Phone: —",
+      p.email ? `Email: ${p.email}` : "Email: —",
+      "",
+      "WHAT THEY WANT",
+      "—",
+      "",
+      "BACKGROUND (pipeline notes)",
+      p.notes?.trim() || "No notes yet — this is a first call.",
+      "",
+      'When you\'re done, record the outcome with one line (e.g., "Called — wants a proposal by Friday"). It goes straight onto the card.',
+      "",
+      "Thanks,",
+      fromName.split(" ")[0],
+    ].join("\n");
+  }
+
+  function openMemo(p: Prospect) {
+    setMemoFor(p);
+    setMemoGoal("");
+    setMemoDue("");
+    setMemoBrief(memoBriefFor(p, memoTo, memoFrom));
+    setMemoError(null);
+  }
+
+  async function sendMemo() {
+    if (!memoFor) return;
+    if (!memoGoal.trim()) {
+      setMemoError("Say what they want / the goal of the call.");
+      return;
+    }
+    setMemoSending(true);
+    setMemoError(null);
+    try {
+      const res = await fetch(`/api/admin/prospects/${memoFor.id}/memo`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ from: memoFrom, to: memoTo, goal: memoGoal, brief: memoBrief, dueOn: memoDue }),
+      });
+      const json = await res.json();
+      if (!json.ok) {
+        setMemoError(json.error ?? "Could not send the memo.");
+        return;
+      }
+      if (!json.emailed) setError(`Memo saved, but the email did not go out${json.emailError ? `: ${json.emailError}` : ""}.`);
+      setMemoFor(null);
+      startTransition(() => router.refresh());
+    } catch {
+      setMemoError("Network error — nothing was sent.");
+    } finally {
+      setMemoSending(false);
     }
   }
 
@@ -459,6 +538,15 @@ export function Board({
             {p.phone}
           </a>
         )}
+        {memoOpenBy[p.id] && (
+          <div className="mt-1.5 flex flex-wrap gap-1">
+            {memoOpenBy[p.id].map((n) => (
+              <span key={n} className="text-[10px] px-1.5 py-0.5 rounded-full bg-violet-50 text-violet-800">
+                memo open · {n}
+              </span>
+            ))}
+          </div>
+        )}
         {p.notes?.trim() && (
           <button
             type="button"
@@ -550,6 +638,15 @@ export function Board({
           >
             ☎ VA call
           </button>
+          <button
+            type="button"
+            disabled={busyId === p.id}
+            onClick={() => openMemo(p)}
+            className="text-xs font-semibold px-2.5 py-1 rounded-sm border border-rule text-ink hover:border-teal hover:text-teal disabled:opacity-40"
+            title="Send a memo to the team"
+          >
+            Memo
+          </button>
           <select
             aria-label="Stage"
             value={p.stage}
@@ -634,6 +731,101 @@ export function Board({
 
   return (
     <>
+      {memoFor && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Memo — ${name(memoFor)}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !memoSending) setMemoFor(null);
+          }}
+        >
+          <div className="w-full max-w-xl max-h-[90vh] overflow-y-auto bg-paper rounded-lg shadow-xl p-6">
+            <div className="flex items-start justify-between gap-4">
+              <h2 className="font-display text-2xl leading-snug">Memo — {name(memoFor)}</h2>
+              <button type="button" onClick={() => setMemoFor(null)} aria-label="Close" className="text-muted hover:text-ink text-xl leading-none">×</button>
+            </div>
+            <p className="mt-3 text-sm text-muted">
+              The memo is saved on this card. The recipient gets an email with a private link, answers there, and the answer lands in this card&apos;s notes.
+            </p>
+
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-[10px] uppercase tracking-wider text-muted">From</label>
+                <select
+                  value={memoFrom}
+                  onChange={(e) => {
+                    const v = e.target.value as TeamKey;
+                    setMemoFrom(v);
+                    setMemoBrief(memoBriefFor(memoFor, memoTo, v));
+                  }}
+                  className="mt-1 w-full border border-rule rounded-md bg-paper px-2 py-2 text-sm"
+                >
+                  {PIPELINE_TEAM.map((m) => (
+                    <option key={m.key} value={m.key}>{m.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-[10px] uppercase tracking-wider text-muted">To</label>
+                <select
+                  value={memoTo}
+                  onChange={(e) => {
+                    const v = e.target.value as TeamKey;
+                    setMemoTo(v);
+                    setMemoBrief(memoBriefFor(memoFor, v, memoFrom));
+                  }}
+                  className="mt-1 w-full border border-rule rounded-md bg-paper px-2 py-2 text-sm"
+                >
+                  {PIPELINE_TEAM.map((m) => (
+                    <option key={m.key} value={m.key}>{m.name} — {m.email}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <label className="block mt-4 text-[10px] uppercase tracking-wider text-muted">What they want / goal of the call</label>
+            <textarea
+              value={memoGoal}
+              onChange={(e) => setMemoGoal(e.target.value)}
+              rows={2}
+              autoFocus
+              placeholder="e.g. Radiography for two assistants. Goal: agree on a next step."
+              className="mt-1 w-full border border-rule rounded-md bg-paper p-3 text-sm"
+            />
+
+            <label className="block mt-4 text-[10px] uppercase tracking-wider text-muted">Due (optional — shows as overdue in Open memos after this date)</label>
+            <input
+              type="date"
+              value={memoDue}
+              onChange={(e) => setMemoDue(e.target.value)}
+              className="mt-1 border border-rule rounded-md bg-paper px-3 py-2 text-sm"
+            />
+
+            <label className="block mt-4 text-[10px] uppercase tracking-wider text-muted">Call brief: {name(memoFor)}{memoFor.current_employer ? ` — ${memoFor.current_employer}` : ""}</label>
+            <textarea
+              value={memoBrief}
+              onChange={(e) => setMemoBrief(e.target.value)}
+              rows={12}
+              className="mt-1 w-full border border-rule rounded-md bg-paper p-3 text-sm"
+            />
+
+            {memoError && <p className="mt-2 text-xs text-amber-800">{memoError}</p>}
+            <div className="mt-5 flex justify-end gap-2">
+              <button type="button" className="btn-outline" onClick={() => setMemoFor(null)}>Cancel</button>
+              <button
+                type="button"
+                className="px-4 py-2 rounded-md bg-ink text-paper text-sm font-medium disabled:opacity-40"
+                disabled={memoSending}
+                onClick={sendMemo}
+              >
+                {memoSending ? "Sending…" : "Send memo"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {vaFor && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4"

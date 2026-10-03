@@ -1,6 +1,12 @@
 import Link from "next/link";
 import { countProspects, listProspects, pipelineStats } from "@/lib/prospects-db";
+import { listOpenMemos } from "@/lib/prospect-memos";
+import { teamMember } from "@/lib/pipeline-team";
 import { Board } from "./board";
+
+function etToday(): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York" }).format(new Date());
+}
 
 export const dynamic = "force-dynamic";
 
@@ -9,11 +15,13 @@ export const metadata = { title: "Recruiting pipeline · FIDA Admin" };
 export default async function PipelinePage() {
   // The board is for people being worked. The identified pool (the whole
   // imported list) stays in Prospects — it would be thousands of cards here.
-  const [prospects, stats, identifiedEmployers] = await Promise.all([
+  const [prospects, stats, identifiedEmployers, openMemos] = await Promise.all([
     listProspects({ excludeIdentified: true }, 1000),
     pipelineStats(),
     countProspects({ stage: "identified", segment: "dentist_employer" }),
+    listOpenMemos(),
   ]);
+  const today = etToday();
   const identified = {
     employer: identifiedEmployers,
     student: Math.max(0, stats.identified - identifiedEmployers),
@@ -79,7 +87,40 @@ export default async function PipelinePage() {
         </div>
       </div>
 
-      <Board prospects={prospects} identified={identified} />
+      {openMemos.length > 0 && (
+        <div className="card mt-8 p-5">
+          <div className="eyebrow text-muted">
+            Open memos · {openMemos.length} waiting
+          </div>
+          <ul className="mt-3 divide-y divide-rule">
+            {openMemos.map((m) => {
+              const overdue = Boolean(m.due_on && m.due_on < today);
+              return (
+                <li key={m.id} className="py-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+                  <span
+                    className={`text-[10px] px-1.5 py-0.5 rounded-full ${
+                      overdue ? "bg-red-50 text-red-700" : "bg-violet-50 text-violet-800"
+                    }`}
+                  >
+                    {overdue ? "overdue" : "open"}
+                  </span>
+                  <span className="font-medium text-navy">{m.prospect_name}</span>
+                  <span className="text-muted">
+                    {teamMember(m.from_key)?.name.split(" ")[0] ?? m.from_key} → {teamMember(m.to_key)?.name ?? m.to_key}
+                  </span>
+                  <span className="text-muted truncate max-w-md">{m.goal}</span>
+                  {m.due_on && <span className="text-xs text-muted tabular-nums">due {m.due_on}</span>}
+                  <a href={`/memo/${m.token}`} className="ml-auto text-xs font-semibold text-teal underline">
+                    Answer
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+
+      <Board prospects={prospects} identified={identified} openMemos={openMemos} />
     </div>
   );
 }
