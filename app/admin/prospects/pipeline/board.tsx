@@ -74,6 +74,74 @@ export function Board({
   const [notesError, setNotesError] = useState<string | null>(null);
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
 
+  // Log Touch dialog
+  const [touchFor, setTouchFor] = useState<Prospect | null>(null);
+  const [touchKind, setTouchKind] = useState<"call" | "email" | "text" | "note">("call");
+  const [touchLine, setTouchLine] = useState("");
+  const [touchDay, setTouchDay] = useState("");
+  const [touchSaving, setTouchSaving] = useState(false);
+  const [touchError, setTouchError] = useState<string | null>(null);
+
+  function openTouch(p: Prospect) {
+    setTouchFor(p);
+    setTouchKind("call");
+    setTouchLine("");
+    // Default the next follow-up to 3 days out (ET).
+    const d = new Date();
+    d.setDate(d.getDate() + 3);
+    setTouchDay(etDay(d));
+    setTouchError(null);
+  }
+
+  /**
+   * Stamps a touch (last_touch_at, touch_count, prospect_touches row), writes
+   * the one-liner to the top of the card's notes dated today, and sets the
+   * next follow-up — the Atticus "Log Touch" in one save.
+   */
+  async function saveTouch() {
+    if (!touchFor) return;
+    setTouchSaving(true);
+    setTouchError(null);
+    try {
+      const line = touchLine.trim();
+      const res = await fetch(`/api/admin/prospects/${touchFor.id}/touch`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kind: touchKind, body: line || undefined }),
+      });
+      const json = await res.json();
+      if (!json.ok) {
+        setTouchError(json.error ?? "Could not log the touch.");
+        return;
+      }
+      const patch: Record<string, unknown> = {
+        next_followup_at: touchDay ? `${touchDay}T16:00:00.000Z` : null,
+      };
+      if (line) {
+        const [y, m, d] = etDay(new Date()).split("-");
+        const stamp = `${Number(m)}/${Number(d)}/${y.slice(2)} ${touchKind}`;
+        const prev = touchFor.notes?.trim();
+        patch.notes = `${stamp} — ${line}${prev ? `\n${prev}` : ""}`;
+      }
+      const res2 = await fetch(`/api/admin/prospects/${touchFor.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(patch),
+      });
+      const json2 = await res2.json();
+      if (!json2.ok) {
+        setTouchError(json2.error ?? "Touch logged, but the notes/follow-up did not save.");
+        return;
+      }
+      setTouchFor(null);
+      startTransition(() => router.refresh());
+    } catch {
+      setTouchError("Network error — nothing was logged.");
+    } finally {
+      setTouchSaving(false);
+    }
+  }
+
   /** Sets (or clears, with "") the follow-up date. Stored as midday ET on that day. */
   async function setFollowup(p: Prospect, day: string) {
     setBusyId(p.id);
@@ -345,6 +413,15 @@ export function Board({
           </span>
         </div>
         <div className="mt-2 flex flex-wrap items-center gap-1.5">
+          <button
+            type="button"
+            disabled={busyId === p.id}
+            onClick={() => openTouch(p)}
+            className="text-xs font-semibold px-2.5 py-1 rounded-sm bg-ink text-paper hover:bg-navy disabled:opacity-40"
+            title="Stamp a call, email or text and set the next follow-up"
+          >
+            Log Touch
+          </button>
           <select
             aria-label="Stage"
             value={p.stage}
@@ -429,6 +506,98 @@ export function Board({
 
   return (
     <>
+      {touchFor && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Log Touch — ${name(touchFor)}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setTouchFor(null);
+          }}
+        >
+          <div className="w-full max-w-xl max-h-[90vh] overflow-y-auto bg-paper rounded-lg shadow-xl p-6">
+            <div className="flex items-start justify-between gap-4">
+              <h2 className="font-display text-2xl leading-snug">
+                Log Touch — {name(touchFor)}
+              </h2>
+              <button
+                type="button"
+                onClick={() => setTouchFor(null)}
+                aria-label="Close"
+                className="text-muted hover:text-ink text-xl leading-none"
+              >
+                ×
+              </button>
+            </div>
+            <p className="mt-3 text-sm text-muted">
+              Stamps today as the last touch, puts your one-liner at the top of
+              the card&apos;s notes, and sets the next follow-up.
+            </p>
+
+            <label className="block mt-4 text-[10px] uppercase tracking-wider text-muted">
+              What kind of touch
+            </label>
+            <div className="mt-1 flex gap-1.5">
+              {(["call", "email", "text", "note"] as const).map((k) => (
+                <button
+                  key={k}
+                  type="button"
+                  onClick={() => setTouchKind(k)}
+                  className={`px-3 py-1 text-xs uppercase tracking-wider rounded-sm border ${
+                    touchKind === k
+                      ? "bg-teal text-white border-teal"
+                      : "border-rule text-ink hover:border-teal"
+                  }`}
+                >
+                  {k}
+                </button>
+              ))}
+            </div>
+
+            <label className="block mt-4 text-[10px] uppercase tracking-wider text-muted">
+              What happened — one line (optional)
+            </label>
+            <input
+              type="text"
+              value={touchLine}
+              onChange={(e) => setTouchLine(e.target.value)}
+              autoFocus
+              placeholder="e.g. Left voicemail, asked for a call back Tue"
+              className="mt-1 w-full border border-rule rounded-md bg-paper px-3 py-2 text-sm"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !touchSaving) saveTouch();
+              }}
+            />
+
+            <label className="block mt-4 text-[10px] uppercase tracking-wider text-muted">
+              Next follow-up
+            </label>
+            <input
+              type="date"
+              value={touchDay}
+              onChange={(e) => setTouchDay(e.target.value)}
+              className="mt-1 border border-rule rounded-md bg-paper px-3 py-2 text-sm"
+            />
+            <span className="ml-2 text-xs text-muted">Clear it for no follow-up.</span>
+
+            {touchError && <p className="mt-2 text-xs text-amber-800">{touchError}</p>}
+            <div className="mt-5 flex justify-end gap-2">
+              <button type="button" className="btn-outline" onClick={() => setTouchFor(null)}>
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="px-4 py-2 rounded-md bg-ink text-paper text-sm font-medium disabled:opacity-40"
+                disabled={touchSaving}
+                onClick={saveTouch}
+              >
+                {touchSaving ? "Saving…" : "Log Touch"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {notesFor && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4"
