@@ -16,8 +16,8 @@ export default function AdminLayout({
       {/* <DemoBanner />  // re-enable for demos */}
       <div className="flex flex-1">
         <Sidebar />
-        <div className="flex-1 flex flex-col">
-          <div className="flex-1 px-8 md:px-12 py-10">{children}</div>
+        <div className="flex-1 min-w-0 flex flex-col">
+          <div className="flex-1 px-6 md:px-8 py-8">{children}</div>
           <AtticusCopyrightBar />
         </div>
       </div>

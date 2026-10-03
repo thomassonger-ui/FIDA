@@ -593,7 +593,7 @@ export function Board({
     const next = idx >= 0 && idx < STAGES.length - 1 ? STAGES[idx + 1] : null;
     return (
       <div
-        className={`border rounded-sm bg-paper px-3 py-2.5 text-sm ${
+        className={`border rounded-sm bg-paper px-2.5 py-2 text-[13px] ${
           overdue(p) ? "border-red-300" : "border-rule"
         } ${busyId === p.id ? "opacity-50" : ""}`}
       >
@@ -620,7 +620,30 @@ export function Board({
               ⋯
             </button>
             {menuFor === p.id && (
-              <div className="absolute right-0 top-5 z-20 w-40 bg-paper border border-rule rounded-md shadow-lg py-1 text-xs">
+              <div className="absolute right-0 top-5 z-20 w-48 bg-paper border border-rule rounded-md shadow-lg py-1 text-xs">
+                <label className="flex items-center gap-2 px-3 py-1.5 text-muted">
+                  Stage
+                  <select
+                    aria-label="Stage"
+                    value={p.stage}
+                    disabled={busyId === p.id}
+                    onChange={(e) => {
+                      const s = e.target.value as Stage;
+                      setMenuFor(null);
+                      if (s === p.stage) return;
+                      if (s === "registered" && track === "student") promote(p.id);
+                      else move(p.id, s);
+                    }}
+                    className="flex-1 text-xs border border-rule rounded-sm bg-paper px-1.5 py-1 text-ink"
+                  >
+                    {STAGES.filter((s) => s !== "identified").map((s) => (
+                      <option key={s} value={s}>
+                        {stageLabel(track, s)}
+                      </option>
+                    ))}
+                    <option value="lost">{stageLabel(track, "lost")}</option>
+                  </select>
+                </label>
                 <button type="button" className="block w-full text-left px-3 py-1.5 hover:bg-ink/5" onClick={() => openContact(p)}>
                   Edit contact
                 </button>
@@ -638,6 +661,15 @@ export function Board({
                 >
                   Notes
                 </button>
+                {p.stage !== "lost" && (
+                  <button
+                    type="button"
+                    className="block w-full text-left px-3 py-1.5 text-red-700 hover:bg-red-50"
+                    onClick={() => { setMenuFor(null); move(p.id, "lost"); }}
+                  >
+                    {stageLabel(track, "lost")}
+                  </button>
+                )}
               </div>
             )}
           </div>
@@ -771,12 +803,12 @@ export function Board({
                 : `touched ${stale}d ago`}
           </span>
         </div>
-        <div className="mt-2 flex flex-wrap items-center gap-1.5">
+        <div className="mt-2 flex items-center gap-1.5">
           <button
             type="button"
             disabled={busyId === p.id}
             onClick={() => openTouch(p)}
-            className="text-xs font-semibold px-2.5 py-1 rounded-sm bg-ink text-paper hover:bg-navy disabled:opacity-40"
+            className="text-[11px] font-semibold px-2 py-1 rounded-sm bg-ink text-paper hover:bg-navy disabled:opacity-40 whitespace-nowrap"
             title="Stamp a call, email or text and set the next follow-up"
           >
             Log Touch
@@ -785,7 +817,7 @@ export function Board({
             type="button"
             disabled={busyId === p.id}
             onClick={() => openVa(p)}
-            className="text-xs font-semibold px-2.5 py-1 rounded-sm border border-teal text-teal hover:bg-teal hover:text-white disabled:opacity-40"
+            className="text-[11px] font-semibold px-1.5 py-1 rounded-sm border border-teal text-teal hover:bg-teal hover:text-white disabled:opacity-40 whitespace-nowrap"
             title="Script, call, send briefing"
           >
             ☎ VA call
@@ -794,99 +826,68 @@ export function Board({
             type="button"
             disabled={busyId === p.id}
             onClick={() => openMemo(p)}
-            className="text-xs font-semibold px-2.5 py-1 rounded-sm border border-rule text-ink hover:border-teal hover:text-teal disabled:opacity-40"
+            className="text-[11px] font-semibold px-1.5 py-1 rounded-sm border border-rule text-ink hover:border-teal hover:text-teal disabled:opacity-40 whitespace-nowrap"
             title="Send a memo to the team"
           >
             Memo
           </button>
-          <select
-            aria-label="Stage"
-            value={p.stage}
-            disabled={busyId === p.id}
-            onChange={(e) => {
-              const s = e.target.value as Stage;
-              if (s === p.stage) return;
-              if (s === "registered" && track === "student") promote(p.id);
-              else move(p.id, s);
-            }}
-            className="text-xs border border-rule rounded-sm bg-paper px-1.5 py-1 text-ink"
-          >
-            {STAGES.filter((s) => s !== "identified").map((s) => (
-              <option key={s} value={s}>
-                {stageLabel(track, s)}
-              </option>
-            ))}
-            <option value="lost">{stageLabel(track, "lost")}</option>
-          </select>
+        </div>
+        <div className="mt-1.5 flex items-center justify-end gap-0.5">
+          {next && (
+            <button
+              type="button"
+              disabled={busyId === p.id}
+              onClick={() => (next === "registered" && track === "student" ? promote(p.id) : move(p.id, next))}
+              title={
+                next === "registered" && track === "student"
+                  ? "Closed Won → Student ($150 paid, creates the student record)"
+                  : `Move to ${stageLabel(track, next)}`
+              }
+              className="mr-auto text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded-sm border border-rule text-muted hover:border-teal hover:text-teal disabled:opacity-40 whitespace-nowrap"
+            >
+              → {stageLabel(track, next)}
+            </button>
+          )}
           <button
             type="button"
+            title="They replied"
+            aria-label="They replied"
             disabled={busyId === p.id}
             onClick={() => openReply(p)}
-            className="text-xs font-semibold text-teal underline disabled:opacity-40"
+            className="text-sm leading-none px-1 py-0.5 rounded-sm text-muted hover:bg-ink/5 hover:text-ink disabled:opacity-40"
           >
-            Replied
+            ↩
           </button>
           {p.email && (
             <a
               href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(p.email)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-sm border border-rule text-muted hover:border-teal hover:text-teal"
+              title={`Gmail — ${p.email}`}
+              className="text-sm leading-none px-1 py-0.5 rounded-sm text-muted hover:bg-ink/5 hover:text-ink"
             >
-              Gmail
+              ✉
             </a>
           )}
-        </div>
-        <div className="mt-2 flex items-center gap-1.5">
-          {next === "registered" && track === "student" ? (
-            <button
-              type="button"
-              disabled={busyId === p.id}
-              onClick={() => promote(p.id)}
-              className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-sm bg-teal text-white hover:bg-teal-deep disabled:opacity-40"
-              title="Marks Closed Won ($150 paid) and creates the student record"
-            >
-              Closed Won → Student
-            </button>
-          ) : next ? (
-            <button
-              type="button"
-              disabled={busyId === p.id}
-              onClick={() => move(p.id, next)}
-              className="text-[10px] uppercase tracking-wider px-1.5 py-1 rounded-sm border border-rule text-muted hover:border-teal hover:text-teal disabled:opacity-40 whitespace-nowrap"
-            >
-              → {stageLabel(track, next)}
-            </button>
-          ) : null}
-          {p.stage !== "lost" && <button
+          <button
             type="button"
+            title="Notes"
+            aria-label="Notes"
             disabled={busyId === p.id}
-            onClick={() => move(p.id, "lost")}
-            className="text-[10px] uppercase tracking-wider px-1.5 py-1 rounded-sm border border-rule text-subtle hover:border-red-300 hover:text-red-700 disabled:opacity-40"
+            onClick={() => openNotes(p)}
+            className="text-sm leading-none px-0.5 rounded-sm hover:bg-ink/5 disabled:opacity-40"
           >
-            {stageLabel(track, "lost")}
-          </button>}
-          <span className="ml-auto flex items-center gap-0.5 shrink-0">
-            <button
-              type="button"
-              title="Notes"
-              aria-label="Notes"
-              disabled={busyId === p.id}
-              onClick={() => openNotes(p)}
-              className="text-sm leading-none px-0.5 rounded-sm hover:bg-ink/5 disabled:opacity-40"
-            >
-              📝
-            </button>
-            <a
-              href={CALENDLY_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={`Calendly — ${CALENDLY_URL}`}
-              className="text-sm leading-none px-0.5 rounded-sm hover:bg-ink/5"
-            >
-              📅
-            </a>
-          </span>
+            📝
+          </button>
+          <a
+            href={CALENDLY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={`Calendly — ${CALENDLY_URL}`}
+            className="text-sm leading-none px-0.5 rounded-sm hover:bg-ink/5"
+          >
+            📅
+          </a>
         </div>
       </div>
     );
@@ -1471,7 +1472,7 @@ export function Board({
           </div>
         </div>
       )}
-      <div className="mt-8 flex items-center gap-2 flex-wrap">
+      <div className="mt-6 flex items-center gap-2 flex-wrap">
         {(["employer", "student"] as Track[]).map((t) => (
           <button
             key={t}
@@ -1514,9 +1515,9 @@ export function Board({
       </div>
 
       {view === "board" ? (
-        <div className="mt-6 flex gap-3 overflow-x-auto pb-4">
+        <div className="mt-4 flex gap-2.5 overflow-x-auto pb-4">
           {COLUMNS.map((s) => (
-            <div key={s} className="w-64 shrink-0">
+            <div key={s} className="w-[232px] shrink-0">
               <div className="flex items-baseline justify-between px-1 mb-1">
                 <span className="text-[10px] uppercase tracking-wider text-muted">
                   {stageLabel(track, s)}

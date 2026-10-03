@@ -31,7 +31,7 @@ export default async function PipelinePage() {
     <div>
       <div className="eyebrow">Recruiting · Pipeline</div>
       <div className="flex items-center justify-between mt-2 flex-wrap gap-3">
-        <h1 className="font-display text-4xl md:text-5xl">
+        <h1 className="font-display text-3xl md:text-4xl">
           Recruiting pipeline
         </h1>
         <div className="flex gap-2">
@@ -60,28 +60,28 @@ export default async function PipelinePage() {
         $150 fee is paid and promotes them into Students).
       </p>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-        <div className="card p-5">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
+        <div className="card p-4">
           <div className="eyebrow text-muted">In pipeline</div>
-          <div className="font-display text-4xl tabular-nums mt-2">
+          <div className="font-display text-3xl tabular-nums mt-1">
             {stats.inPipeline}
           </div>
         </div>
-        <div className="card p-5">
+        <div className="card p-4">
           <div className="eyebrow text-muted">Follow-ups overdue</div>
-          <div className="font-display text-4xl tabular-nums mt-2 text-teal">
+          <div className="font-display text-3xl tabular-nums mt-1 text-teal">
             {stats.overdue}
           </div>
         </div>
-        <div className="card p-5">
+        <div className="card p-4">
           <div className="eyebrow text-muted">No touch in 7d</div>
-          <div className="font-display text-4xl tabular-nums mt-2 text-teal">
+          <div className="font-display text-3xl tabular-nums mt-1 text-teal">
             {stats.stale7d}
           </div>
         </div>
-        <div className="card p-5">
+        <div className="card p-4">
           <div className="eyebrow text-muted">Closed Won</div>
-          <div className="font-display text-4xl tabular-nums mt-2 text-teal">
+          <div className="font-display text-3xl tabular-nums mt-1 text-teal">
             {stats.registered}
           </div>
         </div>
