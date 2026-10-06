@@ -9,6 +9,8 @@ import { currentLimits, RAMP, MAILING_ADDRESS } from "@/lib/prospects-shared";
 import { SCHEDULE_LABEL, dripStats } from "@/lib/drip";
 import { ProspectsTable } from "./prospects-table";
 import { VaHoursPanel } from "@/components/admin/VaHoursPanel";
+import { VaCallPlan } from "@/components/admin/VaCallPlan";
+import { VaTimeClockButton } from "@/components/admin/VaTimeClockButton";
 
 const DRIP_SENDER =
   process.env.DRIP_FROM || process.env.RESEND_FROM || "reply@fldentalassisting.com";
@@ -148,6 +150,10 @@ export default async function ProspectsPage() {
       </div>
 
       <VaHoursPanel />
+      <VaCallPlan />
+      <VaTimeClockButton>
+        <VaHoursPanel />
+      </VaTimeClockButton>
 
       <ProspectsTable
         initial={prospects}

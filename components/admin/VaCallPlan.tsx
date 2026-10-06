@@ -1,7 +1,7 @@
 "use client";
 
-// Floating "VA Call Plan" (bottom-right) on /admin/prospects/pipeline (admin
-// pages are gated by middleware.ts). The VA's script for calling dental
+// Floating "VA Call Plan" (bottom-right) on /admin/prospects and
+// /admin/prospects/pipeline (admin pages are gated by middleware.ts). The VA's script for calling dental
 // offices: get past the gatekeeper to the office manager or dentist.
 // Same plan as the FIDA tab of the Call Plan on tryatticus.com.
 // Checkboxes are scratch state for the current call.
@@ -11,17 +11,20 @@ import { useState } from "react";
 const GOAL = "A meeting with the office manager or dentist";
 const OPENER =
   "Hi, this is Jessa with the Florida Institute of Dental Assisting. I'm reaching out to dental offices about training for their assistants: x-ray certification and EFDA. Who handles training or hiring for your assistants?";
+const OBJECTIVES = [
+  "Get past the front desk to the office manager or dentist",
+  "Qualify the office with the 3 questions below",
+  "Book a 15-minute call with FIDA",
+];
+const QUALIFY = [
+  "How many dental assistants do you have, and are they all x-ray (radiology) certified?",
+  "Would expanded duties (EFDA) help your office? Do any of your assistants have it now?",
+  "Are you hiring assistants now, or in the next few months?",
+];
 const MUST = [
   "Office manager's name, and the dentist's name",
   "Best direct email and phone for the manager",
   "Best day and time to reach the manager or doctor",
-];
-const MORE = [
-  "How many assistants work there?",
-  "Are they all radiology-certified?",
-  "Any EFDA-trained assistants?",
-  "Hiring right now?",
-  "Open to a 15-minute call with FIDA?",
 ];
 const GATEKEEPER =
   "\u201CI know the doctor is busy. Who\u2019s the best person to talk to about assistant training?\u201D Get their name and the best time to call back.";
@@ -31,12 +34,15 @@ const OBJECTIONS: [string, string][] = [
 ];
 const CLOSE = "Could [manager/Dr.] do 15 minutes this week or next?";
 const BOOK = "https://calendly.com/fldentalassisting";
+const VOICEMAIL =
+  "Hi, this is Jessa with the Florida Institute of Dental Assisting, calling for the office manager. We help dental offices get their assistants x-ray certified and EFDA trained. I'd love 15 minutes with you or the doctor. Please call me back at this number, or book a time at calendly.com/fldentalassisting. Again, Jessa with FIDA. Thank you!";
 
 export function VaCallPlan() {
   const [open, setOpen] = useState(false);
   const [checked, setChecked] = useState<Record<string, boolean>>({});
 
   const mustDone = MUST.filter((q) => checked[q]).length;
+  const qualDone = QUALIFY.filter((q) => checked[q]).length;
   const toggle = (q: string) => setChecked((c) => ({ ...c, [q]: !c[q] }));
   const h = "eyebrow text-teal-deep mb-1";
 
@@ -62,8 +68,31 @@ export function VaCallPlan() {
             <p className="rounded-sm bg-teal-50 px-3 py-2 text-xs font-semibold text-teal">Goal: {GOAL}</p>
 
             <section>
+              <h4 className={h}>Objectives</h4>
+              <ol className="list-decimal space-y-0.5 pl-5">
+                {OBJECTIVES.map((o) => <li key={o}>{o}</li>)}
+              </ol>
+            </section>
+
+            <section>
               <h4 className={h}>Opener</h4>
               <p className="italic">&ldquo;{OPENER}&rdquo;</p>
+            </section>
+
+            <section>
+              <h4 className={h}>Gatekeeper</h4>
+              <p className="italic">{GATEKEEPER}</p>
+            </section>
+
+            <section className="rounded-sm bg-paper-subtle p-3">
+              <h4 className={`${h} flex items-center justify-between`}>
+                <span>3 qualifying questions</span>
+                <span className={qualDone === QUALIFY.length ? "text-teal-deep" : "text-muted"}>
+                  {qualDone}/{QUALIFY.length}
+                  {qualDone === QUALIFY.length ? " ✓" : ""}
+                </span>
+              </h4>
+              {QUALIFY.map((q) => <Box key={q} q={q} />)}
             </section>
 
             <section className="rounded-sm bg-paper-subtle p-3">
@@ -75,16 +104,6 @@ export function VaCallPlan() {
                 </span>
               </h4>
               {MUST.map((q) => <Box key={q} q={q} />)}
-            </section>
-
-            <section>
-              <h4 className={h}>If it&apos;s going well</h4>
-              {MORE.map((q) => <Box key={q} q={q} />)}
-            </section>
-
-            <section>
-              <h4 className={h}>Gatekeeper</h4>
-              <p className="italic">{GATEKEEPER}</p>
             </section>
 
             <section>
@@ -103,6 +122,11 @@ export function VaCallPlan() {
               <a href={BOOK} target="_blank" rel="noopener noreferrer" className="mt-1 inline-block text-teal underline">
                 Open FIDA&apos;s Calendly ↗
               </a>
+            </section>
+
+            <section>
+              <h4 className={h}>Voicemail</h4>
+              <p className="italic">&ldquo;{VOICEMAIL}&rdquo;</p>
             </section>
 
           </div>
