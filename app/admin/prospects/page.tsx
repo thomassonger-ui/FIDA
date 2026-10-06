@@ -11,6 +11,7 @@ import { ProspectsTable } from "./prospects-table";
 import { VaHoursPanel } from "@/components/admin/VaHoursPanel";
 import { VaCallPlan } from "@/components/admin/VaCallPlan";
 import { VaTimeClockButton } from "@/components/admin/VaTimeClockButton";
+import { VaDailyReminder } from "@/components/admin/VaDailyReminder";
 
 const DRIP_SENDER =
   process.env.DRIP_FROM || process.env.RESEND_FROM || "reply@fldentalassisting.com";
@@ -151,6 +152,7 @@ export default async function ProspectsPage() {
 
       <VaHoursPanel />
       <VaCallPlan />
+      <VaDailyReminder />
       <VaTimeClockButton>
         <VaHoursPanel />
       </VaTimeClockButton>

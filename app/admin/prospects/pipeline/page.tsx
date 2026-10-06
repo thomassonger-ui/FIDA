@@ -4,6 +4,7 @@ import { listOpenMemos } from "@/lib/prospect-memos";
 import { teamMember } from "@/lib/pipeline-team";
 import { Board } from "./board";
 import { VaCallPlan } from "@/components/admin/VaCallPlan";
+import { VaDailyReminder } from "@/components/admin/VaDailyReminder";
 
 function etToday(): string {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York" }).format(new Date());
@@ -123,6 +124,7 @@ export default async function PipelinePage() {
 
       <Board prospects={prospects} identified={identified} openMemos={openMemos} />
       <VaCallPlan />
+      <VaDailyReminder />
     </div>
   );
 }
