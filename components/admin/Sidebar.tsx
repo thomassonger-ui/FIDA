@@ -36,6 +36,7 @@ const nav: NavItem[] = [
   { href: "/admin/prospects", label: "Prospects", tag: "ENROLL" },
   { href: "/admin/prospects/pipeline", label: "Pipeline", tag: "ENROLL" },
   { href: "/admin/students", label: "Students", tag: "OS" },
+  { href: "/admin/settings/sis", label: "SIS fields", tag: "OS", isNew: true },
   { href: "/admin/cohorts", label: "Cohorts", tag: "OS" },
   { href: "/admin/attendance", label: "Attendance", tag: "OS" },
   { href: "/admin/payments", label: "Payments", tag: "OS", isNew: true },

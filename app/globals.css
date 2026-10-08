@@ -215,3 +215,11 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* SIS — print only the ID card on the ID-card pages */
+@media print {
+  body:has(.id-card) aside,
+  body:has(.id-card) nav,
+  body:has(.id-card) .print\:hidden { display: none !important; }
+  .id-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; box-shadow: none; }
+}

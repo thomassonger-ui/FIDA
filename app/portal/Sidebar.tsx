@@ -42,6 +42,7 @@ export async function PortalSidebar() {
         <SidebarLink href="/portal/tickets" label="Messages" badge={unread} />
         <SidebarLink href="/portal/documents" label="Documents" />
         <SidebarLink href="/portal/profile" label="Profile" />
+        <SidebarLink href="/portal/id-card" label="ID card" />
       </nav>
 
       <div className="mt-auto pt-6 border-t border-rule space-y-3">
