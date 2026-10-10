@@ -85,7 +85,7 @@ export function WelcomeScreen({
         style={{ width: `${progress * 100}%` }}
       />
       <style>{`
-        .atticus-welcome{background:linear-gradient(160deg,#ffffff 0%,#faf6ec 55%,#f3ead6 100%)}
+        .atticus-welcome{background:#ffffff}
         .atticus-welcome-logo{position:absolute;top:50%;left:50%;height:min(60vmin,520px);width:auto;transform:translate(-50%,-50%);opacity:0;animation:atticusFade 2.4s ease-in-out forwards;pointer-events:none}
         .atticus-welcome-copy{opacity:0;animation:atticusIn 1.6s ease-in-out .8s forwards}
         @keyframes atticusFade{to{opacity:.3}}
