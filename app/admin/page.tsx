@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AtticusOverviewCard } from "@/components/admin/AskAtticus";
 import { getDemoCohorts, getOverviewKpis } from "@/lib/demo-cohorts";
 import { demoStudents } from "@/lib/demo-students";
 import { getServerClient } from "@/lib/supabase";
@@ -196,6 +197,9 @@ export default async function AdminOverviewPage() {
           </div>
         </div>
       </div>
+
+      {/* Atticus v2.0 — What's New + Ask Atticus */}
+      <AtticusOverviewCard />
 
       {/* Primary KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">

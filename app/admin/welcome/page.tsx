@@ -32,6 +32,11 @@ export default async function AdminWelcome({
       tasks={tasks}
       next={safeNext(next, "/admin", "/admin/leads")}
       cta="Enter Dashboard"
+      news={{
+        text: "Ask Atticus finds any record in seconds, and builds a cited audit binder with a gap report.",
+        href: "/admin/ask",
+        label: "Try it",
+      }}
     />
   );
 }

@@ -31,6 +31,7 @@ type NavItem = {
 
 const nav: NavItem[] = [
   { href: "/admin", label: "Overview" },
+  { href: "/admin/ask", label: "Ask Atticus", isNew: true },
   { href: "/admin/tickets", label: "Messages", tag: "ENROLL" },
   { href: "/admin/leads", label: "Leads", tag: "ENROLL" },
   { href: "/admin/prospects", label: "Prospects", tag: "ENROLL" },

@@ -16,7 +16,9 @@ export function WelcomeScreen({
   tasks,
   next,
   cta,
+  news,
 }: {
+  news?: { text: string; href: string; label: string };
   eyebrow: string;
   firstName?: string | null;
   tasks: number;
@@ -69,6 +71,14 @@ export function WelcomeScreen({
           {firstName ? `, ${firstName}` : ""}
         </h1>
         <p className="text-base text-muted">{taskLine}</p>
+        {news ? (
+          <p className="mx-auto mt-4 max-w-md text-sm text-ink">
+            <span className="font-semibold text-[#a87f2c]">What&apos;s New in v{ATTICUS_VERSION}:</span> {news.text}{" "}
+            <button type="button" onClick={() => router.replace(news.href)} className="underline underline-offset-2 hover:opacity-80">
+              {news.label}
+            </button>
+          </p>
+        ) : null}
         <button
           type="button"
           onClick={() => router.replace(next)}
