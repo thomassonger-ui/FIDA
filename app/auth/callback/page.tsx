@@ -15,7 +15,12 @@ async function finalize(next: string): Promise<string> {
   try {
     const res = await fetch("/api/auth/finalize", { method: "POST" });
     const body = (await res.json().catch(() => ({}))) as { ok?: boolean; reason?: string };
-    if (res.ok && body.ok) return next;
+    if (res.ok && body.ok) {
+      // Student sign-ins land on the Atticus welcome screen first.
+      return next.startsWith("/portal")
+        ? `/portal/welcome?next=${encodeURIComponent(next)}`
+        : next;
+    }
     const reason = body.reason === "not-active" ? "not-active" : "auth-failed";
     return `/portal/login?error=${reason}`;
   } catch {

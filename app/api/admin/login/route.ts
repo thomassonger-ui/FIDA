@@ -112,7 +112,9 @@ export async function POST(req: NextRequest) {
 
 function grantAdmin(req: NextRequest, next: string, sessionSecret: string) {
   const safeNext = next.startsWith("/admin") ? next : "/admin/leads";
-  const redirect = NextResponse.redirect(new URL(safeNext, req.url), {
+  // Show the Atticus welcome screen first; it continues on to safeNext.
+  const welcome = `/admin/welcome?next=${encodeURIComponent(safeNext)}`;
+  const redirect = NextResponse.redirect(new URL(welcome, req.url), {
     status: 303,
   });
   redirect.cookies.set(ADMIN_COOKIE, sessionSecret, {

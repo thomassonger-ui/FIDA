@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
       return redirect("/portal/login?error=link-failed");
     }
 
-    const response = NextResponse.redirect(new URL("/portal", origin), {
+    const response = NextResponse.redirect(new URL("/portal/welcome", origin), {
       status: 303,
     });
     response.cookies.set(PORTAL_SESSION_COOKIE, created.id, {
