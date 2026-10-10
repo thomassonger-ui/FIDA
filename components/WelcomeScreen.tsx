@@ -6,7 +6,7 @@ import { ATTICUS_VERSION } from "@/lib/atticus-version";
 
 /**
  * Full-screen welcome shown once right after sign-in (admin + student portal).
- * Gold Atticus owl fades in to 30% behind a time-aware greeting and a single
+ * FIDA shield fades in to 30% behind a time-aware greeting and a single
  * "You have X tasks waiting" line, then continues to `next` after 5 seconds.
  * Rendered as a fixed overlay so it covers the admin/portal sidebar layouts.
  */
@@ -60,8 +60,8 @@ export function WelcomeScreen({
 
   return (
     <div className="atticus-welcome fixed inset-0 z-[100] grid place-items-center overflow-hidden px-4">
-      {/* Existing transparent owl, tinted Atticus gold via CSS mask. */}
-      <div aria-hidden="true" className="atticus-welcome-logo" />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/fida-shield.svg" alt="" aria-hidden="true" className="atticus-welcome-logo" />
       <div className="atticus-welcome-copy relative text-center">
         <div className="text-xs font-semibold uppercase tracking-[0.22em] text-[#a87f2c]">{eyebrow}</div>
         <h1 className="mt-3.5 mb-2 font-display text-[clamp(32px,6vw,56px)] font-normal text-ink">
@@ -86,7 +86,7 @@ export function WelcomeScreen({
       />
       <style>{`
         .atticus-welcome{background:linear-gradient(160deg,#ffffff 0%,#faf6ec 55%,#f3ead6 100%)}
-        .atticus-welcome-logo{position:absolute;top:50%;left:50%;width:min(60vmin,520px);aspect-ratio:1;background:#d4a74f;-webkit-mask:url(/atticus-logo.png) center/contain no-repeat;mask:url(/atticus-logo.png) center/contain no-repeat;transform:translate(-50%,-50%);opacity:0;animation:atticusFade 2.4s ease-in-out forwards;pointer-events:none}
+        .atticus-welcome-logo{position:absolute;top:50%;left:50%;height:min(60vmin,520px);width:auto;transform:translate(-50%,-50%);opacity:0;animation:atticusFade 2.4s ease-in-out forwards;pointer-events:none}
         .atticus-welcome-copy{opacity:0;animation:atticusIn 1.6s ease-in-out .8s forwards}
         @keyframes atticusFade{to{opacity:.3}}
         @keyframes atticusIn{to{opacity:1}}
